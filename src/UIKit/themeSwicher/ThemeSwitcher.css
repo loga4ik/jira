@@ -1,0 +1,32 @@
+.switch_btn {
+  border: solid 2px #888888;
+  border-radius: 10rem;
+  padding: 2px;
+  width: 6rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.switcher_text{
+    margin: 0 2px;
+    font-size: small;
+}
+.switch_icon {
+  border: none;
+  background-color: #888888;
+  padding: 14px;
+  cursor: pointer;
+  border-radius: 10rem;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.switch_btn > .dark {
+    background-color:#d8d8d8;
+  background-image: url(/public/img/moon.svg);
+}
+
+.switch_btn > .light {
+    background-image: url(/public/img/sun.svg);
+}

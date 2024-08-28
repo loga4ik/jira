@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   id="Outline"
+   viewBox="0 0 24 24"
+   width="16"
+   height="16"
+   version="1.1"
+   sodipodi:docname="angle-left.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="50.8125"
+     inkscape:cx="7.9901599"
+     inkscape:cy="8"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Outline" />
+  <path
+     d="m 7.8268605,24 a 1,1 0 0 0 0.71,-0.29 L 16.70686,15.54 a 5,5 0 0 0 0,-7.08 L 8.5368605,0.29 a 1.0040916,1.0040916 0 1 0 -1.42,1.42 L 15.28686,9.88 a 3,3 0 0 1 0,4.24 l -8.1699995,8.17 a 1,1 0 0 0 0,1.42 1,1 0 0 0 0.71,0.29 z"
+     id="path1" />
+</svg>

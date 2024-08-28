@@ -1,0 +1,85 @@
+:root {
+  --main-bg-color: rgb(224, 224, 224);
+  --main-text-color: #575757;
+  --main-bg-color-dark: #3b3b3b;
+  --main-text-color-dark: #9b9b9b;
+  --main-bg-light-gradient: linear-gradient(145deg, #f0f0f0, #e4e4e4);
+}
+body {
+  margin: 0;
+  height: 100%;
+}
+
+p {
+  padding: 0;
+  margin: 0;
+}
+
+.p-3 {
+  padding: 1rem;
+}
+
+.flex_reverse {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.full-screen-wrapper {
+  min-height: 100vh;
+  background: var(--main-bg-color); /* Установите здесь ваш цвет фона */
+}
+
+.bg_dark {
+  background-color: var(--main-bg-color-dark);
+}
+.border_dark {
+  border: solid #777777 1px;
+}
+.text_light {
+  color: var(--main-text-color);
+}
+.text_dark {
+  color: var(--main-text-color-dark) !important;
+}
+
+.dark_in_big {
+  background-color: #404040;
+  box-shadow: inset 30px 30px 60px #363636, inset -30px -30px 60px #4a4a4a;
+}
+.dark_in_small {
+  background-color: #404040;
+  box-shadow: inset 5px 5px 10px #363636, inset -5px -5px 10px #4a4a4a;
+}
+.dark_out_big {
+  background-color: #404040;
+  box-shadow: 30px 30px 60px #363636, -30px -30px 60px #4a4a4a;
+}
+.dark_out_small {
+  border: none;
+  background-color: #404040;
+  box-shadow: 5px 5px 10px #363636, -5px -5px 10px #4a4a4a;
+}
+.dark_out_small:focus {
+  outline: none;
+}
+.light_out_small {
+  background-color: var(--main-bg-light-gradient);
+  box-shadow: 6px 6px 14px #c4c4c4, -6px -6px 14px #ffffff;
+}
+.light_out_big {
+  background-color: var(--main-bg-light-gradient);
+  box-shadow: 6px 6px 14px #c4c4c4, -6px -6px 14px #ffffff;
+}
+.margin-0 {
+  margin-left: 1rem;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+.header_label {
+  font-size: medium;
+}
+.header_login {
+  font-size: larger;
+}
