@@ -2,15 +2,15 @@ import { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import "./Layout.css";
-import { AppDispatch, RootState } from "../Lib/store";
-import { ThemeContext } from "../Context/ThemeContext";
+import { AppDispatch, RootState } from "../../Lib/store";
+import { ThemeContext } from "../../Context/ThemeContext";
 import {
   getCookie,
   setAllUserDefault,
-} from "../Lib/Slices/userSlice/userSlice";
-import { ThemeSwitcher } from "../UIKit/themeSwicher/ThemeSwitcher";
-import { Button } from "../UIKit/Inputs/Button";
-import { getUserProjects } from "../Lib/Slices/projectSlice/projectSlice";
+} from "../../Lib/Slices/userSlice/userSlice";
+import { ThemeSwitcher } from "../../UIKit/themeSwicher/ThemeSwitcher";
+import { Button } from "../../UIKit/Inputs/Button";
+import { getUserProjects } from "../../Lib/Slices/projectSlice/projectSlice";
 
 export const Layout = () => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
@@ -21,16 +21,11 @@ export const Layout = () => {
   const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
-    dispatch(getCookie());
-    if (!currentUser) {
-      async () => {
-        const query = await dispatch(getCookie());
-        console.log(query);
-
-        !query.payload && navigate("/login");
-      };
-    }
-  }, []);
+    (async () => {
+      const query = await dispatch(getCookie());
+      !query.payload && navigate("/login");
+    })();
+  }, [dispatch]);
 
   useEffect(() => {
     if (currentUser?.id) {
@@ -94,7 +89,9 @@ export const Layout = () => {
           </Button>
         )}
       </header>
-      <Outlet />
+      {/* <div className="flex justify-center"> */}
+        <Outlet />
+      {/* </div> */}
     </div>
   );
 };

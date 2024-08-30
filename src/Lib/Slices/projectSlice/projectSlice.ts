@@ -11,7 +11,7 @@ import * as projectApi from "./projectApi";
 //   createdAt: Date;
 //   updateAt: Date;
 // };
-type Project = {
+interface Project {
   id: number;
   title: string;
   description: string;
@@ -20,15 +20,19 @@ type Project = {
   img: string;
   createdAt: Date;
   updateAt: Date;
-};
+}
 
 type GetProjectsRes = {
   owner: Project;
   working: Project[];
 };
 
+export interface ProjectAddIsOwner extends Project {
+  isOwner: boolean | null;
+}
+
 type State = {
-  projects: Project[];
+  projects: ProjectAddIsOwner[];
 };
 
 const initialState: State = {
@@ -58,9 +62,11 @@ const projectSlice = createSlice({
   },
   extraReducers: (element) => {
     element.addCase(getUserProjects.fulfilled, (state, action) => {
-      console.log(123);
-      state.projects.push(action.payload.owner);
-      console.log(action.payload);
+      console.log(action.payload.working);
+      state.projects = [{ ...action.payload.owner, isOwner: true }];
+      action.payload.working.map((project) => {
+        state.projects.push({ ...project, isOwner: false });
+      });
     });
   },
 });

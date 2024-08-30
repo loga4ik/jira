@@ -1,14 +1,14 @@
 "use client";
 
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../Lib/store";
-import { UserType } from "../../types/UserTypes";
 import { useForm } from "react-hook-form";
-import { registerUser } from "../../Lib/Slices/userSlice/userSlice";
 import { useNavigate } from "react-router-dom";
-import { Wrapper } from "../../UIKit/Wrapper";
-import Input from "../../UIKit/Inputs/Input";
-import { Button } from "../../UIKit/Inputs/Button";
+import { AppDispatch } from "../../../Lib/store";
+import { UserType } from "../../../types/UserTypes";
+import { registerUser } from "../../../Lib/Slices/userSlice/userSlice";
+import { Wrapper } from "../../../UIKit/Wrapper";
+import Input from "../../../UIKit/Inputs/Input";
+import { Button } from "../../../UIKit/Inputs/Button";
 
 const Register = () => {
   const navigate = useNavigate();

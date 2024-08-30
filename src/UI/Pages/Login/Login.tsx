@@ -1,15 +1,15 @@
 "use client";
 
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../Lib/store";
 import { useForm } from "react-hook-form";
-import { UserLoginData } from "../../types/UserTypes";
-import { loginUser } from "../../Lib/Slices/userSlice/userSlice";
 import { useNavigate } from "react-router-dom";
-import Input from "../../UIKit/Inputs/Input";
-import { Button } from "../../UIKit/Inputs/Button";
-import { Wrapper } from "../../UIKit/Wrapper";
-import HiddenInput from "../../UIKit/Inputs/HiddenInput";
+import { AppDispatch } from "../../../Lib/store";
+import { UserLoginData } from "../../../types/UserTypes";
+import { loginUser } from "../../../Lib/Slices/userSlice/userSlice";
+import { Wrapper } from "../../../UIKit/Wrapper";
+import Input from "../../../UIKit/Inputs/Input";
+import { Button } from "../../../UIKit/Inputs/Button";
+import HiddenInput from "../../../UIKit/Inputs/HiddenInput";
 
 const Login = () => {
   const dispatch = useDispatch<AppDispatch>();

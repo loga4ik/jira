@@ -80,6 +80,7 @@ const userSlice = createSlice({
   },
   extraReducers: (element) => {
     element.addCase(getCookie.fulfilled, (state, action) => {
+      console.log(action.payload);
       state.currentUser = action.payload;
     });
     element.addCase(loginUser.fulfilled, (state, action) => {

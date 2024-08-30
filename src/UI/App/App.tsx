@@ -1,9 +1,9 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./App.css";
 import { Layout } from "../HOC/Layout";
-import Main from "../Pages/Main";
 import Login from "../Pages/Login/Login";
 import Register from "../Pages/Register/Register";
+import Main from "../Pages/Main/Main";
+import Project from "../Pages/project/Project";
 
 function App() {
   return (
@@ -13,6 +13,7 @@ function App() {
           <Route index element={<Main />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/project" element={<Project />} />
         </Route>
       </Routes>
     </BrowserRouter>
