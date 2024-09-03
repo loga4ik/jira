@@ -8,7 +8,7 @@ import { UserType } from "../../../types/UserTypes";
 import { registerUser } from "../../../Lib/Slices/userSlice/userSlice";
 import { Wrapper } from "../../../UIKit/Wrapper";
 import Input from "../../../UIKit/Inputs/Input";
-import { Button } from "../../../UIKit/Inputs/Button";
+import { Button } from "../../../UIKit/Inputs/Button/Button";
 
 const Register = () => {
   const navigate = useNavigate();

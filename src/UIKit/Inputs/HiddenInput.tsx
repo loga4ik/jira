@@ -7,7 +7,7 @@ import {
 } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 import Input from "./Input";
-import { Button } from "./Button";
+import { Button } from "./Button/Button";
 import "./HiddenInput.css";
 type Props = {
   inputType: "text" | "password" | "masked";

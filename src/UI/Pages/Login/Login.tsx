@@ -8,7 +8,7 @@ import { UserLoginData } from "../../../types/UserTypes";
 import { loginUser } from "../../../Lib/Slices/userSlice/userSlice";
 import { Wrapper } from "../../../UIKit/Wrapper";
 import Input from "../../../UIKit/Inputs/Input";
-import { Button } from "../../../UIKit/Inputs/Button";
+import { Button } from "../../../UIKit/Inputs/Button/Button";
 import HiddenInput from "../../../UIKit/Inputs/HiddenInput";
 
 const Login = () => {

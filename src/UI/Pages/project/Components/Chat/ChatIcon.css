@@ -1,0 +1,7 @@
+.chat-class_light {
+  background-image: url(/public/img/chat.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 70%;
+  /* background-size: auto; */
+}

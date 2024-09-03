@@ -9,7 +9,7 @@ import {
   setAllUserDefault,
 } from "../../Lib/Slices/userSlice/userSlice";
 import { ThemeSwitcher } from "../../UIKit/themeSwicher/ThemeSwitcher";
-import { Button } from "../../UIKit/Inputs/Button";
+import { Button } from "../../UIKit/Inputs/Button/Button";
 import { getUserProjects } from "../../Lib/Slices/projectSlice/projectSlice";
 
 export const Layout = () => {

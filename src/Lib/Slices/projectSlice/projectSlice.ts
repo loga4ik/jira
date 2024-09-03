@@ -62,7 +62,6 @@ const projectSlice = createSlice({
   },
   extraReducers: (element) => {
     element.addCase(getUserProjects.fulfilled, (state, action) => {
-      console.log(action.payload.working);
       state.projects = [{ ...action.payload.owner, isOwner: true }];
       action.payload.working.map((project) => {
         state.projects.push({ ...project, isOwner: false });
