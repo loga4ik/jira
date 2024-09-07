@@ -22,7 +22,7 @@ const Main = () => {
       )}
       <Button
         type="button"
-        changableIconClass="add_project"
+        changableIconClass="add"
         className="absolute rounded-full top-0 right-2"
         defaultBorder={false}
       >

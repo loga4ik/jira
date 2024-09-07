@@ -16,7 +16,7 @@ const Chat: React.FC = () => {
         type="button"
         onClick={() => setIsOpen(!isOpen)}
       />
-      <ChatBoard />
+      {/* <ChatBoard /> */}
     </div>
   );
 };

@@ -1,12 +1,11 @@
 import { useLocation } from "react-router-dom";
 import { CardData } from "../../../UIKit/Card";
-import { Button } from "../../../UIKit/Inputs/Button/Button";
 import { Wrapper } from "../../../UIKit/Wrapper";
 import { useEffect, useState } from "react";
 import { getTeam } from "../../../Api/projectApi";
 import { ProjectPai_UserRes } from "../../../Api/types";
 import Chat from "./Components/Chat/Chat";
-
+import Sidebar from "./Components/Sidebar/Sidebar";
 const Project = () => {
   const location = useLocation();
   const state = location.state as CardData; // Приведение типа для использования state
@@ -30,11 +29,7 @@ const Project = () => {
   return (
     <div className="flex mx-4 my-8 ">
       {/* sidebar */}
-      <Wrapper className="py-8 flex flex-col flex-none w-20 rounded-full">
-        <Button type="button">ка</Button>
-        <Button type="button">ка</Button>
-        <Button type="button">ка</Button>
-      </Wrapper>
+      <Sidebar />
       {/* mainBlock */}
       <Wrapper className="flex-1 ml-6 p-3 min-h-96 rounded-lg relative">
         {/* <p>{state.img}</p> */}

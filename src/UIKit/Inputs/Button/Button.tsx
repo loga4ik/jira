@@ -1,5 +1,6 @@
 import React, { BaseSyntheticEvent, ReactNode, useContext } from "react";
 import { ThemeContext } from "../../../Context/ThemeContext";
+import './Button.css'
 
 type Props = {
   className?: string;
@@ -43,7 +44,8 @@ export const Button: React.FC<Props> = ({
           theme === "dark"
             ? "dark_out_small text_dark"
             : "light_out_small text_light"
-        } w-fit`}
+        } back-image-center`}
+        // w-fit
         onClick={onClick}
       >
         {children}

@@ -1,0 +1,25 @@
+.user_add_light {
+  background-image: url(/public/img/user-add.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 70%;
+}
+.user_add_dark {
+  background-image: url(/public/img/user-add-dark.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 70%;
+}
+
+.bin_light {
+  background-image: url(/public/img/bin.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 70%;
+}
+.bin_dark {
+  background-image: url(/public/img/bin-dark.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 70%;
+}

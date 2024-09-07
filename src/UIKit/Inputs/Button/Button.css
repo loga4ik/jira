@@ -1,6 +1,10 @@
-.add_project_light{
-    background-image: url(/public/img/plus_light.svg);
+.add_light {
+  background-image: url(/public/img/plus_light.svg);
 }
-.add_project_light{
-    background-image: url(/public/img/plus.svg);
+.add_dark {
+  background-image: url(/public/img/plus.svg);
+}
+.back-image-center {
+  background-repeat: no-repeat;
+  background-position: center;
 }

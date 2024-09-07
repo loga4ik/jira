@@ -15,6 +15,13 @@ const ChatBoard = () => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
 
   useEffect(() => {
+    console.log(
+      fetch(`/api/message/${projectId}`)
+        .then((response) => response.json())
+        .then((data) => setMessages(data))
+        .catch((error) => console.error("Error fetching messages:", error))
+    );
+
     const onMessageReceived = (message: Message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     };
