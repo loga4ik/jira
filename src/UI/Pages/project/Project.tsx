@@ -40,7 +40,6 @@ const Project = () => {
             {userList?.length}
           </p>
         </div>
-        <div></div>
       </Wrapper>
       {/* <ChatIcon /> */}
       <Chat />

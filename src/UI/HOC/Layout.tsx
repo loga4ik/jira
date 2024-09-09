@@ -90,7 +90,7 @@ export const Layout = () => {
         )}
       </header>
       {/* <div className="flex justify-center"> */}
-        <Outlet />
+      <Outlet />
       {/* </div> */}
     </div>
   );

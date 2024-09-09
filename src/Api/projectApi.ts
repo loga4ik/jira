@@ -1,5 +1,8 @@
 import { ProjectPai_UserRes } from "./types";
-
+export type GetFreeUsers = {
+  freeUsers: ProjectPai_UserRes[];
+  activeUsers: ProjectPai_UserRes[];
+};
 export const getTeam = async (
   project_id: number
 ): Promise<Error | ProjectPai_UserRes[]> => {
@@ -23,9 +26,21 @@ export const getTeam = async (
   }
 };
 
-export const getUserList = async (): Promise<Error | ProjectPai_UserRes[]> => {
+export const getUserList = async (
+  project_id: number
+): Promise<Error | GetFreeUsers> => {
   try {
-    const response = await fetch(`/api/user/getAllUsers`);
+    console.log(project_id);
+
+    const response = await fetch(`/api/project/getFreeUsers`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        project_id,
+      }),
+    });
     if (!response.ok) {
       throw new Error(`${response.status}`);
     }
@@ -37,7 +52,7 @@ export const getUserList = async (): Promise<Error | ProjectPai_UserRes[]> => {
   }
 };
 
-type AddUserInProjectReq = {
+type ManageUserInProjectReq = {
   user_id: number;
   project_id: number;
 };
@@ -45,10 +60,10 @@ type AddUserInProjectReq = {
 export const addUserInProject = async ({
   user_id,
   project_id,
-}: AddUserInProjectReq): Promise<Error | true> => {
+}: ManageUserInProjectReq): Promise<Error | GetFreeUsers> => {
   try {
-    const response = await fetch(`/api/project/addUserInProject`, {
-      method: "POST",
+    const response = await fetch(`/api/team/create`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -65,5 +80,28 @@ export const addUserInProject = async ({
     throw new Error(`${error}`);
   } finally {
     // abortController.abort();
+  }
+};
+
+export const removeUser = async ({
+  user_id,
+  project_id,
+}: ManageUserInProjectReq): Promise<Error | GetFreeUsers> => {
+  try {
+    const response = await fetch(`/api/team/deleteUser/${user_id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json", // Указываем тип содержимого
+      },
+      body: JSON.stringify({ project_id }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    return await response.json(); // Ожидание ответа в формате JSON
+  } catch (error) {
+    throw new Error(`Error: ${error}`);
   }
 };

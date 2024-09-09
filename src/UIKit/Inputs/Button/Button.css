@@ -4,6 +4,12 @@
 .add_dark {
   background-image: url(/public/img/plus.svg);
 }
+.cross_light {
+  background-image: url(/public/img/cross.svg);
+}
+.cross_dark {
+  background-image: url(/public/img/);
+}
 .back-image-center {
   background-repeat: no-repeat;
   background-position: center;
