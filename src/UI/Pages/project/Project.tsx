@@ -6,6 +6,7 @@ import { getTeam } from "../../../Api/projectApi";
 import { ProjectPai_UserRes } from "../../../Api/types";
 import Chat from "./Components/Chat/Chat";
 import Sidebar from "./Components/Sidebar/Sidebar";
+import TaskList from "./Components/Tasks/TaskList";
 const Project = () => {
   const location = useLocation();
   const state = location.state as CardData; // Приведение типа для использования state
@@ -18,7 +19,7 @@ const Project = () => {
           if (!(teamData instanceof Error)) {
             setUserList(teamData);
           }
-          console.log(teamData);
+          // console.log(teamData);
         })
         .catch((error) => {
           console.error("Error fetching team:", error);
@@ -32,7 +33,6 @@ const Project = () => {
       <Sidebar />
       {/* mainBlock */}
       <Wrapper className="flex-1 ml-6 p-3 min-h-96 rounded-lg relative">
-        {/* <p>{state.img}</p> */}
         <div className="flex border px-3 py-1 border-transparent border-b-slate-500">
           <p className="font-semibold text-xl mr-2 h-full">{state.title}</p>|
           <p className="font-normal text-xl ml-2 ">{state.description}</p>
@@ -40,9 +40,10 @@ const Project = () => {
             {userList?.length}
           </p>
         </div>
+        <TaskList project_id={state.id} />
       </Wrapper>
       {/* <ChatIcon /> */}
-      <Chat />
+      <Chat title={state.title} />
     </div>
   );
 };

@@ -22,7 +22,7 @@ const Card: React.FC<CardData> = ({ title, description, img, id }) => {
   };
   return (
     <div
-      className="flex flex-row items-center bg-white border
+      className="flex flex-row items-center border
       border-gray-200 rounded-lg shadow max-w-xl bg-zinc-200
       hover:bg-gray-100 w-full"
       onClick={redirectClickHandler}

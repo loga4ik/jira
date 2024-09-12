@@ -1,4 +1,4 @@
-import { ProjectPai_UserRes } from "./types";
+import { ProjectPai_UserRes, TaskAndSubtasks } from "./types";
 export type GetFreeUsers = {
   freeUsers: ProjectPai_UserRes[];
   activeUsers: ProjectPai_UserRes[];
@@ -100,6 +100,30 @@ export const removeUser = async ({
       throw new Error(`Error: ${response.status}`);
     }
 
+    return await response.json(); // Ожидание ответа в формате JSON
+  } catch (error) {
+    throw new Error(`Error: ${error}`);
+  }
+};
+
+export const getProjectTaskAndSubtasks = async (
+  project_id: number,
+  abortController: AbortController
+): Promise<Error | TaskAndSubtasks[]> => {
+  try {
+    const response = await fetch(
+      `/api/task/getTasksAndSubtasks/${project_id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json", // Указываем тип содержимого
+        },
+        signal: abortController.signal,
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
     return await response.json(); // Ожидание ответа в формате JSON
   } catch (error) {
     throw new Error(`Error: ${error}`);

@@ -5,4 +5,21 @@ type ProjectPai_UserRes = {
   surname: string;
   profile_image: string | null;
 };
-export type { ProjectPai_UserRes };
+
+type SubtaskType = {
+  id: number;
+  title: string;
+  task_id: number;
+  user_id: number;
+  status: string;
+};
+
+type TaskAndSubtasks = {
+  id: number;
+  project_id: number;
+  title: string;
+  description: string;
+  subtasks?: SubtaskType[];
+};
+
+export type { ProjectPai_UserRes, TaskAndSubtasks, SubtaskType };

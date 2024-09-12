@@ -3,6 +3,7 @@ export interface Message {
   user_id: number;
   text: string;
 }
+
 type OnMessageReceived = (message: Message) => void;
 
 const WEB_SOCKET_URL = "ws://localhost:4000/ws"; // URL вашего WebSocket сервера
@@ -26,7 +27,6 @@ export const connectWebSocket = (
   ws.onmessage = (event: MessageEvent) => {
     try {
       const parsedMessage: Message = JSON.parse(event.data);
-      console.log(parsedMessage);
       onMessageReceived(parsedMessage);
     } catch (error) {
       console.error("Error parsing WebSocket message:", error);

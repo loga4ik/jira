@@ -3,20 +3,24 @@ import { Button } from "../../../../../UIKit/Inputs/Button/Button";
 import "./ChatIcon.css";
 import ChatBoard from "./ChatBoard";
 
-const Chat: React.FC = () => {
+type Props = {
+  title: string;
+};
+
+const Chat: React.FC<Props> = ({ title }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className=" flex flex-col fixed bottom-0 right-0 m-3">
-      {isOpen && <ChatBoard />}
+    <div className=" flex flex-col fixed bottom-0 right-0 m-3 justify-end">
+      {isOpen && <ChatBoard title={title} />}
+
       <Button
         changableIconClass="chat-class"
         defaultBorder={false}
         defaultMP={false}
-        className="h-14 w-14 border place-self-end rounded-full "
+        className="h-10 w-10 border place-self-end rounded-full m-3"
         type="button"
         onClick={() => setIsOpen(!isOpen)}
       />
-      {/* <ChatBoard /> */}
     </div>
   );
 };
