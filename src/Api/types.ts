@@ -11,7 +11,7 @@ type SubtaskType = {
   title: string;
   task_id: number;
   user_id: number;
-  status: string;
+  status_id: number;
 };
 
 type TaskAndSubtasks = {

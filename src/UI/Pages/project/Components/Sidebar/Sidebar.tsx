@@ -36,7 +36,7 @@ const Sidebar = () => {
       />
       <Button
         type="button"
-        changableIconClass="user_add"
+        changableIconClass="edit"
         defaultMP={false}
         className="h-12 w-12 mb-5 border place-self-center"
         onClick={() => buttonClickHandler("edit")}

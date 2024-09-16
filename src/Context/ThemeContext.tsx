@@ -11,13 +11,11 @@ export const ThemeContext = createContext<ThemeContextType>(
   {} as ThemeContextType
 );
 
-interface ThemeProviderProps {
+export interface ProviderProps {
   children: ReactNode;
 }
 
-export const ThemeContextWrapper: React.FC<ThemeProviderProps> = ({
-  children,
-}) => {
+export const ThemeContextWrapper: React.FC<ProviderProps> = ({ children }) => {
   const localTheme = localStorage.getItem("theme");
   const initialTheme =
     localTheme === "light" || localTheme === "dark" ? localTheme : "light";

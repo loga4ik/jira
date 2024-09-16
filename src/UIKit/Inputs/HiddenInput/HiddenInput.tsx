@@ -2,13 +2,12 @@ import {
   ChangeEventHandler,
   forwardRef,
   ReactNode,
-  useMemo,
   useState,
 } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
-import Input from "./Input";
-import { Button } from "./Button/Button";
 import "./HiddenInput.css";
+import Input from "../Input";
+import { Button } from "../Button/Button";
 type Props = {
   inputType: "text" | "password" | "masked";
   className?: string;

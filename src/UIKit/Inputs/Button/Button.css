@@ -10,6 +10,18 @@
 .cross_dark {
   background-image: url(/public/img/);
 }
+.edit_light {
+  background-image: url(/public/img/edit.svg);
+}
+.close_edit_light {
+  background-image: url(/public/img/edit_crossed.svg);
+}
+.edit_dark {
+  background-image: url(/public/img/edit_dark.svg);
+}
+.close_edit_dark {
+  background-image: url(/public/img/edit_crossed_dark.svg);
+}
 .back-image-center {
   background-repeat: no-repeat;
   background-position: center;

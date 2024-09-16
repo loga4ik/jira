@@ -1,6 +1,6 @@
 import React, { BaseSyntheticEvent, ReactNode, useContext } from "react";
 import { ThemeContext } from "../../../Context/ThemeContext";
-import './Button.css'
+import "./Button.css";
 
 type Props = {
   className?: string;
@@ -31,7 +31,6 @@ export const Button: React.FC<Props> = ({
       <button
         type={type}
         className={`
-        ${className} 
         ${defaultMP && "mx-2 my-4 px-5 py-1"} 
         ${defaultBorder && "border-gray-100 outline-inherit rounded-md"} 
         ${
@@ -44,7 +43,9 @@ export const Button: React.FC<Props> = ({
           theme === "dark"
             ? "dark_out_small text_dark"
             : "light_out_small text_light"
-        } back-image-center`}
+        } 
+        ${className} 
+        back-image-center`}
         // w-fit
         onClick={onClick}
       >

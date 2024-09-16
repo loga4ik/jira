@@ -24,10 +24,6 @@ const TaskList: React.FC<Props> = ({ project_id }) => {
     };
   }, [project_id]);
 
-  useEffect(() => {
-    console.log(tasks);
-  }, [tasks]);
-
   return (
     <div>
       {tasks?.map((task) => (

@@ -6,7 +6,7 @@ type Props = {
 };
 export const Task: React.FC<Props> = ({ data }) => {
   return (
-    <div className="border rounded-lg border-slate-500 m-5 px-2 h-36 flex">
+    <div className="border rounded-lg border-slate-500 m-5 px-2 flex">
       <div className="flex-1 border border-r-slate-500">
         <p className="font-semibold text-lg pt-1">{data.title}</p>
         <p className="mx-1">
