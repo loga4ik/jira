@@ -1,10 +1,11 @@
 :root {
-  --main-bg-color: rgb(224, 224, 224);
+  --main-bg-color: #e0e0e0;
   --main-text-color: #575757;
   --main-bg-color-dark: #3b3b3b;
   --main-text-color-dark: #9b9b9b;
   --main-bg-light-gradient: linear-gradient(145deg, #f0f0f0, #e4e4e4);
 }
+
 body {
   margin: 0;
   height: 100%;
@@ -50,6 +51,11 @@ p {
   background-color: #404040;
   box-shadow: inset 5px 5px 10px #363636, inset -5px -5px 10px #4a4a4a;
 }
+.light_in_small {
+  background-color: var(--main-bg-light-gradient);
+  box-shadow: inset 5px 5px 10px #c4c4c4,
+    inset -5px -5px 10px var(--main-bg-light-gradient);
+}
 .dark_out_big {
   background-color: #404040;
   box-shadow: 30px 30px 60px #363636, -30px -30px 60px #4a4a4a;
@@ -63,8 +69,8 @@ p {
   outline: none;
 }
 .light_out_small {
-  background-color: var(--main-bg-light-gradient);
-  box-shadow: 6px 6px 14px #c4c4c4, -6px -6px 14px #ffffff;
+  background-color: #dfdfdf;
+  box-shadow: 6px 6px 14px #c4c4c4, -6px -6px 14px #ebebeb;
 }
 .light_out_big {
   background-color: var(--main-bg-light-gradient);

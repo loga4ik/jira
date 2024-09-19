@@ -32,20 +32,21 @@ export const Button: React.FC<Props> = ({
         type={type}
         className={`
         ${defaultMP && "mx-2 my-4 px-5 py-1"} 
-        ${defaultBorder && "border-gray-100 outline-inherit rounded-md"} 
+        ${defaultBorder && "border-gray-200 outline-inherit rounded-md"} 
         ${
           changableIconClass
             ? theme !== "dark"
               ? changableIconClass + "_light"
               : changableIconClass + "_dark"
             : ""
-        } ${
+        } 
+        ${
           theme === "dark"
             ? "dark_out_small text_dark"
             : "light_out_small text_light"
         } 
         ${className} 
-        back-image-center`}
+        back-image-center `}
         // w-fit
         onClick={onClick}
       >

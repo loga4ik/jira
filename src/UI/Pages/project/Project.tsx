@@ -1,34 +1,33 @@
 import { useLocation } from "react-router-dom";
 import { CardData } from "../../../UIKit/Card";
 import { Wrapper } from "../../../UIKit/Wrapper";
-import { useContext, useEffect, useState } from "react";
-import { getTeam } from "../../../Api/projectApi";
-import { ProjectPai_UserRes } from "../../../Api/types";
+import { useEffect, useState } from "react";
+import { UserType } from "../../../Lib/Slices/projectSlice/types";
 import Chat from "./Components/Chat/Chat";
 import Sidebar from "./Components/Sidebar/Sidebar";
 import TaskList from "./Components/Tasks/TaskList";
-import {
-  ProjectContext,
-  ProjectContextWrapper,
-} from "../../../Context/ProjectConstext";
+import { ProjectContextWrapper } from "../../../Context/ProjectConstext";
+import { AppDispatch, RootState } from "../../../Lib/store";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserList } from "../../../Lib/Slices/projectSlice/projectSlice";
 const Project = () => {
   const location = useLocation();
   const state = location.state as CardData; // Приведение типа для использования state
-  const [userList, setUserList] = useState<ProjectPai_UserRes[]>();
+  const userList = useSelector((state: RootState) => state.project.userList);
+
+  // const [userList, setUserList] = useState<UserType[]>();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    if (state.id) {
-      getTeam(state.id)
-        .then((teamData) => {
-          if (!(teamData instanceof Error)) {
-            setUserList(teamData);
-          }
-          // console.log(teamData);
+    (async () => {
+      const abortController = new AbortController();
+      await dispatch(
+        getUserList({
+          project_id: state.id,
+          abortController,
         })
-        .catch((error) => {
-          console.error("Error fetching team:", error);
-        });
-    }
+      );
+    })();
   }, [state.id]);
 
   return (

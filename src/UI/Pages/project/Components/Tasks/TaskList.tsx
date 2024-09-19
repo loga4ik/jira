@@ -1,27 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { TaskAndSubtasks } from "../../../../../Api/types";
-import { getProjectTaskAndSubtasks } from "../../../../../Api/projectApi";
 import { Task } from "./Task";
+import { AppDispatch, RootState } from "../../../../../Lib/store";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getTasksAndSubtasks } from "../../../../../Lib/Slices/projectSlice/projectSlice";
 type Props = {
   project_id: number;
 };
 const TaskList: React.FC<Props> = ({ project_id }) => {
-  const [tasks, setTasks] = useState<TaskAndSubtasks[]>();
+  const tasks = useSelector((state: RootState) => state.project.tasks);
+  const dispatch = useDispatch<AppDispatch>();
+  
   useEffect(() => {
-    const abortController = new AbortController();
     (async () => {
-      const updatedData = await getProjectTaskAndSubtasks(
-        project_id,
-        abortController
+      const abortController = new AbortController();
+      await dispatch(
+        getTasksAndSubtasks({
+          project_id: project_id,
+          abortController,
+        })
       );
-
-      if (!(updatedData instanceof Error)) {
-        setTasks(updatedData);
-      }
     })();
-    return () => {
-      abortController.abort();
-    };
   }, [project_id]);
 
   return (

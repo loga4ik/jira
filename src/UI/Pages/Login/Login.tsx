@@ -3,11 +3,11 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { AppDispatch } from "../../../Lib/store";
 import { UserLoginData } from "../../../types/UserTypes";
-import { loginUser } from "../../../Lib/Slices/userSlice/userSlice";
 import { Wrapper } from "../../../UIKit/Wrapper";
 import Input from "../../../UIKit/Inputs/Input";
 import { Button } from "../../../UIKit/Inputs/Button/Button";
 import HiddenInput from "../../../UIKit/Inputs/HiddenInput/HiddenInput";
+import { loginUser } from "../../../Lib/Slices/userSlice/userSlice";
 
 const Login = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,7 +22,6 @@ const Login = () => {
 
   const formOnSubmitHandler = (data: UserLoginData) => {
     (async () => {
-      console.log(data);
       const query = await dispatch(loginUser(data));
       query.meta.requestStatus === "fulfilled" && navigate("/");
     })();

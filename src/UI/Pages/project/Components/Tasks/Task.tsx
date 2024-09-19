@@ -1,13 +1,17 @@
-import React from "react";
-import { TaskAndSubtasks } from "../../../../../Api/types";
+import { TaskType } from "../../../../../Lib/Slices/projectSlice/types";
 import Subtask from "./Subtask";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../Lib/store";
+
 type Props = {
-  data: TaskAndSubtasks;
+  data: TaskType;
 };
+
 export const Task: React.FC<Props> = ({ data }) => {
+  const subtasks = useSelector((state: RootState) => state.project.subtasks);
   return (
     <div className="border rounded-lg border-slate-500 m-5 px-2 flex">
-      <div className="flex-1 border border-r-slate-500">
+      <div className="flex-1 border border-transparent border-r-slate-500">
         <p className="font-semibold text-lg pt-1">{data.title}</p>
         <p className="mx-1">
           Lorem, ipsum dolor sit amet consectetur adipisicing elit. Recusandae
@@ -17,9 +21,12 @@ export const Task: React.FC<Props> = ({ data }) => {
         </p>
       </div>
       <div className="flex-1 p-2">
-        {data.subtasks?.map((subtask) => (
-          <Subtask key={subtask.id} data={subtask} />
-        ))}
+        {subtasks?.map(
+          (subtask) =>
+            subtask.task_id === data.id && (
+              <Subtask key={subtask.id} data={subtask} />
+            )
+        )}
       </div>
     </div>
   );

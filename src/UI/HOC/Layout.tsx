@@ -10,7 +10,6 @@ import {
 } from "../../Lib/Slices/userSlice/userSlice";
 import { ThemeSwitcher } from "../../UIKit/themeSwicher/ThemeSwitcher";
 import { Button } from "../../UIKit/Inputs/Button/Button";
-import { getUserProjects } from "../../Lib/Slices/projectSlice/projectSlice";
 
 export const Layout = () => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
@@ -26,12 +25,6 @@ export const Layout = () => {
       !query.payload && navigate("/login");
     })();
   }, [dispatch]);
-
-  useEffect(() => {
-    if (currentUser?.id) {
-      dispatch(getUserProjects({ id: currentUser.id }));
-    }
-  }, [dispatch, currentUser]);
 
   const LogOut = () => {
     dispatch(setAllUserDefault());

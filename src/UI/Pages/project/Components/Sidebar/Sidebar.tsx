@@ -24,21 +24,21 @@ const Sidebar = () => {
         type="button"
         changableIconClass="user_add"
         defaultMP={false}
-        className="h-12 w-12 mb-5 border place-self-center"
+        className="h-12 w-12 mb-5  place-self-center"
         onClick={() => buttonClickHandler("add_user")}
       />
       <Button
         type="button"
         changableIconClass="bin"
         defaultMP={false}
-        className="h-12 w-12 mb-5 border place-self-center"
+        className="h-12 w-12 mb-5  place-self-center"
         onClick={() => buttonClickHandler("delete")}
       />
       <Button
         type="button"
         changableIconClass="edit"
         defaultMP={false}
-        className="h-12 w-12 mb-5 border place-self-center"
+        className="h-12 w-12 mb-5  place-self-center"
         onClick={() => buttonClickHandler("edit")}
       />
       {openElement && (

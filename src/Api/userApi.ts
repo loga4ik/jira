@@ -1,23 +1,21 @@
+import { GetFreeUsers } from "./projectApi";
 import { UserType } from "../Lib/Slices/projectSlice/types";
-export type GetFreeUsers = {
-  freeUsers: UserType[];
-  activeUsers: UserType[];
-};
 
-
-export const userProjects = async (
-  id: number,
-  abortController: AbortController
-) => {
+export const getUserList = async (
+  project_id: number
+): Promise<Error | UserType[]> => {
   try {
-    const response = await fetch(`/api/project/getUserProjects/${id}`, {
-      method: "GET",
+    console.log(project_id);
+
+    const response = await fetch(`/api/project/getFreeUsers`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      signal: abortController.signal,
+      body: JSON.stringify({
+        project_id,
+      }),
     });
-
     if (!response.ok) {
       throw new Error(`${response.status}`);
     }

@@ -27,7 +27,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
     ref
   ) => {
     const defaultClassNames =
-      "border mx-2 my-2 px-3 py-1 h-8 rounded-md outline-inherit border-gray-200";
+      "border m-2 px-3 py-1 h-8 rounded-md outline-inherit border-gray-200";
     if (inputType === "masked") {
       return (
         <InputMask

@@ -1,34 +1,38 @@
 import { useEffect, useState } from "react";
-import {
-  addUserInProject,
-  GetFreeUsers,
-  getUserList,
-  removeUser,
-} from "../../../../../Api/projectApi";
-import { Button } from "../../../../../UIKit/Inputs/Button/Button";
+import { GetFreeUsers } from "../../../../../Api/projectApi";
 import { useLocation } from "react-router-dom";
 import { CardData } from "../../../../../UIKit/Card";
+import { getUserList } from "../../../../../Api/userApi";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../../Lib/store";
+import { Button } from "../../../../../UIKit/Inputs/Button/Button";
+import {
+  addUserInProject,
+  removeUserInProject,
+} from "../../../../../Lib/Slices/projectSlice/projectSlice";
+import { UserType } from "../../../../../Lib/Slices/projectSlice/types";
 
 const AddUser = () => {
   const [userList, setUserList] = useState<GetFreeUsers | undefined>(undefined);
+  const [freeUsers, setFreeUsers] = useState<UserType[]>();
+  
   const location = useLocation();
   const state = location.state as CardData; // Приведение типа для использования state
-
-  // Функция для обновления данных пользователя
-  const fetchUserList = async () => {
-    try {
-      const teamData = await getUserList(state.id);
-      if (!(teamData instanceof Error)) {
-        setUserList(teamData);
-      }
-      console.log(teamData);
-    } catch (error) {
-      console.error("Error fetching team:", error);
-    }
-  };
-
+  const activeUsers = useSelector((state: RootState) => state.project.userList);
+  const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-    fetchUserList(); // Загрузка данных при монтировании компонента
+    (async () => {
+      try {
+        const teamData = await getUserList(state.id);
+
+        if (!(teamData instanceof Error)) {
+          setUserList({ activeUsers: activeUsers, freeUsers: teamData });
+        }
+        console.log(teamData);
+      } catch (error) {
+        console.error("Error fetching team:", error);
+      }
+    })(); // Загрузка данных при монтировании компонента
   }, []);
 
   useEffect(() => {
@@ -36,31 +40,26 @@ const AddUser = () => {
   }, [userList]);
 
   const addClickHandler = async (user_id: number) => {
-    try {
-      const updatedData = await addUserInProject({ user_id, project_id: state.id });
-      if (!(updatedData instanceof Error)) {
-        setUserList(updatedData);
-      }
-    } catch (error) {
-      console.error("Error adding user:", error);
-    }
+    const abortController = new AbortController();
+    const res = dispatch(
+      addUserInProject({ user_id, project_id: state.id, abortController })
+    );
+
+    console.log(res);
   };
 
   const removeClickHandler = async (user_id: number) => {
-    try {
-      const updatedData = await removeUser({ user_id, project_id: state.id });
-      if (!(updatedData instanceof Error)) {
-        setUserList(updatedData);
-      }
-    } catch (error) {
-      console.error("Error removing user:", error);
-    }
+    const abortController = new AbortController();
+    dispatch(
+      removeUserInProject({ user_id, project_id: state.id, abortController })
+    );
   };
 
   return (
     <div>
       Уже на проекте:
-      {userList && userList.activeUsers.length > 0 &&
+      {userList &&
+        userList.activeUsers.length > 0 &&
         userList.activeUsers.map((user) => (
           <div className="flex" key={user.id}>
             <p>
@@ -75,7 +74,8 @@ const AddUser = () => {
           </div>
         ))}
       Добавить:
-      {userList && userList.freeUsers.length > 0 &&
+      {userList &&
+        userList.freeUsers.length > 0 &&
         userList.freeUsers.map((user) => (
           <div className="flex" key={user.id}>
             <p>

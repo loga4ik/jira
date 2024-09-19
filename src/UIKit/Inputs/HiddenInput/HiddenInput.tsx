@@ -27,7 +27,7 @@ const HiddenInput = forwardRef<HTMLInputElement, Props>(
       >
         <Input
           ref={ref}
-          className="m-0 m-0 w-full px-3 py-1 h-8"
+          className="m-0 w-full px-3 py-1 h-8"
           inputType={isOpen ? "text" : "password"}
           placeholder={placeholder}
           register={register}
