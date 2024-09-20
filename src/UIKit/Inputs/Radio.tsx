@@ -7,8 +7,6 @@ type Props = {
 };
 
 export const Radio: React.FC<Props> = ({ label, value, register }) => {
-  console.log(label, value);
-
   return (
     <div className="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem]">
       <input
@@ -18,9 +16,7 @@ export const Radio: React.FC<Props> = ({ label, value, register }) => {
         defaultChecked={false}
         {...register}
       />
-      <label
-        className="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
-      >
+      <label className="mt-px inline-block pl-[0.15rem] hover:cursor-pointer">
         {label}
       </label>
     </div>

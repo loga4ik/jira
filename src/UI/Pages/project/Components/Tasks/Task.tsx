@@ -2,6 +2,7 @@ import { TaskType } from "../../../../../Lib/Slices/projectSlice/types";
 import Subtask from "./Subtask";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../Lib/store";
+import { useEffect } from "react";
 
 type Props = {
   data: TaskType;
@@ -9,6 +10,10 @@ type Props = {
 
 export const Task: React.FC<Props> = ({ data }) => {
   const subtasks = useSelector((state: RootState) => state.project.subtasks);
+  useEffect(() => {
+    console.log(subtasks);
+  }, [subtasks]);
+
   return (
     <div className="border rounded-lg border-slate-500 m-5 px-2 flex">
       <div className="flex-1 border border-transparent border-r-slate-500">

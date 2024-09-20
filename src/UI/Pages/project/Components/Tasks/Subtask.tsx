@@ -4,6 +4,8 @@ import { Button } from "../../../../../UIKit/Inputs/Button/Button";
 import Modal from "../../../../../UIKit/Modal/Modal";
 import { ProjectContext } from "../../../../../Context/ProjectConstext";
 import SubtaskEdit from "./SubtaskEdit";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../Lib/store";
 type Props = {
   data: SubtaskType;
 };
@@ -11,6 +13,7 @@ type Props = {
 const Subtask: React.FC<Props> = ({ data }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { statuses } = useContext(ProjectContext);
+  const activeUsers = useSelector((state: RootState) => state.project.userList);
 
   const closeModal = () => {
     setIsOpen(false);
@@ -20,9 +23,11 @@ const Subtask: React.FC<Props> = ({ data }) => {
     <div className="flex justify-between items-center">
       <div className="flex flex-row justify-between items-center">
         <p>{data.title}</p>
-        <p className="ml-2 border-2 rounded-md mr-2 py-1 px-2 bg-teal-200">
-          {statuses[data.status_id]}
-        </p>
+        {data.user_id && (
+          <p className="ml-2 border-2 rounded-md mr-2 py-1 px-2 bg-teal-200">
+            {activeUsers.find((user) => user.id === data.user_id)?.login}
+          </p>
+        )}
       </div>
       <div>
         <div className="flex flex-row justify-between items-center">

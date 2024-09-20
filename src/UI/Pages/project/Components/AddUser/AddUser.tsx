@@ -1,66 +1,65 @@
 import { useEffect, useState } from "react";
-import { GetFreeUsers } from "../../../../../Api/projectApi";
 import { useLocation } from "react-router-dom";
 import { CardData } from "../../../../../UIKit/Card";
 import { getUserList } from "../../../../../Api/userApi";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../../Lib/store";
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
+import { UserType } from "../../../../../Lib/Slices/projectSlice/types";
 import {
   addUserInProject,
   removeUserInProject,
-} from "../../../../../Lib/Slices/projectSlice/projectSlice";
-import { UserType } from "../../../../../Lib/Slices/projectSlice/types";
+} from "../../../../../Lib/Slices/projectSlice/projectApi";
 
 const AddUser = () => {
-  const [userList, setUserList] = useState<GetFreeUsers | undefined>(undefined);
-  const [freeUsers, setFreeUsers] = useState<UserType[]>();
-  
+  const [freeUsers, setFreeUsers] = useState<UserType[]>([]);
+  const activeUsers = useSelector((state: RootState) => state.project.userList);
+
+  const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
   const state = location.state as CardData; // Приведение типа для использования state
-  const activeUsers = useSelector((state: RootState) => state.project.userList);
-  const dispatch = useDispatch<AppDispatch>();
+
   useEffect(() => {
     (async () => {
       try {
         const teamData = await getUserList(state.id);
 
         if (!(teamData instanceof Error)) {
-          setUserList({ activeUsers: activeUsers, freeUsers: teamData });
+          setFreeUsers(teamData);
         }
-        console.log(teamData);
       } catch (error) {
         console.error("Error fetching team:", error);
       }
     })(); // Загрузка данных при монтировании компонента
   }, []);
 
-  useEffect(() => {
-    console.log(userList);
-  }, [userList]);
-
   const addClickHandler = async (user_id: number) => {
     const abortController = new AbortController();
-    const res = dispatch(
+    const res = await dispatch(
       addUserInProject({ user_id, project_id: state.id, abortController })
     );
-
-    console.log(res);
+    if (res.payload) {
+      setFreeUsers(freeUsers.filter((user) => user.id !== user_id));
+    }
   };
 
   const removeClickHandler = async (user_id: number) => {
     const abortController = new AbortController();
-    dispatch(
+    const res = await dispatch(
       removeUserInProject({ user_id, project_id: state.id, abortController })
     );
+
+    if (res.payload) {
+      const deletedUser = activeUsers.filter((user) => user.id === user_id);
+      setFreeUsers([...freeUsers, deletedUser[0]]);
+    }
   };
 
   return (
     <div>
       Уже на проекте:
-      {userList &&
-        userList.activeUsers.length > 0 &&
-        userList.activeUsers.map((user) => (
+      {activeUsers.length > 0 &&
+        activeUsers.map((user) => (
           <div className="flex" key={user.id}>
             <p>
               Name: {user.name} Login: {user.login}{" "}
@@ -74,9 +73,8 @@ const AddUser = () => {
           </div>
         ))}
       Добавить:
-      {userList &&
-        userList.freeUsers.length > 0 &&
-        userList.freeUsers.map((user) => (
+      {freeUsers.length > 0 &&
+        freeUsers.map((user) => (
           <div className="flex" key={user.id}>
             <p>
               Name: {user.name} Login: {user.login}{" "}

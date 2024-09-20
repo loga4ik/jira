@@ -1,12 +1,9 @@
-import { GetFreeUsers } from "./projectApi";
 import { UserType } from "../Lib/Slices/projectSlice/types";
 
 export const getUserList = async (
   project_id: number
 ): Promise<Error | UserType[]> => {
   try {
-    console.log(project_id);
-
     const response = await fetch(`/api/project/getFreeUsers`, {
       method: "POST",
       headers: {

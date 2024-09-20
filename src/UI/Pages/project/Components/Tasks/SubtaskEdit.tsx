@@ -3,9 +3,9 @@ import { useForm } from "react-hook-form";
 import Input from "../../../../../UIKit/Inputs/Input";
 import { Radio } from "../../../../../UIKit/Inputs/Radio";
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../../Lib/store";
 import { updateSubtask } from "../../../../../Lib/Slices/projectSlice/projectApi";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../../Lib/store";
 
 type ChangeSabtask = {
   title: string;
@@ -19,6 +19,7 @@ type Props = {
 
 const SubtaskEdit: React.FC<Props> = ({ subtask, closeModal }) => {
   const userList = useSelector((state: RootState) => state.project.userList);
+  const dispatch = useDispatch<AppDispatch>();
 
   const { handleSubmit, register } = useForm<ChangeSabtask>({
     defaultValues: {
@@ -29,8 +30,15 @@ const SubtaskEdit: React.FC<Props> = ({ subtask, closeModal }) => {
 
   const formOnSubmitHandler = (data: ChangeSabtask) => {
     (async () => {
-      const res = updateSubtask(subtask.id, data.user_id, data.title);
-      console.log(res);
+      const abortController = new AbortController();
+      dispatch(
+        updateSubtask({
+          id: subtask.id,
+          user_id: data.user_id,
+          title: data.title,
+          abortController,
+        })
+      );
       closeModal();
     })();
   };

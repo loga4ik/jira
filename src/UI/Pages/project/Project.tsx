@@ -1,15 +1,14 @@
 import { useLocation } from "react-router-dom";
 import { CardData } from "../../../UIKit/Card";
 import { Wrapper } from "../../../UIKit/Wrapper";
-import { useEffect, useState } from "react";
-import { UserType } from "../../../Lib/Slices/projectSlice/types";
+import { useEffect } from "react";
 import Chat from "./Components/Chat/Chat";
 import Sidebar from "./Components/Sidebar/Sidebar";
 import TaskList from "./Components/Tasks/TaskList";
 import { ProjectContextWrapper } from "../../../Context/ProjectConstext";
 import { AppDispatch, RootState } from "../../../Lib/store";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserList } from "../../../Lib/Slices/projectSlice/projectSlice";
+import { getUserList } from "../../../Lib/Slices/projectSlice/projectApi";
 const Project = () => {
   const location = useLocation();
   const state = location.state as CardData; // Приведение типа для использования state

@@ -2,7 +2,7 @@ import { Task } from "./Task";
 import { AppDispatch, RootState } from "../../../../../Lib/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { getTasksAndSubtasks } from "../../../../../Lib/Slices/projectSlice/projectSlice";
+import { getTasksAndSubtasks } from "../../../../../Lib/Slices/projectSlice/projectApi";
 type Props = {
   project_id: number;
 };
