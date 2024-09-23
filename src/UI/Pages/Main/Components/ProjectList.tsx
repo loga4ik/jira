@@ -22,9 +22,6 @@ export const ProjectList: React.FC = () => {
       })();
     return () => abortController.abort();
   }, [currentUser]);
-  useEffect(() => {
-    console.log(projectList);
-  }, [projectList]);
 
   return (
     <>

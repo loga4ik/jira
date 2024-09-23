@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   ManageUserInProjectReqType,
+  Project,
   SubtaskType,
   TaskAndSubtasks,
   UserType,
@@ -150,6 +151,30 @@ export const updateSubtask = createAsyncThunk<
         signal: abortController.signal,
       });
       return (await response.json()) as SubtaskType; // Возвращаем успешный результат
+    } catch (error) {
+      return thunkAPI.rejectWithValue(`${error}`);
+    }
+  }
+);
+
+export const getProjectData = createAsyncThunk<
+  Project, // Ожидаемый тип успешного ответа
+  ReqProject_idType, // Тип аргументов
+  { rejectValue: string } // Тип для ошибки
+>(
+  "getProjectData",
+  async ({ project_id, abortController }: ReqProject_idType, thunkAPI) => {
+    try {
+      const response = await fetch(`/api/project/${project_id}`, {
+        method: "get",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        signal: abortController.signal,
+      });
+      const res = await response.json();
+
+      return res[0] as Project; // Возвращаем успешный результат
     } catch (error) {
       return thunkAPI.rejectWithValue(`${error}`);
     }

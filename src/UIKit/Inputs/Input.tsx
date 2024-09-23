@@ -3,11 +3,11 @@ import { ChangeEventHandler, ReactNode, forwardRef } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 
 type Props = {
-  inputType: "text" | "password" | "masked";
+  inputType: "text" | "password" | "masked" | "textarea";
   className?: string;
   placeholder?: string;
   value?: string;
-  onChange?: ChangeEventHandler<HTMLInputElement>;
+  onChange?: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
   children?: ReactNode;
   register?: UseFormRegisterReturn;
   useDefaultStyles?: boolean;
@@ -27,7 +27,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
     ref
   ) => {
     const defaultClassNames =
-      "border m-2 px-3 py-1 h-8 rounded-md outline-inherit border-gray-200";
+      "border m-2 px-3 py-1 rounded-md outline-inherit border-gray-200";
     if (inputType === "masked") {
       return (
         <InputMask
@@ -35,6 +35,18 @@ const Input = forwardRef<HTMLInputElement, Props>(
           replacement={{ _: /\d/ }}
           placeholder={placeholder}
           className={`${className} ${defaultClassNames}`}
+          {...register}
+        />
+      );
+    } else if (inputType === "textarea") {
+      return (
+        <textarea
+          ref={ref as React.Ref<HTMLTextAreaElement>} // Преобразуем ref для textarea
+          className={`${useDefaultStyles && defaultClassNames} ${className}`}
+          rows={3}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
           {...register}
         />
       );

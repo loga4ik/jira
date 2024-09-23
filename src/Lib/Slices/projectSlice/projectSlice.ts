@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { Project, SubtaskType, TaskType, UserType } from "./types";
 import {
   addUserInProject,
+  getProjectData,
   getTasksAndSubtasks,
   getUserList,
   removeUserInProject,
@@ -45,9 +46,11 @@ const projectSlice = createSlice({
     element.addCase(removeUserInProject.fulfilled, (state, action) => {
       state.userList = action.payload.activeUsers;
     });
+    element.addCase(getProjectData.fulfilled, (state, action) => {
+      state.project = action.payload;
+      console.log(action.payload);
+    });
     element.addCase(updateSubtask.fulfilled, (state, action) => {
-      console.log(action);
-
       state.subtasks = state.subtasks.map((subtask) =>
         subtask.id === action.payload.id ? action.payload : subtask
       );

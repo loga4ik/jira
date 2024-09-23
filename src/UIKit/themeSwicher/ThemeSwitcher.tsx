@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import "./ThemeSwitcher.css";
 import { ThemeContext } from "../../Context/ThemeContext";
 import { useLocalStorage } from "../../Hooks/useLocalStorage";
