@@ -21,6 +21,7 @@ export type EditProjectType = {
     }[];
   }[];
 };
+
 type Props = {
   closeModal: () => void;
 };

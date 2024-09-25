@@ -1,0 +1,14 @@
+.form_subtask {
+  position: relative;
+  margin-left: 1rem;
+}
+
+.form_subtask::before {
+  content: "";
+  display: block;
+  width: 4px;
+  height: 110%;
+  background-color: var(--main-text-color);
+  position: absolute;
+  border-radius: 10rem;
+}
