@@ -6,6 +6,7 @@ import {
   getTasksAndSubtasks,
   getUserList,
   removeUserInProject,
+  updateAllProject,
   updateSubtask,
 } from "./projectApi";
 
@@ -48,6 +49,11 @@ const projectSlice = createSlice({
     });
     element.addCase(getProjectData.fulfilled, (state, action) => {
       state.project = action.payload;
+    });
+    element.addCase(updateAllProject.fulfilled, (state, action) => {
+      state.project = action.payload.project;
+      state.tasks = action.payload.tasks;
+      state.subtasks = action.payload.subtasks;
       console.log(action.payload);
     });
     element.addCase(updateSubtask.fulfilled, (state, action) => {

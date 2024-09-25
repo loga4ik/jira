@@ -10,7 +10,7 @@ import { RootState } from "../../../../../Lib/store";
 import ChatMessage from "./ChatMessage";
 
 type Props = {
-  title: string;
+  title?: string;
 };
 
 const ChatBoard: React.FC<Props> = ({ title }) => {

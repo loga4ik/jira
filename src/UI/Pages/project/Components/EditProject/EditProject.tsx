@@ -1,19 +1,18 @@
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../../Lib/store";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
 import { Wrapper } from "../../../../../UIKit/Wrapper";
 import Input from "../../../../../UIKit/Inputs/Input";
 import { SubtaskForm } from "./SubtaskForm";
 import "./EditProject.css";
+import { updateAllProject } from "../../../../../Lib/Slices/projectSlice/projectApi";
 
 export type EditProjectType = {
   title: string;
   description: string;
-  img: string | null;
-  gitLink: string | null;
+  project_id: number;
   tasks: {
     title: string;
     description: string;
@@ -22,51 +21,53 @@ export type EditProjectType = {
     }[];
   }[];
 };
-
-const EditProject = () => {
-  const navigate = useNavigate();
+type Props = {
+  closeModal: () => void;
+};
+const EditProject: React.FC<Props> = ({ closeModal }) => {
+  // const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const { project, tasks, subtasks } = useSelector(
-    (state: RootState) => state.project
-  );
+  const {
+    project,
+    tasks: reduxTasks,
+    subtasks: reduxSubtasks,
+  } = useSelector((state: RootState) => state.project);
 
-  const { watch, handleSubmit, control, reset } = useForm<EditProjectType>({
+  const { handleSubmit, control, reset } = useForm<EditProjectType>({
     defaultValues: {
       title: project?.title,
       description: project?.description,
+      project_id: project?.id,
       tasks: [],
     },
   });
 
-  const {
-    fields: taskFields,
-    append: tasksAppend,
-    remove: tasksRemove,
-  } = useFieldArray({
+  const { fields: taskFields } = useFieldArray({
     control,
     name: "tasks",
   });
 
   useEffect(() => {
-    if (project && tasks && subtasks) {
+    if (project && reduxTasks && reduxSubtasks) {
       reset({
         title: project.title,
         description: project.description,
-        tasks: tasks.map((task) => ({
+        project_id: project.id,
+        tasks: reduxTasks.map((task) => ({
           ...task,
-          subtasks: subtasks.filter((subtask) => subtask.task_id === task.id),
+          subtasks: reduxSubtasks
+            .filter((reduxSubtasks) => reduxSubtasks.task_id === task.id)
+            .map((reduxSubtasks) => ({ ...reduxSubtasks })),
         })),
       });
     }
-  }, [project, tasks, subtasks, reset]);
+  }, [project, reduxTasks, reduxSubtasks, reset]);
 
   const formHandleSubmit = (data: EditProjectType) => {
-    // Dispatch the form data
     console.log(data);
-  };
-
-  const GoBackHandleSubmit = () => {
-    navigate("/");
+    
+    dispatch(updateAllProject(data));
+    closeModal();
   };
 
   return (
@@ -103,7 +104,7 @@ const EditProject = () => {
         </div>
         <div className="flex flex-wrap">
           {taskFields.map((task, task_id) => (
-            <Wrapper key={task_id} className="aimForm-task rounded-xl m-3">
+            <Wrapper key={task_id} className="aimForm-task rounded-xl m-3 w-96">
               <Controller
                 name={`tasks.${task_id}.title`}
                 control={control}
@@ -116,32 +117,12 @@ const EditProject = () => {
                   />
                 )}
               />
-              <div className="subTask">
-                <SubtaskForm control={control} task={task} task_id={task_id} />
+              <div className="subTask mb-3">
+                <SubtaskForm control={control} task_id={task_id} />
               </div>
-              <Button
-                className="form_btn"
-                type="button"
-                onClick={() => tasksRemove(task_id)}
-              >
-                удалить
-              </Button>
             </Wrapper>
           ))}
         </div>
-        <Button
-          className="form_btn"
-          type="button"
-          onClick={() =>
-            tasksAppend({
-              title: "",
-              description: "",
-              subtasks: [{ title: "" }],
-            })
-          }
-        >
-          добавить
-        </Button>
         <Button className="form_btn" type="submit">
           сохранить
         </Button>

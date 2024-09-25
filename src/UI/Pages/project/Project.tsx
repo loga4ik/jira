@@ -16,7 +16,9 @@ import {
 const Project = () => {
   const location = useLocation();
   const state = location.state as CardData | null; // Allow null type for state
-  const userList = useSelector((state: RootState) => state.project.userList);
+  const { userList, project } = useSelector(
+    (state: RootState) => state.project
+  );
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -45,8 +47,13 @@ const Project = () => {
         <Wrapper className="flex-1 ml-6 p-3 min-h-96 rounded-lg relative">
           {state && (
             <div className="flex border px-3 py-1 border-transparent border-b-slate-500">
-              <p className="font-semibold text-xl mr-2 h-full">{state.title}</p>
-              |<p className="font-normal text-xl ml-2 ">{state.description}</p>
+              <p className="font-semibold text-xl mr-2 h-full">
+                {project?.title}
+              </p>
+              |
+              <p className="font-normal text-xl ml-2 ">
+                {project?.description}
+              </p>
               <p className="absolute right-5 font-semibold text-xl">
                 {userList?.length}
               </p>
@@ -55,7 +62,7 @@ const Project = () => {
           {state && <TaskList project_id={state.id} />}
         </Wrapper>
         {/* <ChatIcon /> */}
-        {state && <Chat title={state.title} />}
+        {state && <Chat title={project?.title} />}
       </div>
     </ProjectContextWrapper>
   );

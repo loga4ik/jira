@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^2.1.8",
     "@react-input/mask": "^1.2.5",
     "@reduxjs/toolkit": "^2.2.7",
     "@vitejs/plugin-react": "^4.3.1",

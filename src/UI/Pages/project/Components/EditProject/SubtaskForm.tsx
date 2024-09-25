@@ -1,26 +1,15 @@
 import React from "react";
-import {
-  Control,
-  Controller,
-  FieldArrayWithId,
-  useFieldArray,
-} from "react-hook-form";
+import { Control, Controller, useFieldArray } from "react-hook-form";
 import { EditProjectType } from "./EditProject";
 import Input from "../../../../../UIKit/Inputs/Input";
-import { Button } from "../../../../../UIKit/Inputs/Button/Button";
 
 type Props = {
   control: Control<EditProjectType>;
-  task: FieldArrayWithId<EditProjectType, "tasks", "id">;
   task_id: number;
 };
 
-export const SubtaskForm: React.FC<Props> = ({ control, task, task_id }) => {
-  const {
-    fields: subtaskFields,
-    append: subtasksAppend,
-    remove: subtasksRemove,
-  } = useFieldArray({
+export const SubtaskForm: React.FC<Props> = ({ control, task_id }) => {
+  const { fields: subtaskFields } = useFieldArray({
     control,
     name: `tasks.${task_id}.subtasks`, // Correctly reference the subtasks field
   });
@@ -41,22 +30,8 @@ export const SubtaskForm: React.FC<Props> = ({ control, task, task_id }) => {
               />
             )}
           />
-          <Button
-            className="aimFormDelete"
-            type="button"
-            onClick={() => subtasksRemove(subtask_id)}
-          >
-            Удалить
-          </Button>
         </div>
       ))}
-      <Button
-        className="aimFormAdd"
-        type="button"
-        onClick={() => subtasksAppend({ title: "" })} // Ensure "title" is appended
-      >
-        Добавить подзадачу
-      </Button>
     </>
   );
 };

@@ -4,7 +4,7 @@ import "./ChatIcon.css";
 import ChatBoard from "./ChatBoard";
 
 type Props = {
-  title: string;
+  title?: string;
 };
 
 const Chat: React.FC<Props> = ({ title }) => {
