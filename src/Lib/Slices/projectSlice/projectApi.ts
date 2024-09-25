@@ -8,6 +8,7 @@ import {
   UserType,
 } from "./types";
 import { EditProjectType } from "../../../UI/Pages/project/Components/EditProject/EditProject";
+import { CreateProjectType } from "../../../UI/Pages/Main/Components/ProjectCreate/ProjectCreateForm";
 
 export type ReqProject_idType = {
   project_id: number;
@@ -187,6 +188,7 @@ type updateAllType = {
   tasks: TaskType[];
   subtasks: SubtaskType[];
 };
+
 export const updateAllProject = createAsyncThunk<
   updateAllType, // Ожидаемый тип успешного ответа
   EditProjectType, // Тип аргументов
@@ -212,6 +214,40 @@ export const updateAllProject = createAsyncThunk<
         // signal: abortController.signal,
       });
       const res = await response.json();
+
+      return res as updateAllType; // Возвращаем успешный результат
+    } catch (error) {
+      return thunkAPI.rejectWithValue(`${error}`);
+    }
+  }
+);
+
+export const createNewProject = createAsyncThunk<
+  updateAllType, // Ожидаемый тип успешного ответа
+  CreateProjectType, // Тип аргументов
+  { rejectValue: string } // Тип для ошибки
+>(
+  "createNewProject",
+  async (
+    { title, description, user_id, tasks }: CreateProjectType,
+    thunkAPI
+  ) => {
+    try {
+      const response = await fetch(`/api/project/create`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          user_id,
+          tasks,
+        }),
+        // signal: abortController.signal,
+      });
+      const res = await response.json();
+console.log(res);
 
       return res as updateAllType; // Возвращаем успешный результат
     } catch (error) {

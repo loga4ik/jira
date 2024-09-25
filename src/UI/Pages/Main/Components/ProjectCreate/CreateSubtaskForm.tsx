@@ -42,7 +42,10 @@ export const CreateSubtaskForm: React.FC<Props> = ({ control, task_id }) => {
         </div>
       ))}
       <Button
-        className="aim"
+        className="h-8 w-8 rounded-full"
+        defaultMP={false}
+        defaultBorder={false}
+        changableIconClass="add"
         type="button"
         onClick={() => subtasksAppend({ title: "" })}
       />

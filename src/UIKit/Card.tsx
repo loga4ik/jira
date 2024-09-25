@@ -22,30 +22,25 @@ const Card: React.FC<CardData> = ({ title, description, img, id }) => {
   };
   return (
     <div
-      className="flex flex-row items-center border
+      className="flex border
       border-gray-200 rounded-lg shadow max-w-xl bg-zinc-200
-      hover:bg-gray-100 w-full"
+      hover:bg-gray-100 w-full mb-5 min-w-60 items-center"
       onClick={redirectClickHandler}
     >
       <img
-        className="object-cover w-20 h-full rounded-l-lg p-3 ml-3"
+        className="w-20 h-full rounded-l-lg p-3 ml-3"
         src={"../public/img/noIco.svg"}
         alt=""
       />
       {/* <div /> */}
-      <div className="flex flex-col justify-between p-4">
+      <div className="p-4">
         <h5
           className="mb-2 text-2xl font-bold tracking-tight
         text-gray-600"
         >
           {title}
         </h5>
-        <p
-          className="mb-3 font-normal
-        text-gray-400"
-        >
-          {description}
-        </p>
+        <p className="mb-3 font-normal text-gray-400">{description}</p>
       </div>
     </div>
   );

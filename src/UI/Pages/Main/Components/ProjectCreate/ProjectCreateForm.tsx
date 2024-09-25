@@ -9,6 +9,8 @@ import { EditProjectType } from "../../../project/Components/EditProject/EditPro
 import Input from "../../../../../UIKit/Inputs/Input";
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
 import { Wrapper } from "../../../../../UIKit/Wrapper";
+import { createNewProject } from "../../../../../Lib/Slices/projectSlice/projectApi";
+import { Project } from "../../../../../Lib/Slices/projectSlice/types";
 
 export type CreateProjectType = Omit<EditProjectType, "project_id"> & {
   user_id: number;
@@ -51,12 +53,12 @@ export const ProjectCreateForm = () => {
 
   const formHandleSubmit = (data: CreateProjectType) => {
     console.log(data);
-    // dispatch(createProject(data)); // Вы можете раскомментировать, чтобы добавить логику сохранения
-    navigate("/");
-  };
-
-  const GoBackHandleSubmit = () => {
-    navigate("/");
+    (async () => {
+      const res = await dispatch(createNewProject(data)); // Вы можете раскомментировать, чтобы добавить логику сохранения
+      if (typeof res.payload !== "string" && res.payload?.project) {
+        navigate("/project", { state: res.payload.project });
+      }
+    })();
   };
 
   return (
@@ -79,13 +81,6 @@ export const ProjectCreateForm = () => {
             className="aim_input"
             register={register("description")}
           />
-          <Button
-            className="form_btn"
-            type="button"
-            onClick={GoBackHandleSubmit}
-          >
-            назад
-          </Button>
         </div>
         {taskFields.map((task, task_id) => (
           <Wrapper key={task_id} className="aimForm-task rounded-xl m-3 w-96">
