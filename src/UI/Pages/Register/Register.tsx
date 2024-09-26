@@ -5,7 +5,7 @@ import { AppDispatch } from "../../../Lib/store";
 import { UserType } from "../../../types/UserTypes";
 import { registerUser } from "../../../Lib/Slices/userSlice/userSlice";
 import { Wrapper } from "../../../UIKit/Wrapper";
-import Input from "../../../UIKit/Inputs/Input";
+import TextInput from "../../../UIKit/Inputs/TextInput";
 import { Button } from "../../../UIKit/Inputs/Button/Button";
 
 const Register = () => {
@@ -39,43 +39,43 @@ const Register = () => {
             className="flex flex-col items-center"
             onSubmit={handleSubmit(formOnSubmitHandler)}
           >
-            <Input
+            <TextInput
               className="form_input"
               inputType="text"
               placeholder="name"
               register={register("name")}
             />
-            <Input
+            <TextInput
               className="form_input"
               inputType="text"
               placeholder="surname"
               register={register("surname")}
             />
-            <Input
+            <TextInput
               className="form_input"
               inputType="text"
               placeholder="patronymic"
               register={register("patronymic")}
             />
-            <Input
+            <TextInput
               className="form_input"
               inputType="masked"
               placeholder="phone"
               register={register("phone")}
             />
-            <Input
+            <TextInput
               className="form_input"
               inputType="text"
               placeholder="email"
               register={register("email")}
             />
-            <Input
+            <TextInput
               className="form_input password_input"
               inputType="text"
               placeholder="login"
               register={register("login")}
             />
-            <Input
+            <TextInput
               className="form_input password_input focus:animate-pulse"
               inputType="password"
               placeholder="password"

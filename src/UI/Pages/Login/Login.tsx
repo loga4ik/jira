@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { AppDispatch } from "../../../Lib/store";
 import { UserLoginData } from "../../../types/UserTypes";
 import { Wrapper } from "../../../UIKit/Wrapper";
-import Input from "../../../UIKit/Inputs/Input";
+import TextInput from "../../../UIKit/Inputs/TextInput";
 import { Button } from "../../../UIKit/Inputs/Button/Button";
 import HiddenInput from "../../../UIKit/Inputs/HiddenInput/HiddenInput";
 import { loginUser } from "../../../Lib/Slices/userSlice/userSlice";
@@ -36,7 +36,7 @@ const Login = () => {
             className="flex flex-col items-center"
             onSubmit={handleSubmit(formOnSubmitHandler)}
           >
-            <Input
+            <TextInput
               className="w-1/2"
               inputType="text"
               placeholder="login"

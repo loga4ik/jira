@@ -6,7 +6,7 @@ import {
 } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 import "./HiddenInput.css";
-import Input from "../Input";
+import TextInput from "../TextInput";
 import { Button } from "../Button/Button";
 type Props = {
   inputType: "text" | "password" | "masked";
@@ -25,7 +25,7 @@ const HiddenInput = forwardRef<HTMLInputElement, Props>(
       <div
         className={`${className} relative border my-2 mx-2 rounded outline-inherit border-gray-200`}
       >
-        <Input
+        <TextInput
           ref={ref}
           className="m-0 w-full px-3 py-1 h-8"
           inputType={isOpen ? "text" : "password"}

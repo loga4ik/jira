@@ -6,11 +6,11 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { AppDispatch, RootState } from "../../../../../Lib/store";
 import { CreateSubtaskForm } from "./CreateSubtaskForm";
 import { EditProjectType } from "../../../project/Components/EditProject/EditProject";
-import Input from "../../../../../UIKit/Inputs/Input";
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
 import { Wrapper } from "../../../../../UIKit/Wrapper";
 import { createNewProject } from "../../../../../Lib/Slices/projectSlice/projectApi";
 import { Project } from "../../../../../Lib/Slices/projectSlice/types";
+import TextInput from "../../../../../UIKit/Inputs/TextInput";
 
 export type CreateProjectType = Omit<EditProjectType, "project_id"> & {
   user_id: number;
@@ -52,7 +52,6 @@ export const ProjectCreateForm = () => {
   }, [currentUser, navigate]);
 
   const formHandleSubmit = (data: CreateProjectType) => {
-    console.log(data);
     (async () => {
       const res = await dispatch(createNewProject(data)); // Вы можете раскомментировать, чтобы добавить логику сохранения
       if (typeof res.payload !== "string" && res.payload?.project) {
@@ -68,14 +67,14 @@ export const ProjectCreateForm = () => {
         className="create_aim_page m-3 max-w-7xl max-h-3xl"
       >
         <div className="flex flex-col">
-          <Input
+          <TextInput
             inputType="text"
             placeholder="название"
             className="aim_input"
             register={register("title")}
             // {...register("title")}
           />
-          <Input
+          <TextInput
             inputType="text"
             placeholder="описание"
             className="aim_input"
@@ -84,13 +83,13 @@ export const ProjectCreateForm = () => {
         </div>
         {taskFields.map((task, task_id) => (
           <Wrapper key={task_id} className="aimForm-task rounded-xl m-3 w-96">
-            <Input
+            <TextInput
               inputType="text"
               placeholder="задача"
               className="task_input"
               register={register(`tasks.${task_id}.title`)}
             />
-            <Input
+            <TextInput
               inputType="text"
               placeholder="описание"
               className="task_input"

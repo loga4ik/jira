@@ -32,7 +32,6 @@ const Card: React.FC<CardData> = ({ title, description, img, id }) => {
         src={"../public/img/noIco.svg"}
         alt=""
       />
-      {/* <div /> */}
       <div className="p-4">
         <h5
           className="mb-2 text-2xl font-bold tracking-tight

@@ -4,7 +4,7 @@ import { AppDispatch, RootState } from "../../../../../Lib/store";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
 import { Wrapper } from "../../../../../UIKit/Wrapper";
-import Input from "../../../../../UIKit/Inputs/Input";
+import TextInput from "../../../../../UIKit/Inputs/TextInput";
 import { SubtaskForm } from "./SubtaskForm";
 import "./EditProject.css";
 import { updateAllProject } from "../../../../../Lib/Slices/projectSlice/projectApi";
@@ -82,7 +82,7 @@ const EditProject: React.FC<Props> = ({ closeModal }) => {
             name="title"
             control={control}
             render={({ field }) => (
-              <Input
+              <TextInput
                 className={"aim_input"}
                 inputType="text"
                 placeholder="назване"
@@ -94,7 +94,7 @@ const EditProject: React.FC<Props> = ({ closeModal }) => {
             name="description"
             control={control}
             render={({ field }) => (
-              <Input
+              <TextInput
                 className={"aim_input"}
                 inputType="textarea"
                 placeholder="описание"
@@ -110,7 +110,7 @@ const EditProject: React.FC<Props> = ({ closeModal }) => {
                 name={`tasks.${task_id}.title`}
                 control={control}
                 render={({ field }) => (
-                  <Input
+                  <TextInput
                     className={"task_input"}
                     inputType="text"
                     placeholder="Задача"

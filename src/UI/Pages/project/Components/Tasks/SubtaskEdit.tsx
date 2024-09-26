@@ -1,6 +1,6 @@
 import { SubtaskType } from "../../../../../Lib/Slices/projectSlice/types";
 import { useForm } from "react-hook-form";
-import Input from "../../../../../UIKit/Inputs/Input";
+import TextInput from "../../../../../UIKit/Inputs/TextInput";
 import { Radio } from "../../../../../UIKit/Inputs/Radio";
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
 import { useDispatch, useSelector } from "react-redux";
@@ -50,7 +50,7 @@ const SubtaskEdit: React.FC<Props> = ({ subtask, closeModal }) => {
         onSubmit={handleSubmit(formOnSubmitHandler)}
       >
         <h1 className="text-xl m-1">делегировать задачу</h1>
-        <Input
+        <TextInput
           className="w-full"
           inputType="text"
           placeholder="login"

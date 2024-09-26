@@ -7,7 +7,6 @@ import { ProjectCreateForm } from "./Components/ProjectCreate/ProjectCreateForm"
 
 const Main = () => {
   const [open, setIsOpen] = useState(false);
-  // const projectList = useSelector((state: RootState) => state.project.projects);
   const { theme } = useContext(ThemeContext);
 
   return (
