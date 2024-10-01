@@ -44,38 +44,38 @@ const SubtaskEdit: React.FC<Props> = ({ subtask, closeModal }) => {
   };
 
   return (
-    <div className="flex flex-col place-items-center h-full">
-      <form
-        className="flex flex-col place-items-center w-fit h-full justify-between"
-        onSubmit={handleSubmit(formOnSubmitHandler)}
-      >
-        <h1 className="text-xl m-1">делегировать задачу</h1>
-        <TextInput
-          className="w-full"
-          inputType="text"
-          placeholder="login"
-          register={register("title")}
-        />
-        <div className="m-2 place-self-start">
-          {userList &&
-            userList?.length &&
-            userList?.map(
-              (user) =>
-                user.id && (
-                  <Radio
-                    key={`user-${user.id}`}
-                    label={user.login}
-                    value={user.id}
-                    register={register("user_id")}
-                  />
-                )
-            )}
-        </div>
-        <Button type="submit" className={"form_submit_btn"}>
-          сохранить
-        </Button>
-      </form>
-    </div>
+    // <div className="flex flex-col place-items-center h-full">
+    <form
+      className="flex flex-col place-items-center w-full h-full justify-between"
+      onSubmit={handleSubmit(formOnSubmitHandler)}
+    >
+      <h1 className="text-xl m-1">делегировать задачу</h1>
+      <TextInput
+        className="w-full"
+        inputType="text"
+        placeholder="login"
+        register={register("title")}
+      />
+      <div className="m-2 place-self-start">
+        {userList &&
+          userList?.length &&
+          userList?.map(
+            (user) =>
+              user.id && (
+                <Radio
+                  key={`user-${user.id}`}
+                  label={user.login}
+                  value={user.id}
+                  register={register("user_id")}
+                />
+              )
+          )}
+      </div>
+      <Button type="submit" className={"form_submit_btn"}>
+        сохранить
+      </Button>
+    </form>
+    // </div>
   );
 };
 

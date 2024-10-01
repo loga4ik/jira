@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Wrapper } from "./Wrapper";
 
 export type CardData = {
   title: string;
@@ -21,10 +22,9 @@ const Card: React.FC<CardData> = ({ title, description, img, id }) => {
     navigate("/project", { state: data });
   };
   return (
-    <div
-      className="flex border
-      border-gray-200 rounded-lg shadow max-w-xl bg-zinc-200
-      hover:bg-gray-100 w-full mb-5 min-w-60 items-center"
+    <Wrapper
+      className="flex rounded-lg max-w-xl
+    hover:bg-gray-100 w-full mb-5 min-w-60 items-center"
       onClick={redirectClickHandler}
     >
       <img
@@ -41,7 +41,7 @@ const Card: React.FC<CardData> = ({ title, description, img, id }) => {
         </h5>
         <p className="mb-3 font-normal text-gray-400">{description}</p>
       </div>
-    </div>
+    </Wrapper>
   );
 };
 

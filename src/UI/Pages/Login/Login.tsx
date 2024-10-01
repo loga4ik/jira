@@ -13,7 +13,11 @@ const Login = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const { handleSubmit, register } = useForm<UserLoginData>({
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<UserLoginData>({
     defaultValues: {
       login: "",
       password: "",
@@ -37,17 +41,25 @@ const Login = () => {
             onSubmit={handleSubmit(formOnSubmitHandler)}
           >
             <TextInput
-              className="w-1/2"
+              className={`w-1/2 border-gray-300 focus:outline-none focus:ring ${
+                errors.login ? "focus:ring-red-300" : "focus:ring-green-300"
+              }`}
               inputType="text"
               placeholder="login"
-              register={register("login")}
+              autocomplite="login"
+              register={register("login", { required: "обязательное поле" })}
             />
+            {errors.login && <p>{errors.login.message}</p>}
             <HiddenInput
-              className="w-1/2"
+              className={`w-1/2 border-gray-300 focus:outline-none focus:ring ${
+                errors.password ? "focus:ring-red-300" : "focus:ring-green-300"
+              }`}
               inputType="password"
               placeholder="password"
-              register={register("password")}
+              autocomplite="password"
+              register={register("password", { required: "обязательное поле" })}
             />
+            {errors.password && <p>{errors.password.message}</p>}
             <Button
               className={"form_submit_btn"}
               type="submit"

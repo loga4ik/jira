@@ -1,8 +1,12 @@
-import { Field, Input } from "@headlessui/react";
 import { InputMask } from "@react-input/mask";
-import { ChangeEventHandler, ReactNode, forwardRef } from "react";
+import {
+  CSSProperties,
+  ChangeEventHandler,
+  ReactNode,
+  forwardRef,
+} from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
-import clsx from "clsx";
+
 type Props = {
   inputType: "text" | "password" | "masked" | "textarea";
   className?: string;
@@ -12,6 +16,8 @@ type Props = {
   children?: ReactNode;
   register?: UseFormRegisterReturn;
   useDefaultStyles?: boolean;
+  style?: CSSProperties;
+  autocomplite?: string;
 };
 
 const TextInput = forwardRef<HTMLInputElement, Props>(
@@ -24,6 +30,8 @@ const TextInput = forwardRef<HTMLInputElement, Props>(
       value,
       onChange,
       useDefaultStyles = true,
+      style,
+      autocomplite,
     },
     ref
   ) => {
@@ -36,6 +44,7 @@ const TextInput = forwardRef<HTMLInputElement, Props>(
           replacement={{ _: /\d/ }}
           placeholder={placeholder}
           className={`${className} ${defaultClassNames}`}
+          autoComplete={autocomplite}
           {...register}
         />
       );
@@ -60,6 +69,8 @@ const TextInput = forwardRef<HTMLInputElement, Props>(
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        style={style}
+        autoComplete={autocomplite}
         {...register}
       />
       // <div className="w-full max-w-md px-4">

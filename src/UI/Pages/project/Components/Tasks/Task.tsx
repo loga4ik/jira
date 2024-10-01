@@ -11,8 +11,8 @@ export const Task: React.FC<Props> = ({ data }) => {
   const subtasks = useSelector((state: RootState) => state.project.subtasks);
 
   return (
-    <div className="border rounded-lg border-slate-500 m-5 px-2 flex">
-      <div className="flex-1 border border-transparent border-r-slate-500">
+    <div className="border rounded-lg border-gray-400 m-5 px-2 flex">
+      <div className="flex-1 border border-transparent border-r-gray-400">
         <p className="font-semibold text-lg pt-1">{data.title}</p>
         <p className="mx-1">
           Lorem, ipsum dolor sit amet consectetur adipisicing elit. Recusandae

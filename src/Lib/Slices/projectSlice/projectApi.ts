@@ -18,6 +18,7 @@ export type ReqProject_idType = {
 export type ResActiveAndFreeUsers = {
   freeUsers: UserType[];
   activeUsers: UserType[];
+  updatedSubtasks: SubtaskType[];
 };
 
 export const getTasksAndSubtasks = createAsyncThunk<
@@ -247,7 +248,7 @@ export const createNewProject = createAsyncThunk<
         // signal: abortController.signal,
       });
       const res = await response.json();
-console.log(res);
+      console.log(res);
 
       return res as updateAllType; // Возвращаем успешный результат
     } catch (error) {

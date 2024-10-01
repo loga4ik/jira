@@ -1,9 +1,4 @@
-import {
-  ChangeEventHandler,
-  forwardRef,
-  ReactNode,
-  useState,
-} from "react";
+import { ChangeEventHandler, forwardRef, ReactNode, useState } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 import "./HiddenInput.css";
 import TextInput from "../TextInput";
@@ -16,10 +11,21 @@ type Props = {
   onChange?: ChangeEventHandler<HTMLInputElement>;
   children?: ReactNode;
   register?: UseFormRegisterReturn;
+  autocomplite?: string;
 };
 
 const HiddenInput = forwardRef<HTMLInputElement, Props>(
-  ({ inputType, className, placeholder, register, value, onChange }, ref) => {
+  (
+    {
+      className,
+      placeholder,
+      register,
+      value,
+      onChange,
+      autocomplite,
+    },
+    ref
+  ) => {
     const [isOpen, setIsOpen] = useState(false);
     return (
       <div
@@ -33,11 +39,12 @@ const HiddenInput = forwardRef<HTMLInputElement, Props>(
           register={register}
           value={value}
           onChange={onChange}
+          autocomplite={autocomplite}
           useDefaultStyles={false}
         />
         <Button
           type="button"
-          className="absolute top-0 p-3 mt-0.5 right-2 rounded-full eye-btn border
+          className="shadow-none absolute top-0 p-3 mt-0.5 right-2 rounded-full eye-btn border
           outline-inherit border-gray-300"
           onClick={() => setIsOpen(!isOpen)}
           changableIconClass={!isOpen ? "eye-open" : "eye-close"}

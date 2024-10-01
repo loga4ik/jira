@@ -2,7 +2,7 @@
   background-image: url(/public/img/plus_light.svg);
 }
 .add_dark {
-  background-image: url(/public/img/plus.svg);
+  background-image: url(/public/img/plus_light.svg);
 }
 .cross_light {
   background-image: url(/public/img/cross.svg);
@@ -25,4 +25,12 @@
 .back-image-center {
   background-repeat: no-repeat;
   background-position: center;
+}
+.chat-class_light {
+  background-image: url(/public/img/chat.svg);
+  background-size: 70%;
+}
+.chat-class_dark {
+  background-image: url(/public/img/chat.svg);
+  background-size: 70%;
 }

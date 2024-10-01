@@ -7,29 +7,46 @@ import { registerUser } from "../../../Lib/Slices/userSlice/userSlice";
 import { Wrapper } from "../../../UIKit/Wrapper";
 import TextInput from "../../../UIKit/Inputs/TextInput";
 import { Button } from "../../../UIKit/Inputs/Button/Button";
+import HiddenInput from "../../../UIKit/Inputs/HiddenInput/HiddenInput";
 
 const Register = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { handleSubmit, register } = useForm<UserType>({
+  interface UserForm extends UserType {
+    password_repeat: string;
+  }
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<UserForm>({
     defaultValues: {
       name: "",
       surname: "",
       patronymic: "",
       login: "",
       password: "",
+      password_repeat: "",
       phone: "",
       email: "",
     },
   });
 
-  const formOnSubmitHandler = (data: UserType) => {
+  const formOnSubmitHandler = (data: UserForm) => {
     (async () => {
+      if (data.password !== data.password_repeat) {
+        return;
+      }
       const query = await dispatch(registerUser(data));
       query.meta.requestStatus === "fulfilled" && navigate("/");
     })();
   };
+  // useEffect(() => {
+  //   console.log(errors);
+  // }, [errors.login, errors.password, errors.phone]);
+
   return (
     <>
       <div className="flex justify-center">
@@ -40,48 +57,83 @@ const Register = () => {
             onSubmit={handleSubmit(formOnSubmitHandler)}
           >
             <TextInput
-              className="form_input"
+              className={`border-gray-300 focus:outline-none focus:ring ${
+                errors.name ? "focus:ring-red-300" : "focus:ring-green-300"
+              }`}
               inputType="text"
-              placeholder="name"
-              register={register("name")}
+              placeholder="имя"
+              autocomplite="name"
+              register={register("name", { required: "обязательное поле" })}
             />
+            {errors.name && <p>{errors.name.message}</p>}
             <TextInput
-              className="form_input"
+              className={`border-gray-300 focus:outline-none focus:ring ${
+                errors.surname ? "focus:ring-red-300" : "focus:ring-green-300"
+              }`}
               inputType="text"
-              placeholder="surname"
-              register={register("surname")}
+              placeholder="фамилия"
+              autocomplite="surname"
+              register={register("surname", { required: "обязательное поле" })}
             />
+            {errors.surname && <p>{errors.surname.message}</p>}
             <TextInput
-              className="form_input"
+              className={`border-gray-300 focus:outline-none focus:ring ${
+                errors.phone ? "focus:ring-red-300" : "focus:ring-green-300"
+              }`}
               inputType="text"
-              placeholder="patronymic"
-              register={register("patronymic")}
+              placeholder="отчество"
+              autocomplite="patronymic"
+              register={register("patronymic", {
+                required: "обязательное поле",
+              })}
             />
+            {errors.patronymic && <p>{errors.patronymic.message}</p>}
             <TextInput
-              className="form_input"
+              className={`border-gray-300 focus:outline-none focus:ring ${
+                errors.phone ? "focus:ring-red-300" : "focus:ring-green-300"
+              }`}
               inputType="masked"
-              placeholder="phone"
-              register={register("phone")}
+              placeholder="телефон"
+              autocomplite="phone"
+              register={register("phone", { required: "обязательное поле" })}
             />
+            {errors.phone && <p>{errors.phone.message}</p>}
             <TextInput
-              className="form_input"
+              className={`border-gray-300 focus:outline-none focus:ring ${
+                errors.phone ? "focus:ring-red-300" : "focus:ring-green-300"
+              }`}
               inputType="text"
               placeholder="email"
-              register={register("email")}
+              autocomplite="email"
+              register={register("email", { required: "обязательное поле" })}
             />
+            {errors.email && <p>{errors.email.message}</p>}
             <TextInput
               className="form_input password_input"
               inputType="text"
-              placeholder="login"
-              register={register("login")}
+              placeholder="логин"
+              autocomplite="login"
+              register={register("login", { required: "обязательное поле" })}
             />
-            <TextInput
+            {errors.login && <p>{errors.login.message}</p>}
+            <HiddenInput
               className="form_input password_input focus:animate-pulse"
               inputType="password"
-              placeholder="password"
-              register={register("password")}
+              placeholder="пароль"
+              autocomplite="password"
+              register={register("password", { required: "обязательное поле" })}
             />
-            {/* <div className="grid grid-cols-3 w-full"> */}
+            {errors.password && <p>{errors.password.message}</p>}
+            <HiddenInput
+              className="form_input password_input focus:animate-pulse"
+              inputType="password"
+              placeholder="повтор пароля"
+              autocomplite="password_repeat"
+              register={register("password_repeat", {
+                required: "обязательное поле",
+              })}
+            />
+            {errors.password_repeat && <p>{errors.password_repeat.message}</p>}
             <Button
               className={
                 "border border-gray-400 rounded-full justify-self-center col-start-2"
@@ -91,14 +143,6 @@ const Register = () => {
             >
               Отправить
             </Button>
-            {/* <Button
-                type="button"
-                className=" font-semibold text-sm text-indigo-600 hover:text-indigo-500 hover:underline justify-self-end self-end"
-                onClick={() => navigate("/login")}
-              >
-                уже есть аккаунт
-              </Button> */}
-            {/* </div> */}
           </form>
         </Wrapper>
       </div>

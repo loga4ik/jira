@@ -46,8 +46,20 @@ const projectSlice = createSlice({
       state.userList = action.payload.activeUsers;
     });
     element.addCase(removeUserInProject.fulfilled, (state, action) => {
+      console.log(action.payload);
+
+      // Обновляем массив subtasks, заменяя объекты по id
+      state.subtasks = state.subtasks.map((item1) => {
+        const matchingItem = action.payload.updatedSubtasks.find(
+          (item2) => item2.id === item1.id
+        );
+        return matchingItem ? matchingItem : item1;
+      });
+
+      // Обновляем список пользователей
       state.userList = action.payload.activeUsers;
     });
+
     element.addCase(getProjectData.fulfilled, (state, action) => {
       state.project = action.payload;
     });

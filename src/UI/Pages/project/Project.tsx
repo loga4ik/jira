@@ -46,7 +46,7 @@ const Project = () => {
         <Sidebar />
         <Wrapper className="flex-1 ml-6 p-3 min-h-96 rounded-lg relative">
           {state && (
-            <div className="flex border px-3 py-1 border-transparent border-b-slate-500">
+            <div className="flex border px-3 py-1 border-transparent border-b-gray-400">
               <p className="font-semibold text-xl mr-2 h-full">
                 {project?.title}
               </p>

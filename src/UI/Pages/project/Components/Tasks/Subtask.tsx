@@ -6,6 +6,7 @@ import { ProjectContext } from "../../../../../Context/ProjectConstext";
 import SubtaskEdit from "./SubtaskEdit";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../Lib/store";
+import { NewModal } from "../../../../../UIKit/Modal/NewModal";
 type Props = {
   data: SubtaskType;
 };
@@ -14,10 +15,6 @@ const Subtask: React.FC<Props> = ({ data }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { statuses } = useContext(ProjectContext);
   const activeUsers = useSelector((state: RootState) => state.project.userList);
-
-  const closeModal = () => {
-    setIsOpen(false);
-  };
 
   return (
     <div className="flex justify-between items-center">
@@ -44,11 +41,9 @@ const Subtask: React.FC<Props> = ({ data }) => {
             onClick={() => setIsOpen(true)}
           />
         </div>
-        {isOpen && (
-          <Modal closeModal={closeModal}>
-            <SubtaskEdit subtask={data} closeModal={closeModal} />
-          </Modal>
-        )}
+        <NewModal open={isOpen} closeModal={() => setIsOpen(!isOpen)}>
+          <SubtaskEdit subtask={data} closeModal={() => setIsOpen(!isOpen)} />
+        </NewModal>
       </div>
     </div>
   );
