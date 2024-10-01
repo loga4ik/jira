@@ -130,6 +130,7 @@ export const removeUserInProject = createAsyncThunk<
 type UpdateSubtaskReq = {
   id: number;
   user_id: number;
+  status_id: number;
   title: string;
   abortController: AbortController;
 };
@@ -141,7 +142,7 @@ export const updateSubtask = createAsyncThunk<
 >(
   "updateSubtask",
   async (
-    { id, user_id, title, abortController }: UpdateSubtaskReq,
+    { id, user_id, status_id, title, abortController }: UpdateSubtaskReq,
     thunkAPI
   ) => {
     try {
@@ -151,7 +152,7 @@ export const updateSubtask = createAsyncThunk<
         headers: {
           "Content-Type": "application/json", // Указываем тип содержимого
         },
-        body: JSON.stringify({ id, user_id, title }),
+        body: JSON.stringify({ id, user_id, status_id, title }),
         signal: abortController.signal,
       });
       return (await response.json()) as SubtaskType; // Возвращаем успешный результат
