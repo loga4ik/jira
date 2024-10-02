@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, FormEvent } from "react";
 import {
   closeWebSocket,
   connectWebSocket,
@@ -55,7 +55,8 @@ const ChatBoard: React.FC<Props> = ({ title, project_id }) => {
     scrollToBottom(); // Прокрутка чата при добавлении нового сообщения
   }, [messages]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = (e: FormEvent) => {
+    e.preventDefault();
     if (currentUser?.id && messageText.trim()) {
       const message: Message = {
         projectId,
@@ -68,7 +69,10 @@ const ChatBoard: React.FC<Props> = ({ title, project_id }) => {
   };
 
   return (
-    <div className="bg-gray-100 max-h-96 flex flex-col max-w-lg mx-auto">
+    <form
+      onSubmit={handleSendMessage}
+      className="bg-gray-100 max-h-96 flex flex-col max-w-lg mx-auto"
+    >
       <div className="bg-blue-500 p-4 text-white flex justify-between items-center">
         <span>{title}</span>
       </div>
@@ -121,7 +125,7 @@ const ChatBoard: React.FC<Props> = ({ title, project_id }) => {
           </svg>
         </button>
       </div>
-    </div>
+    </form>
   );
 };
 
