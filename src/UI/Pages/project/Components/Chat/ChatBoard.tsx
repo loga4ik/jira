@@ -11,12 +11,13 @@ import ChatMessage from "./ChatMessage";
 
 type Props = {
   title?: string;
+  project_id: number;
 };
 
-const ChatBoard: React.FC<Props> = ({ title }) => {
+const ChatBoard: React.FC<Props> = ({ title, project_id }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [messageText, setMessageText] = useState("");
-  const projectId = 1;
+  const projectId = project_id;
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
   const messagesEndRef = useRef<HTMLDivElement>(null); // Ref для автоскролла
 
@@ -43,7 +44,7 @@ const ChatBoard: React.FC<Props> = ({ title }) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     };
 
-    connectWebSocket(onMessageReceived);
+    connectWebSocket(onMessageReceived, projectId);
 
     return () => {
       closeWebSocket(); // Закрытие WebSocket соединения при размонтировании

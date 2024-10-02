@@ -11,7 +11,8 @@ const WEB_SOCKET_URL = "ws://localhost:4000/ws"; // URL вашего WebSocket �
 let ws: WebSocket | null = null;
 
 export const connectWebSocket = (
-  onMessageReceived: OnMessageReceived
+  onMessageReceived: OnMessageReceived,
+  projectId: number
 ): void => {
   if (ws) {
     console.warn("WebSocket connection already established");
@@ -22,6 +23,9 @@ export const connectWebSocket = (
 
   ws.onopen = () => {
     console.log("WebSocket connection opened");
+    console.log(projectId);
+
+    ws && ws.send(JSON.stringify({ type: "join_room", projectId }));
   };
 
   ws.onmessage = (event: MessageEvent) => {

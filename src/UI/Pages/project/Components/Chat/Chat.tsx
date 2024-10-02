@@ -5,13 +5,14 @@ import ChatBoard from "./ChatBoard";
 
 type Props = {
   title?: string;
+  project_id: number;
 };
 
-const Chat: React.FC<Props> = ({ title }) => {
+const Chat: React.FC<Props> = ({ title, project_id }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className=" flex flex-col fixed bottom-0 right-0 m-3 justify-end">
-      {isOpen && <ChatBoard title={title} />}
+      {isOpen && <ChatBoard title={title} project_id={project_id} />}
 
       <Button
         changableIconClass="chat-class"

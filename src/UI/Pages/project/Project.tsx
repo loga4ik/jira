@@ -62,7 +62,7 @@ const Project = () => {
           {state && <TaskList project_id={state.id} />}
         </Wrapper>
         {/* <ChatIcon /> */}
-        {state && <Chat title={project?.title} />}
+        {state && <Chat title={project?.title} project_id={state.id} />}
       </div>
     </ProjectContextWrapper>
   );
