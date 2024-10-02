@@ -4,12 +4,9 @@ import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import "./Layout.css";
 import { AppDispatch, RootState } from "../../Lib/store";
 import { ThemeContext } from "../../Context/ThemeContext";
-import {
-  getCookie,
-  setAllUserDefault,
-} from "../../Lib/Slices/userSlice/userSlice";
 import { ThemeSwitcher } from "../../UIKit/themeSwicher/ThemeSwitcher";
 import { Button } from "../../UIKit/Inputs/Button/Button";
+import { getCookie, logOut } from "../../Lib/Slices/userSlice/userApi";
 
 export const Layout = () => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
@@ -27,7 +24,7 @@ export const Layout = () => {
   }, [dispatch]);
 
   const LogOut = () => {
-    dispatch(setAllUserDefault());
+    dispatch(logOut());
     navigate("/login");
   };
 

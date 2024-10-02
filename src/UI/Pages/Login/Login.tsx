@@ -7,7 +7,7 @@ import { Wrapper } from "../../../UIKit/Wrapper";
 import TextInput from "../../../UIKit/Inputs/TextInput";
 import { Button } from "../../../UIKit/Inputs/Button/Button";
 import HiddenInput from "../../../UIKit/Inputs/HiddenInput/HiddenInput";
-import { loginUser } from "../../../Lib/Slices/userSlice/userSlice";
+import { loginUser } from "../../../Lib/Slices/userSlice/userApi";
 
 const Login = () => {
   const dispatch = useDispatch<AppDispatch>();

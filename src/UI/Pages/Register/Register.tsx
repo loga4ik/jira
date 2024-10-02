@@ -3,19 +3,19 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { AppDispatch } from "../../../Lib/store";
 import { UserType } from "../../../types/UserTypes";
-import { registerUser } from "../../../Lib/Slices/userSlice/userSlice";
 import { Wrapper } from "../../../UIKit/Wrapper";
 import TextInput from "../../../UIKit/Inputs/TextInput";
 import { Button } from "../../../UIKit/Inputs/Button/Button";
 import HiddenInput from "../../../UIKit/Inputs/HiddenInput/HiddenInput";
+import { registerUser } from "../../../Lib/Slices/userSlice/userApi";
+
+export interface UserForm extends Omit<UserType, "id"> {
+  password_repeat: string;
+}
 
 const Register = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-
-  interface UserForm extends UserType {
-    password_repeat: string;
-  }
 
   const {
     handleSubmit,

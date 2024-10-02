@@ -1,16 +1,18 @@
-import * as userApi from "./userApi";
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-type OneItem = {
+import {
+  getCookie,
+  loginUser,
+  logOut,
+  registerUser,
+} from "./userApi";
+
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+export type OneItem = {
   id: number;
   login: string;
   password: string;
   createdAt: Date;
   updateAt: Date;
 };
-// type User = {
-//   id: number;
-//   login: string;
-// };
 
 type State = {
   userList: OneItem[];
@@ -26,40 +28,6 @@ const initialState: State = {
   currentUser: undefined,
   error: undefined,
 };
-
-export const getCookie = createAsyncThunk("getUserCookie", () =>
-  userApi.getUserCookie()
-);
-
-export const setAllUserDefault = createAsyncThunk("logOut", () =>
-  userApi.logOut()
-);
-
-export const loginUser = createAsyncThunk<
-  OneItem,
-  userApi.UserData,
-  { rejectValue: string }
->("login", async ({ login, password }: userApi.UserData, thunkAPI) => {
-  try {
-    const user = await userApi.login({ login, password });
-    return user as OneItem;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(`${error}`);
-  }
-});
-
-export const registerUser = createAsyncThunk<
-  OneItem,
-  userApi.UserData,
-  { rejectValue: string }
->("register", async ({ login, password }: userApi.UserData, thunkAPI) => {
-  try {
-    const user = await userApi.register({ login, password });
-    return user as OneItem;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(`${error}`);
-  }
-});
 
 const userSlice = createSlice({
   name: "user",
@@ -94,7 +62,7 @@ const userSlice = createSlice({
     element.addCase(registerUser.rejected, (state, action) => {
       state.error = String(action.payload);
     });
-    element.addCase(setAllUserDefault.fulfilled, (state, action) => {
+    element.addCase(logOut.fulfilled, (state, action) => {
       state.currentUser = undefined;
       state.error = undefined;
       state.userList = [];
