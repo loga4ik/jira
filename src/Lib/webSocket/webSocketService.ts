@@ -23,8 +23,6 @@ export const connectWebSocket = (
 
   ws.onopen = () => {
     console.log("WebSocket connection opened");
-    console.log(projectId);
-
     ws && ws.send(JSON.stringify({ type: "join_room", projectId }));
   };
 

@@ -45,8 +45,7 @@ export const Button: React.FC<Props> = ({
             ? "dark_out_small text_dark"
             : "light_out_small text_light"
         } 
-        ${className} 
-        back-image-center `}
+        back-image-center bg-inherit ${className}`}
         // w-fit
         onClick={onClick}
       >

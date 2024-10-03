@@ -31,6 +31,6 @@
   background-size: 70%;
 }
 .chat-class_dark {
-  background-image: url(/public/img/chat.svg);
-  background-size: 70%;
+  background-image: url(/public/img/chat_dark.svg);
+  background-size: 60%;
 }

@@ -1,32 +1,25 @@
 import { Wrapper } from "../../../../../UIKit/Wrapper";
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
 import "./Sidebar.css";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddUser from "../AddUser/AddUser";
 import EditProject from "../EditProject/EditProject";
 import { NewModal } from "../../../../../UIKit/Modal/NewModal";
+import DeleteModal from "../DeleteModal/DeleteModal";
 
 type OpenedElement = "edit" | "delete" | "add_user" | false;
-
-const Sidebar = () => {
+type Props = {
+  project_id: number;
+};
+const Sidebar: React.FC<Props> = ({ project_id }) => {
   const [openElement, setOpenElement] = useState<OpenedElement>(false);
 
   const buttonClickHandler = (name: OpenedElement) => {
     setOpenElement(name);
   };
 
-  const closeModal = () => {
-    console.log("closeModal");
-
-    setOpenElement(false);
-  };
-
-  useEffect(() => {
-    console.log(openElement);
-  }, [openElement]);
-
   return (
-    <Wrapper className="py-8 flex flex-col flex-none w-20 rounded-full">
+    <Wrapper className="py-8 flex flex-col flex-none w-20 rounded-full z-10">
       <Button
         type="button"
         changableIconClass="user_add"
@@ -50,7 +43,7 @@ const Sidebar = () => {
       />
       <NewModal open={!!openElement} closeModal={() => setOpenElement(false)}>
         {openElement === "add_user" && <AddUser />}
-        {openElement === "delete" && <div>delete</div>}
+        {openElement === "delete" && <DeleteModal project_id={project_id} />}
         {openElement === "edit" && (
           <EditProject closeModal={() => setOpenElement(false)} />
         )}

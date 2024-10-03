@@ -15,7 +15,7 @@ import {
 
 const Project = () => {
   const location = useLocation();
-  const state = location.state as CardData | null; // Allow null type for state
+  const state = location.state as CardData; // Allow null type for state
   const { userList, project } = useSelector(
     (state: RootState) => state.project
   );
@@ -43,7 +43,7 @@ const Project = () => {
   return (
     <ProjectContextWrapper>
       <div className="flex mx-4 my-8 ">
-        <Sidebar />
+        <Sidebar project_id={state.id} />
         <Wrapper className="flex-1 ml-6 p-3 min-h-96 rounded-lg relative">
           {state && (
             <div className="flex border px-3 py-1 border-transparent border-b-gray-400">

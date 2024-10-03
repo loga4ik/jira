@@ -61,7 +61,7 @@ const SubtaskEdit: React.FC<Props> = ({ subtask, closeModal }) => {
 
   return (
     <form
-      className="flex flex-col place-items-center h-full justify-between m-6"
+      className="flex flex-col place-items-center w-2/3 justify-between m-6 text-white"
       onSubmit={handleSubmit(formOnSubmitHandler)}
     >
       <h1 className="text-xl m-1">Делегировать задачу</h1>
@@ -100,7 +100,7 @@ const SubtaskEdit: React.FC<Props> = ({ subtask, closeModal }) => {
           ))}
       </div>
 
-      <Button type="submit" className="form_submit_btn">
+      <Button type="submit" className="form_submit_btn bg-transparent bg-black text-gray-100">
         Сохранить
       </Button>
     </form>

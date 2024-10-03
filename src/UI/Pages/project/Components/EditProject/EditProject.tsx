@@ -26,7 +26,6 @@ type Props = {
   closeModal: () => void;
 };
 const EditProject: React.FC<Props> = ({ closeModal }) => {
-  // const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const {
     project,
@@ -65,8 +64,6 @@ const EditProject: React.FC<Props> = ({ closeModal }) => {
   }, [project, reduxTasks, reduxSubtasks, reset]);
 
   const formHandleSubmit = (data: EditProjectType) => {
-    console.log(data);
-    
     dispatch(updateAllProject(data));
     closeModal();
   };

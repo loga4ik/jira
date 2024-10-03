@@ -21,7 +21,7 @@ const Subtask: React.FC<Props> = ({ data }) => {
       <div className="flex flex-row justify-between items-center">
         <p>{data.title}</p>
         {data.user_id && (
-          <p className="ml-2 border-2 rounded-md mr-2 py-1 px-2 bg-teal-200">
+          <p className="ml-2 border-2 rounded-md mr-2 py-1 px-3 bg-gray-400 border-gray-400 text-gray-800">
             {activeUsers.find((user) => user.id === data.user_id)?.login}
           </p>
         )}
@@ -29,7 +29,7 @@ const Subtask: React.FC<Props> = ({ data }) => {
       <div>
         <div className="flex flex-row justify-between items-center">
           {data.status_id && (
-            <p className="border-2 rounded-md mr-2 py-1 px-2 border-teal-200">
+            <p className="border-2 rounded-md mr-2 py-1 px-2 border-gray-400">
               {statuses[data.status_id]}
             </p>
           )}

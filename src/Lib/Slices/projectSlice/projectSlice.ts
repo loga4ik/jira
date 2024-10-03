@@ -32,6 +32,7 @@ const projectSlice = createSlice({
     setDefaultProjects(state) {
       state.tasks = [];
       state.subtasks = [];
+      state.project = null;
     },
   },
   extraReducers: (element) => {

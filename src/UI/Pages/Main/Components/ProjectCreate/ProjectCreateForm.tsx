@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./EditProject.css";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,6 @@ import { EditProjectType } from "../../../project/Components/EditProject/EditPro
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
 import { Wrapper } from "../../../../../UIKit/Wrapper";
 import { createNewProject } from "../../../../../Lib/Slices/projectSlice/projectApi";
-import { Project } from "../../../../../Lib/Slices/projectSlice/types";
 import TextInput from "../../../../../UIKit/Inputs/TextInput";
 
 export type CreateProjectType = Omit<EditProjectType, "project_id"> & {
@@ -69,10 +68,9 @@ export const ProjectCreateForm = () => {
         <div className="flex flex-col">
           <TextInput
             inputType="text"
-            placeholder="название"
+            placeholder="название проекта"
             className="aim_input"
             register={register("title")}
-            // {...register("title")}
           />
           <TextInput
             inputType="text"
