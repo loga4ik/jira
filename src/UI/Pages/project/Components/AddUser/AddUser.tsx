@@ -56,37 +56,42 @@ const AddUser = () => {
   };
 
   return (
-    <div>
-      Уже на проекте:
-      {activeUsers.length > 0 &&
-        activeUsers.map((user) => (
-          <div className="flex" key={user.id}>
-            <p>
-              Name: {user.name} Login: {user.login}{" "}
-              <Button
-                type="button"
-                className="h-8"
-                changableIconClass="bin"
-                onClick={() => removeClickHandler(user.id)}
-              />
-            </p>
-          </div>
-        ))}
-      Добавить:
-      {freeUsers.length > 0 &&
-        freeUsers.map((user) => (
-          <div className="flex" key={user.id}>
-            <p>
-              Name: {user.name} Login: {user.login}{" "}
-              <Button
-                type="button"
-                className="h-8"
-                changableIconClass="add"
-                onClick={() => addClickHandler(user.id)}
-              />
-            </p>
-          </div>
-        ))}
+    <div className="text-white">
+      <div className="p-4">
+        <p>Уже на проекте:</p>
+        {activeUsers.length > 0 &&
+          activeUsers.map((user) => (
+            <div className="flex" key={user.id}>
+              <p>
+                Name: {user.name} Login: {user.login}{" "}
+                <Button
+                  type="button"
+                  className="h-8"
+                  changableIconClass="bin"
+                  onClick={() => removeClickHandler(user.id)}
+                />
+              </p>
+            </div>
+          ))}
+      </div>
+      <hr />
+      <div className="p-4">
+        <p>Добавить:</p>
+        {freeUsers.length > 0 &&
+          freeUsers.map((user) => (
+            <div className="flex" key={user.id}>
+              <p>
+                Name: {user.name} Login: {user.login}{" "}
+                <Button
+                  type="button"
+                  className="h-8"
+                  changableIconClass="add"
+                  onClick={() => addClickHandler(user.id)}
+                />
+              </p>
+            </div>
+          ))}
+      </div>
     </div>
   );
 };

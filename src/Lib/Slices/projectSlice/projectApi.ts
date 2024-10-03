@@ -249,8 +249,6 @@ export const createNewProject = createAsyncThunk<
         // signal: abortController.signal,
       });
       const res = await response.json();
-      console.log(res);
-
       return res as updateAllType; // Возвращаем успешный результат
     } catch (error) {
       return thunkAPI.rejectWithValue(`${error}`);

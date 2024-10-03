@@ -22,7 +22,10 @@ export const CreateSubtaskForm: React.FC<Props> = ({ control, task_id }) => {
   return (
     <>
       {subtakFields.map((subtask, subtask_id) => (
-        <div key={`subtask${subtask_id}`} className="form_subtask flex items-center">
+        <div
+          key={`subtask${subtask_id}`}
+          className="form_subtask flex items-center"
+        >
           <TextInput
             className={"subtask_input"}
             inputType="text"
@@ -42,7 +45,7 @@ export const CreateSubtaskForm: React.FC<Props> = ({ control, task_id }) => {
         </div>
       ))}
       <Button
-        className="h-8 w-8 rounded-full"
+        className="h-8 w-8 rounded-full mt-2 ml-0.5"
         defaultMP={false}
         defaultBorder={false}
         changableIconClass="add"

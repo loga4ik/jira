@@ -67,7 +67,7 @@ const SubtaskEdit: React.FC<Props> = ({ subtask, closeModal }) => {
       <h1 className="text-xl m-1">Делегировать задачу</h1>
 
       <TextInput
-        className="w-full"
+        className="w-full text-gray-800"
         inputType="text"
         placeholder="Название подзадачи"
         register={register("title")}

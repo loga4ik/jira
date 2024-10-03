@@ -14,12 +14,7 @@ export const Task: React.FC<Props> = ({ data }) => {
     <div className="border rounded-lg border-gray-400 m-5 px-2 flex">
       <div className="flex-1 border border-transparent border-r-gray-400">
         <p className="font-semibold text-lg pt-1">{data.title}</p>
-        <p className="mx-1">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Recusandae
-          quasi, saepe accusantium quae enim ad inventore, dolorum facere atque
-          sapiente, quo iusto officiis quia iste explicabo accusamus a totam.
-          Perspiciatis?
-        </p>
+        <p className="mx-1">{data.description}</p>
       </div>
       <div className="flex-1 p-2">
         {subtasks?.map(

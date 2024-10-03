@@ -24,7 +24,10 @@ const DropDown: React.FC<DropDownProps> = ({
   // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -47,9 +50,13 @@ const DropDown: React.FC<DropDownProps> = ({
   const selectedOption = options.find((option) => option.id === value);
 
   return (
-    <div className="relative w-full" ref={dropdownRef} onClick={handleDropDownClick}>
+    <div
+      className="relative w-full"
+      ref={dropdownRef}
+      onClick={handleDropDownClick}
+    >
       <button
-        className="w-full py-2 px-4 border rounded bg-white text-gray-700 focus:outline-none"
+        className="w-full py-1 px-2 border rounded bg-white text-gray-700 focus:outline-none"
         type="button"
       >
         {selectedOption ? selectedOption.title : placeholder}

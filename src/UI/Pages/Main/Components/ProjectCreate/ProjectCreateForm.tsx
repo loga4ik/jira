@@ -63,7 +63,7 @@ export const ProjectCreateForm = () => {
     <>
       <form
         onSubmit={handleSubmit(formHandleSubmit)}
-        className="create_aim_page m-3 max-w-7xl max-h-3xl"
+        className="create_aim_page p-3 max-w-7xl max-h-3xl bg-gray-300"
       >
         <div className="flex flex-col">
           <TextInput
@@ -79,49 +79,56 @@ export const ProjectCreateForm = () => {
             register={register("description")}
           />
         </div>
-        {taskFields.map((task, task_id) => (
-          <Wrapper key={task_id} className="aimForm-task rounded-xl m-3 w-96">
-            <TextInput
-              inputType="text"
-              placeholder="задача"
-              className="task_input"
-              register={register(`tasks.${task_id}.title`)}
-            />
-            <TextInput
-              inputType="text"
-              placeholder="описание"
-              className="task_input"
-              register={register(`tasks.${task_id}.description`)}
-            />
-            <div className="subTask">
-              <CreateSubtaskForm control={control} task_id={task_id} />
-            </div>
-            <Button
-              className="form_btn"
-              type="button"
-              onClick={() => tasksRemove(task_id)}
-            >
-              удалить
-            </Button>
-          </Wrapper>
-        ))}
-        <Button
-          className="form_btn"
-          type="button"
-          onClick={() =>
-            tasksAppend({
-              title: "",
-              description: "",
-              subtasks: [{ title: "" }],
-            })
-          }
-        >
-          добавить задачу
-        </Button>
+        <div className="flex flex-wrap">
+          {taskFields.map((task, task_id) => (
+            <Wrapper key={task_id} className="aimForm-task rounded-xl m-3 w-96">
+              <TextInput
+                inputType="text"
+                placeholder="задача"
+                className="task_input"
+                register={register(`tasks.${task_id}.title`)}
+              />
+              <TextInput
+                inputType="text"
+                placeholder="описание"
+                className="task_input"
+                register={register(`tasks.${task_id}.description`)}
+              />
+              <div className="subTask pl-2">
+                <CreateSubtaskForm control={control} task_id={task_id} />
+              </div>
+              <div className="w-full flex flex-row-reverse">
+                <Button
+                  className="form_btn m-3 mt-0 px-2 py-1"
+                  type="button"
+                  defaultMP={false}
+                  onClick={() => tasksRemove(task_id)}
+                >
+                  удалить
+                </Button>
+              </div>
+            </Wrapper>
+          ))}
+        </div>
+        <div className="flex justify-between">
+          <Button
+            className="form_btn"
+            type="button"
+            onClick={() =>
+              tasksAppend({
+                title: "",
+                description: "",
+                subtasks: [{ title: "" }],
+              })
+            }
+          >
+            добавить задачу
+          </Button>
 
-        <Button className="form_btn" type="submit">
-          сохранить
-        </Button>
+          <Button className="form_btn" type="submit">
+            сохранить
+          </Button>
+        </div>
       </form>
     </>
   );

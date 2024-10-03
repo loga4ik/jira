@@ -12,7 +12,6 @@ const DeleteModal: React.FC<Props> = ({ project_id }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const deleteClickHandler = () => {
-    console.log(project_id);
     deleteProject(project_id, abortController);
     navigate("/");
     dispatch(setDefaultProjects());
