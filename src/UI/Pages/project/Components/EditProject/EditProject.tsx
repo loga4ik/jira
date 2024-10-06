@@ -25,6 +25,7 @@ export type EditProjectType = {
 type Props = {
   closeModal: () => void;
 };
+
 const EditProject: React.FC<Props> = ({ closeModal }) => {
   const dispatch = useDispatch<AppDispatch>();
   const {

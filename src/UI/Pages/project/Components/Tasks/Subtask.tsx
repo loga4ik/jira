@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import { SubtaskType } from "../../../../../Lib/Slices/projectSlice/types";
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
-import Modal from "../../../../../UIKit/Modal/Modal";
 import { ProjectContext } from "../../../../../Context/ProjectConstext";
 import SubtaskEdit from "./SubtaskEdit";
 import { useSelector } from "react-redux";

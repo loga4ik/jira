@@ -67,7 +67,8 @@ p {
   outline: none;
 }
 .light_out_small {
-  background-color: #dfdfdf;
+  background-color: var(--main-bg-light-gradient);
+  /* background-color: #dfdfdf; */
   box-shadow: 6px 6px 14px #c4c4c4, -6px -6px 14px #ebebeb;
 }
 .light_out_big {

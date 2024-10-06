@@ -3,6 +3,7 @@ import { Project, SubtaskType, TaskType, UserType } from "./types";
 import {
   addUserInProject,
   createNewProject,
+  editeTask,
   getProjectData,
   getTasksAndSubtasks,
   getUserList,
@@ -45,6 +46,9 @@ const projectSlice = createSlice({
     });
     element.addCase(addUserInProject.fulfilled, (state, action) => {
       state.userList = action.payload.activeUsers;
+    });
+    element.addCase(editeTask.fulfilled, (state, action) => {
+      console.log(action.payload);
     });
     element.addCase(removeUserInProject.fulfilled, (state, action) => {
       console.log(action.payload);

@@ -1,11 +1,13 @@
 import { Wrapper } from "../../../../../UIKit/Wrapper";
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
 import "./Sidebar.css";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AddUser from "../AddUser/AddUser";
 import EditProject from "../EditProject/EditProject";
 import { NewModal } from "../../../../../UIKit/Modal/NewModal";
 import DeleteModal from "../DeleteModal/DeleteModal";
+import { ProjectContext } from "../../../../../Context/ProjectConstext";
+import { TaskEdite } from "../TaskEdite/TaskEdite";
 
 type OpenedElement = "edit" | "delete" | "add_user" | false;
 type Props = {
@@ -13,6 +15,7 @@ type Props = {
 };
 const Sidebar: React.FC<Props> = ({ project_id }) => {
   const [openElement, setOpenElement] = useState<OpenedElement>(false);
+  const { taskIdToEdite } = useContext(ProjectContext);
 
   const buttonClickHandler = (name: OpenedElement) => {
     setOpenElement(name);
@@ -44,8 +47,10 @@ const Sidebar: React.FC<Props> = ({ project_id }) => {
       <NewModal open={!!openElement} closeModal={() => setOpenElement(false)}>
         {openElement === "add_user" && <AddUser />}
         {openElement === "delete" && <DeleteModal project_id={project_id} />}
-        {openElement === "edit" && (
+        {openElement === "edit" && !taskIdToEdite ? (
           <EditProject closeModal={() => setOpenElement(false)} />
+        ) : (
+          taskIdToEdite && <TaskEdite task_id={taskIdToEdite} />
         )}
       </NewModal>
     </Wrapper>

@@ -7,9 +7,13 @@ type StatusType = {
 
 type ProjectContextType = {
   statuses: { [key: number]: string }; // Теперь значение — это только title
+  taskIdToEdite: number | undefined;
+  changeTaskId(taskId: number): void;
 };
 
-const transformToStatusObject = (data: StatusType[]): { [key: number]: string } => {
+const transformToStatusObject = (
+  data: StatusType[]
+): { [key: number]: string } => {
   return data.reduce((acc, status) => {
     acc[status.id] = status.title; // Сохраняем только title
     return acc;
@@ -28,6 +32,15 @@ export const ProjectContextWrapper: React.FC<ProviderProps> = ({
   children,
 }) => {
   const [statuses, setStatuses] = useState<{ [key: number]: string }>({});
+  const [taskIdToEdite, setTaskIdToEdite] = useState<number | undefined>();
+
+  const changeTaskId = (taskId: number | undefined) => {
+    if (taskId === taskIdToEdite) {
+      setTaskIdToEdite(undefined);
+    } else {
+      setTaskIdToEdite(taskId);
+    }
+  };
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -55,7 +68,7 @@ export const ProjectContextWrapper: React.FC<ProviderProps> = ({
   }, []);
 
   return (
-    <ProjectContext.Provider value={{ statuses }}>
+    <ProjectContext.Provider value={{ statuses, taskIdToEdite, changeTaskId }}>
       {children}
     </ProjectContext.Provider>
   );
