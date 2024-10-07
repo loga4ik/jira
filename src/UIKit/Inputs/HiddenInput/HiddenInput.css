@@ -4,6 +4,12 @@
 .eye-close_light {
   background-image: url(/public/img/eye-crossed.svg);
 }
+.eye-open_dark {
+  background-image: url(/public/img/eye_dark.svg);
+}
+.eye-close_dark {
+  background-image: url(/public/img/eye-crossed_dark.svg);
+}
 .eye-btn {
   height: 1.5rem;
   width: 1.5rem;

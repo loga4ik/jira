@@ -12,6 +12,7 @@ type Props = {
   children?: ReactNode;
   register?: UseFormRegisterReturn;
   autocomplite?: string;
+  focusClass?: string;
 };
 
 const HiddenInput = forwardRef<HTMLInputElement, Props>(
@@ -23,17 +24,19 @@ const HiddenInput = forwardRef<HTMLInputElement, Props>(
       value,
       onChange,
       autocomplite,
+      focusClass,
     },
     ref
   ) => {
     const [isOpen, setIsOpen] = useState(false);
     return (
       <div
-        className={`${className} relative border my-2 mx-2 rounded outline-inherit border-gray-200`}
+        className={`relative border rounded outline-inherit ${className}`}
       >
         <TextInput
           ref={ref}
-          className="m-0 w-full px-3 py-1 h-8"
+          className={`m-0 w-full px-3 py-1 h-8 focus:outline-none focus:ring bg-transparent
+          rounded-md ${focusClass}`}
           inputType={isOpen ? "text" : "password"}
           placeholder={placeholder}
           register={register}
@@ -44,9 +47,10 @@ const HiddenInput = forwardRef<HTMLInputElement, Props>(
         />
         <Button
           type="button"
-          className="shadow-none absolute top-0 p-3 mt-0.5 right-2 rounded-full eye-btn border
-          outline-inherit border-gray-300"
+          className={`shadow-none absolute top-0 p-3 mt-1 right-1 rounded-full eye-btn border
+          outline-inherit border-transparent`}
           onClick={() => setIsOpen(!isOpen)}
+          bg_color={false}
           changableIconClass={!isOpen ? "eye-open" : "eye-close"}
           defaultMP={false}
         ></Button>

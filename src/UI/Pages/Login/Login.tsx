@@ -35,33 +35,50 @@ const Login = () => {
     <>
       <div className="flex justify-center">
         <Wrapper className="border-2 border-gray-300 rounded-xl m-3 p-3 w-3/5 max-w-screen-sm">
-          <p className="form-title">войти</p>
+          <p className="form-title">авторизация</p>
           <form
             className="flex flex-col items-center"
             onSubmit={handleSubmit(formOnSubmitHandler)}
           >
-            <TextInput
-              className={`w-1/2 border-gray-300 focus:outline-none focus:ring ${
-                errors.login ? "focus:ring-red-300" : "focus:ring-green-300"
-              }`}
-              inputType="text"
-              placeholder="login"
-              autocomplite="login"
-              register={register("login", { required: "обязательное поле" })}
-            />
-            {errors.login && <p>{errors.login.message}</p>}
-            <HiddenInput
-              className={`w-1/2 border-gray-300 focus:outline-none focus:ring ${
-                errors.password ? "focus:ring-red-300" : "focus:ring-green-300"
-              }`}
-              inputType="password"
-              placeholder="password"
-              autocomplite="password"
-              register={register("password", { required: "обязательное поле" })}
-            />
-            {errors.password && <p>{errors.password.message}</p>}
+            <div className="relative w-1/2">
+              <TextInput
+                className={`focus:outline-none focus:ring mt-0 mb-5
+                  mx-0 w-full ${
+                    errors.login ? "focus:ring-red-300" : "focus:ring-green-300"
+                  }`}
+                inputType="text"
+                placeholder="логин"
+                autocomplite="login"
+                register={register("login", { required: "обязательное поле" })}
+              />
+              {errors.login && (
+                <p className="absolute bottom-0">{errors.login.message}</p>
+              )}
+            </div>
+            <div className="relative w-1/2">
+              <HiddenInput
+                className={`focus:outline-none focus:ring mt-0 mb-5
+                  mx-0 w-full`}
+                focusClass={
+                  errors.password
+                    ? "focus:ring-red-300"
+                    : "focus:ring-green-300"
+                }
+                inputType="password"
+                placeholder="пароль"
+                autocomplite="password"
+                register={register("password", {
+                  required: "обязательное поле",
+                })}
+              />
+              {errors.password && (
+                <p className="absolute bottom-0">{errors.password.message}</p>
+              )}
+            </div>
             <Button
-              className={"form_submit_btn"}
+              className={
+                "border border-gray-400 rounded-full justify-self-center col-start-2 "
+              }
               type="submit"
               onClick={handleSubmit(formOnSubmitHandler)}
             >

@@ -77,7 +77,7 @@ const DropDown: React.FC<DropDownProps> = ({
       </button>
 
       {isOpen && (
-        <ul className="absolute left-0 mt-2 w-full border rounded bg-white shadow-lg z-10">
+        <ul className="absolute left-0 mt-2 w-full border rounded text-gray-700 bg-white shadow-lg z-10">
           {options.map((option) => (
             <li
               key={option.id}

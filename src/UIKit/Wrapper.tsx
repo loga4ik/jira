@@ -6,6 +6,7 @@ type props = {
   itemKey?: string;
   children: ReactNode;
   onClick?: () => void;
+  lightShadow?: boolean;
 };
 
 export const Wrapper: React.FC<props> = ({
@@ -13,12 +14,15 @@ export const Wrapper: React.FC<props> = ({
   className,
   itemKey,
   onClick,
+  lightShadow = false,
 }) => {
   const { theme } = useContext(ThemeContext);
   return (
     <div
       key={itemKey}
-      className={`${theme}_out_big ${className}`}
+      className={`${theme}_out_big ${
+        lightShadow && "light_out_big"
+      } ${className}`}
       onClick={onClick}
     >
       {children}

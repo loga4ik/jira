@@ -2,13 +2,13 @@
   background-image: url(/public/img/plus_light.svg);
 }
 .add_dark {
-  background-image: url(/public/img/plus_light.svg);
+  background-image: url(/public/img/plus_dark.svg);
 }
 .cross_light {
   background-image: url(/public/img/cross.svg);
 }
 .cross_dark {
-  background-image: url(/public/img/);
+  background-image: url(/public/img/cross.svg);
 }
 .edit_light {
   background-image: url(/public/img/edit.svg);

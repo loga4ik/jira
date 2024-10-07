@@ -73,7 +73,7 @@ const EditProject: React.FC<Props> = ({ closeModal }) => {
     <>
       <form
         onSubmit={handleSubmit(formHandleSubmit)}
-        className="create_aim_page m-3 max-w-7xl max-h-3xl"
+        className="create_aim_page m-3 max-w-7xl max-h-3xl text-gray-300"
       >
         <div className="flex flex-col">
           <Controller
@@ -103,7 +103,11 @@ const EditProject: React.FC<Props> = ({ closeModal }) => {
         </div>
         <div className="flex flex-wrap">
           {taskFields.map((task, task_id) => (
-            <Wrapper key={task_id} className="aimForm-task rounded-xl m-3 w-96">
+            <Wrapper
+              key={task_id}
+              lightShadow={true}
+              className="aimForm-task rounded-xl m-3 w-96"
+            >
               <Controller
                 name={`tasks.${task_id}.title`}
                 control={control}
@@ -122,7 +126,12 @@ const EditProject: React.FC<Props> = ({ closeModal }) => {
             </Wrapper>
           ))}
         </div>
-        <Button className="form_btn" type="submit">
+        <Button
+          className="form_btn"
+          bg_color={false}
+          lightShadow={true}
+          type="submit"
+        >
           сохранить
         </Button>
       </form>

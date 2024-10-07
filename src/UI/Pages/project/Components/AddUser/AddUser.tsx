@@ -68,6 +68,7 @@ const AddUser = () => {
                   type="button"
                   className="h-8"
                   changableIconClass="bin"
+                  lightShadow={true}
                   onClick={() => removeClickHandler(user.id)}
                 />
               </p>
@@ -86,6 +87,7 @@ const AddUser = () => {
                   type="button"
                   className="h-8"
                   changableIconClass="add"
+                  lightShadow={true}
                   onClick={() => addClickHandler(user.id)}
                 />
               </p>

@@ -4,8 +4,10 @@ import {
   ChangeEventHandler,
   ReactNode,
   forwardRef,
+  useContext,
 } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
+import { ThemeContext } from "../../Context/ThemeContext";
 
 type Props = {
   inputType: "text" | "password" | "masked" | "textarea";
@@ -35,8 +37,10 @@ const TextInput = forwardRef<HTMLInputElement, Props>(
     },
     ref
   ) => {
+    // const { theme } = useContext(ThemeContext);
     const defaultClassNames =
-      "border m-2 px-3 py-1 rounded-md outline-inherit border-gray-200";
+      "border m-2 px-3 py-1 rounded-md outline-inherit border-gray-200 bg-transparent";
+
     if (inputType === "masked") {
       return (
         <InputMask

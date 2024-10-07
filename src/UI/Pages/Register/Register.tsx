@@ -50,90 +50,156 @@ const Register = () => {
   return (
     <>
       <div className="flex justify-center">
-        <Wrapper className="border-2 border-gray-300 rounded-xl m-3 p-3 w-3/5 light_out_big">
+        <Wrapper className="border-2 border-transparent rounded-xl m-3 p-3 w-3/5">
           <p className="form-title">регистрация</p>
           <form
             className="flex flex-col items-center"
             onSubmit={handleSubmit(formOnSubmitHandler)}
           >
-            <TextInput
-              className={`border-gray-300 focus:outline-none focus:ring ${
-                errors.name ? "focus:ring-red-300" : "focus:ring-green-300"
-              }`}
-              inputType="text"
-              placeholder="имя"
-              autocomplite="name"
-              register={register("name", { required: "обязательное поле" })}
-            />
-            {errors.name && <p>{errors.name.message}</p>}
-            <TextInput
-              className={`border-gray-300 focus:outline-none focus:ring ${
-                errors.surname ? "focus:ring-red-300" : "focus:ring-green-300"
-              }`}
-              inputType="text"
-              placeholder="фамилия"
-              autocomplite="surname"
-              register={register("surname", { required: "обязательное поле" })}
-            />
-            {errors.surname && <p>{errors.surname.message}</p>}
-            <TextInput
-              className={`border-gray-300 focus:outline-none focus:ring ${
-                errors.phone ? "focus:ring-red-300" : "focus:ring-green-300"
-              }`}
-              inputType="text"
-              placeholder="отчество"
-              autocomplite="patronymic"
-              register={register("patronymic", {
-                required: "обязательное поле",
-              })}
-            />
-            {errors.patronymic && <p>{errors.patronymic.message}</p>}
-            <TextInput
-              className={`border-gray-300 focus:outline-none focus:ring ${
-                errors.phone ? "focus:ring-red-300" : "focus:ring-green-300"
-              }`}
-              inputType="masked"
-              placeholder="телефон"
-              autocomplite="phone"
-              register={register("phone", { required: "обязательное поле" })}
-            />
-            {errors.phone && <p>{errors.phone.message}</p>}
-            <TextInput
-              className={`border-gray-300 focus:outline-none focus:ring ${
-                errors.phone ? "focus:ring-red-300" : "focus:ring-green-300"
-              }`}
-              inputType="text"
-              placeholder="email"
-              autocomplite="email"
-              register={register("email", { required: "обязательное поле" })}
-            />
-            {errors.email && <p>{errors.email.message}</p>}
-            <TextInput
-              className="form_input password_input"
-              inputType="text"
-              placeholder="логин"
-              autocomplite="login"
-              register={register("login", { required: "обязательное поле" })}
-            />
-            {errors.login && <p>{errors.login.message}</p>}
-            <HiddenInput
-              className="form_input password_input focus:animate-pulse"
-              inputType="password"
-              placeholder="пароль"
-              autocomplite="password"
-              register={register("password", { required: "обязательное поле" })}
-            />
-            {errors.password && <p>{errors.password.message}</p>}
-            <HiddenInput
-              className="form_input password_input focus:animate-pulse"
-              inputType="password"
-              placeholder="повтор пароля"
-              autocomplite="password_repeat"
-              register={register("password_repeat", {
-                required: "обязательное поле",
-              })}
-            />
-            {errors.password_repeat && <p>{errors.password_repeat.message}</p>}
+            <div className="relative">
+              <TextInput
+                className={`focus:outline-none focus:ring mt-0 mb-5 ${
+                  errors.name ? "focus:ring-red-300" : "focus:ring-green-300"
+                }`}
+                inputType="text"
+                placeholder="имя"
+                autocomplite="name"
+                register={register("name", { required: "обязательное поле" })}
+              />
+              {errors.name && (
+                <p className="absolute bottom-0 text-sm">
+                  {errors.name.message}
+                </p>
+              )}
+            </div>
+            <div className="relative">
+              <TextInput
+                className={`focus:outline-none focus:ring mt-0 mb-5 ${
+                  errors.surname ? "focus:ring-red-300" : "focus:ring-green-300"
+                }`}
+                inputType="text"
+                placeholder="фамилия"
+                autocomplite="surname"
+                register={register("surname", {
+                  required: "обязательное поле",
+                })}
+              />
+              {errors.surname && (
+                <p className="absolute bottom-0 text-sm">
+                  {errors.surname.message}
+                </p>
+              )}
+            </div>
+            <div className="relative">
+              <TextInput
+                className={`focus:outline-none focus:ring mt-0 mb-5 ${
+                  errors.patronymic
+                    ? "focus:ring-red-300"
+                    : "focus:ring-green-300"
+                }`}
+                inputType="text"
+                placeholder="отчество"
+                autocomplite="patronymic"
+                register={register("patronymic", {
+                  required: "обязательное поле",
+                })}
+              />
+              {errors.patronymic && (
+                <p className="absolute bottom-0 text-sm">
+                  {errors.patronymic.message}
+                </p>
+              )}
+            </div>
+            <div className="relative">
+              <TextInput
+                className={`focus:outline-none focus:ring mt-0 mb-5 ${
+                  errors.phone ? "focus:ring-red-300" : "focus:ring-green-300"
+                }`}
+                inputType="masked"
+                placeholder="телефон"
+                autocomplite="phone"
+                register={register("phone", { required: "обязательное поле" })}
+              />
+              {errors.phone && (
+                <p className="absolute bottom-0 text-sm">
+                  {errors.phone.message}
+                </p>
+              )}
+            </div>
+            <div className="relative">
+              <TextInput
+                className={`focus:outline-none focus:ring mt-0 mb-5 ${
+                  errors.email ? "focus:ring-red-300" : "focus:ring-green-300"
+                }`}
+                inputType="text"
+                placeholder="email"
+                autocomplite="email"
+                register={register("email", { required: "обязательное поле" })}
+              />
+              {errors.email && (
+                <p className="absolute bottom-0 text-sm ">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
+            <div className="relative">
+              <TextInput
+                className={`focus:outline-none focus:ring mt-0 mb-5 ${
+                  errors.login ? "focus:ring-red-300" : "focus:ring-green-300"
+                }`}
+                inputType="text"
+                placeholder="логин"
+                autocomplite="login"
+                register={register("login", { required: "обязательное поле" })}
+              />
+              {errors.login && (
+                <p className="absolute bottom-0 text-sm">
+                  {errors.login.message}
+                </p>
+              )}
+            </div>
+            <div className="relative">
+              <HiddenInput
+                className={`focus:outline-none focus:ring mt-0 mb-5`}
+                focusClass={
+                  errors.password
+                    ? "focus:ring-red-300"
+                    : "focus:ring-green-300"
+                }
+                inputType="password"
+                placeholder="пароль"
+                autocomplite="password"
+                register={register("password", {
+                  required: "обязательное поле",
+                })}
+              />
+              {errors.password && (
+                <p className="absolute bottom-0 text-sm">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+            <div className="relative">
+              <HiddenInput
+                className="focus:outline-none focus:ring mt-0 mb-5"
+                focusClass={
+                  errors.password_repeat
+                    ? "focus:ring-red-300"
+                    : "focus:ring-green-300"
+                }
+                inputType="password"
+                placeholder="повтор пароля"
+                autocomplite="password_repeat"
+                register={register("password_repeat", {
+                  required: "обязательное поле",
+                })}
+              />
+              {errors.password_repeat && (
+                <p className="absolute bottom-0 text-sm">
+                  {errors.password_repeat.message}
+                </p>
+              )}
+            </div>
             <Button
               className={
                 "border border-gray-400 rounded-full justify-self-center col-start-2"

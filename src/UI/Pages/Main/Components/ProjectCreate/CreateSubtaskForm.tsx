@@ -38,6 +38,7 @@ export const CreateSubtaskForm: React.FC<Props> = ({ control, task_id }) => {
             className="h-8 w-8 rounded-full"
             defaultMP={false}
             defaultBorder={false}
+            lightShadow={true}
             changableIconClass="cross"
             type="button"
             onClick={() => subtasksRemove(subtask_id)}
@@ -48,6 +49,7 @@ export const CreateSubtaskForm: React.FC<Props> = ({ control, task_id }) => {
         className="h-8 w-8 rounded-full mt-2 ml-0.5"
         defaultMP={false}
         defaultBorder={false}
+        lightShadow={true}
         changableIconClass="add"
         type="button"
         onClick={() => subtasksAppend({ title: "" })}

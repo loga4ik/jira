@@ -42,6 +42,7 @@ export const Layout = () => {
             className={"form_btn-navigate px-3"}
             defaultMP={false}
             onClick={LogOut}
+            bg_color={false}
           >
             {`выйти: ${currentUser.login}`}
           </Button>
@@ -49,13 +50,14 @@ export const Layout = () => {
         {location.pathname === "/register" && !currentUser?.login && (
           <Button
             type="button"
-            className={"form_btn-navigate px-3"}
+            className={"form_btn-navigate"}
             defaultMP={false}
+            bg_color={false}
           >
             <NavLink
               className={`form_btn-navigate ${
                 theme === "dark" && "dark_out_small  text_dark"
-              }`}
+              } p-3`}
               to={"login"}
             >
               уже есть аккаунт
@@ -65,13 +67,14 @@ export const Layout = () => {
         {location.pathname === "/login" && !currentUser?.login && (
           <Button
             type="button"
-            className={"form_btn-navigate px-3"}
+            className={"form_btn-navigate"}
             defaultMP={false}
+            bg_color={false}
           >
             <NavLink
               className={`form_btn-navigate ${
                 theme === "dark" && "dark_out_small text_dark"
-              }`}
+              } p-3`}
               to={"register"}
             >
               зарегистрироваться

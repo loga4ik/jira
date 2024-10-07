@@ -36,6 +36,7 @@ const Subtask: React.FC<Props> = ({ data }) => {
             type="button"
             className="my-2 h-8 w-8"
             changableIconClass="user_add"
+            bg_color={false}
             defaultMP={false}
             onClick={() => setIsOpen(true)}
           />

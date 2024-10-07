@@ -20,6 +20,7 @@ const Chat: React.FC<Props> = ({ title, project_id }) => {
         defaultMP={false}
         className="h-10 w-10 border place-self-end rounded-full m-3"
         type="button"
+        // bg_color={false}
         onClick={() => setIsOpen(!isOpen)}
       />
     </div>

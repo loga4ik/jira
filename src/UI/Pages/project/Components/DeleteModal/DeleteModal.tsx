@@ -25,6 +25,8 @@ const DeleteModal: React.FC<Props> = ({ project_id }) => {
       <Button
         type="button"
         className="w-fit text-white"
+        bg_color={false}
+        lightShadow={true}
         onClick={deleteClickHandler}
       >
         удалить

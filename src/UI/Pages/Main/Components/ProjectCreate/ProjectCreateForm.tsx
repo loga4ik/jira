@@ -63,7 +63,7 @@ export const ProjectCreateForm = () => {
     <>
       <form
         onSubmit={handleSubmit(formHandleSubmit)}
-        className="create_aim_page p-3 max-w-7xl max-h-3xl bg-gray-300"
+        className="create_aim_page p-3 max-w-7xl max-h-3xl "
       >
         <div className="flex flex-col">
           <TextInput
@@ -81,7 +81,11 @@ export const ProjectCreateForm = () => {
         </div>
         <div className="flex flex-wrap">
           {taskFields.map((task, task_id) => (
-            <Wrapper key={task_id} className="aimForm-task rounded-xl m-3 w-96">
+            <Wrapper
+              key={task_id}
+              lightShadow={true}
+              className="aimForm-task rounded-xl m-3 w-96"
+            >
               <TextInput
                 inputType="text"
                 placeholder="задача"
@@ -100,6 +104,7 @@ export const ProjectCreateForm = () => {
               <div className="w-full flex flex-row-reverse">
                 <Button
                   className="form_btn m-3 mt-0 px-2 py-1"
+                  lightShadow={true}
                   type="button"
                   defaultMP={false}
                   onClick={() => tasksRemove(task_id)}
@@ -114,6 +119,7 @@ export const ProjectCreateForm = () => {
           <Button
             className="form_btn"
             type="button"
+            lightShadow={true}
             onClick={() =>
               tasksAppend({
                 title: "",
@@ -125,7 +131,7 @@ export const ProjectCreateForm = () => {
             добавить задачу
           </Button>
 
-          <Button className="form_btn" type="submit">
+          <Button className="form_btn" lightShadow={true} type="submit">
             сохранить
           </Button>
         </div>

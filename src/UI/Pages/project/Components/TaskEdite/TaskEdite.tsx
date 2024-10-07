@@ -78,7 +78,7 @@ export const TaskEdite: React.FC<Props> = ({ task_id }) => {
     <>
       <form
         onSubmit={handleSubmit(formHandleSubmit)}
-        className="create_aim_page p-3 max-w-7xl max-h-3xl bg-gray-300"
+        className="create_aim_page p-3 max-w-7xl max-h-3xl text-gray-300"
       >
         <div className="flex flex-col">
           <TextInput
@@ -88,7 +88,7 @@ export const TaskEdite: React.FC<Props> = ({ task_id }) => {
             register={register("title")}
           />
           <TextInput
-            inputType="text"
+            inputType="textarea"
             placeholder="описание"
             className="aim_input"
             register={register("description")}
@@ -98,6 +98,7 @@ export const TaskEdite: React.FC<Props> = ({ task_id }) => {
           {subtaskFields.map((subtask, subtask_id) => (
             <Wrapper
               key={subtask_id}
+              lightShadow={true}
               className="aimForm-task rounded-xl m-3 w-96"
             >
               <TextInput
@@ -111,6 +112,8 @@ export const TaskEdite: React.FC<Props> = ({ task_id }) => {
                   className="form_btn m-3 mt-0 px-2 py-1"
                   type="button"
                   defaultMP={false}
+                  bg_color={false}
+                  lightShadow={true}
                   onClick={() => subtasksRemove(subtask_id)}
                 >
                   удалить
@@ -123,6 +126,8 @@ export const TaskEdite: React.FC<Props> = ({ task_id }) => {
           <Button
             className="form_btn"
             type="button"
+            bg_color={false}
+            lightShadow={true}
             onClick={() =>
               subtasksAppend({
                 id: undefined,
@@ -133,7 +138,12 @@ export const TaskEdite: React.FC<Props> = ({ task_id }) => {
             добавить задачу
           </Button>
 
-          <Button className="form_btn" type="submit">
+          <Button
+            className="form_btn"
+            bg_color={false}
+            lightShadow={true}
+            type="submit"
+          >
             сохранить
           </Button>
         </div>

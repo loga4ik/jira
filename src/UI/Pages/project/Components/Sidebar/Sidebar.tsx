@@ -27,6 +27,7 @@ const Sidebar: React.FC<Props> = ({ project_id }) => {
         type="button"
         changableIconClass="user_add"
         defaultMP={false}
+        bg_color={false}
         className="h-12 w-12 mb-5  place-self-center"
         onClick={() => buttonClickHandler("add_user")}
       />
@@ -34,6 +35,7 @@ const Sidebar: React.FC<Props> = ({ project_id }) => {
         type="button"
         changableIconClass="bin"
         defaultMP={false}
+        bg_color={false}
         className="h-12 w-12 mb-5  place-self-center"
         onClick={() => buttonClickHandler("delete")}
       />
@@ -41,17 +43,19 @@ const Sidebar: React.FC<Props> = ({ project_id }) => {
         type="button"
         changableIconClass="edit"
         defaultMP={false}
+        bg_color={false}
         className="h-12 w-12 mb-5  place-self-center"
         onClick={() => buttonClickHandler("edit")}
       />
       <NewModal open={!!openElement} closeModal={() => setOpenElement(false)}>
         {openElement === "add_user" && <AddUser />}
         {openElement === "delete" && <DeleteModal project_id={project_id} />}
-        {openElement === "edit" && !taskIdToEdite ? (
-          <EditProject closeModal={() => setOpenElement(false)} />
-        ) : (
-          taskIdToEdite && <TaskEdite task_id={taskIdToEdite} />
-        )}
+        {openElement === "edit" &&
+          (taskIdToEdite ? (
+            <TaskEdite task_id={taskIdToEdite} />
+          ) : (
+            <EditProject closeModal={() => setOpenElement(false)} />
+          ))}
       </NewModal>
     </Wrapper>
   );

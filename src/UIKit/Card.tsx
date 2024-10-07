@@ -24,7 +24,7 @@ const Card: React.FC<CardData> = ({ title, description, img, id }) => {
   return (
     <Wrapper
       className="flex rounded-lg max-w-xl
-    hover:bg-gray-100 w-full mb-5 min-w-60 items-center"
+    w-full mb-5 min-w-60 items-center cursor-pointer"
       onClick={redirectClickHandler}
     >
       <img
