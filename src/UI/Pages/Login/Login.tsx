@@ -34,7 +34,7 @@ const Login = () => {
   return (
     <>
       <div className="flex justify-center">
-        <Wrapper className="border-2 border-gray-300 rounded-xl m-3 p-3 w-3/5 max-w-screen-sm">
+        <Wrapper className="border-2 rounded-xl m-3 p-3 w-3/5 max-w-screen-sm border-transparent">
           <p className="form-title">авторизация</p>
           <form
             className="flex flex-col items-center"
