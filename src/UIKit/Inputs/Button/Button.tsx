@@ -14,6 +14,7 @@ type Props = {
   type: "submit" | "button";
   bg_color?: boolean;
   lightShadow?: boolean;
+  title: string;
 };
 
 export const Button: React.FC<Props> = ({
@@ -26,12 +27,14 @@ export const Button: React.FC<Props> = ({
   defaultBorder = true,
   bg_color = true,
   lightShadow = false,
+  title,
 }) => {
   const { theme } = useContext(ThemeContext);
 
   return (
     <>
       <button
+        title={title}
         type={type}
         className={`
         ${defaultMP && "mx-2 my-4 px-5 py-1"} 

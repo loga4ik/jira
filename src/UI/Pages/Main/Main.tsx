@@ -17,6 +17,7 @@ const Main = () => {
     >
       <ProjectList />
       <Button
+              title="добавить"
         type="button"
         changableIconClass="add"
         className="absolute rounded-full top-0 right-2 h-10"

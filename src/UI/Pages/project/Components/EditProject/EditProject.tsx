@@ -127,6 +127,7 @@ const EditProject: React.FC<Props> = ({ closeModal }) => {
           ))}
         </div>
         <Button
+          title="отправить"
           className="form_btn"
           bg_color={false}
           lightShadow={true}

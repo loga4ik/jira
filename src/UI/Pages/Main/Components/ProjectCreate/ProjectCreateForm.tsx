@@ -103,6 +103,7 @@ export const ProjectCreateForm = () => {
               </div>
               <div className="w-full flex flex-row-reverse">
                 <Button
+                  title="удалить"
                   className="form_btn m-3 mt-0 px-2 py-1"
                   lightShadow={true}
                   type="button"
@@ -117,6 +118,7 @@ export const ProjectCreateForm = () => {
         </div>
         <div className="flex justify-between">
           <Button
+            title="добавить"
             className="form_btn"
             type="button"
             lightShadow={true}
@@ -131,7 +133,12 @@ export const ProjectCreateForm = () => {
             добавить задачу
           </Button>
 
-          <Button className="form_btn" lightShadow={true} type="submit">
+          <Button
+            className="form_btn"
+            title="отправить"
+            lightShadow={true}
+            type="submit"
+          >
             сохранить
           </Button>
         </div>

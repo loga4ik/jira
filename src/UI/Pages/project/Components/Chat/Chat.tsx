@@ -15,6 +15,7 @@ const Chat: React.FC<Props> = ({ title, project_id }) => {
       {isOpen && <ChatBoard title={title} project_id={project_id} />}
 
       <Button
+              title="чат"
         changableIconClass="chat-class"
         defaultBorder={false}
         defaultMP={false}

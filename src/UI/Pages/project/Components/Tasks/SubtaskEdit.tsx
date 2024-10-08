@@ -101,6 +101,7 @@ const SubtaskEdit: React.FC<Props> = ({ subtask, closeModal }) => {
       </div>
 
       <Button
+        title="отправить"
         type="submit"
         bg_color={false}
         lightShadow={true}

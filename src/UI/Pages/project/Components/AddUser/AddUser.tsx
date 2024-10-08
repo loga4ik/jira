@@ -65,6 +65,7 @@ const AddUser = () => {
               <p>
                 Name: {user.name} Login: {user.login}{" "}
                 <Button
+                  title="удалить"
                   type="button"
                   className="h-8"
                   changableIconClass="bin"
@@ -84,6 +85,7 @@ const AddUser = () => {
               <p>
                 Name: {user.name} Login: {user.login}{" "}
                 <Button
+                  title="добавить"
                   type="button"
                   className="h-8"
                   changableIconClass="add"

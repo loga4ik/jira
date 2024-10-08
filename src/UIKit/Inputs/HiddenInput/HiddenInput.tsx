@@ -30,9 +30,7 @@ const HiddenInput = forwardRef<HTMLInputElement, Props>(
   ) => {
     const [isOpen, setIsOpen] = useState(false);
     return (
-      <div
-        className={`relative border rounded outline-inherit ${className}`}
-      >
+      <div className={`relative border rounded outline-inherit ${className}`}>
         <TextInput
           ref={ref}
           className={`m-0 w-full px-3 py-1 h-8 focus:outline-none focus:ring bg-transparent
@@ -46,6 +44,7 @@ const HiddenInput = forwardRef<HTMLInputElement, Props>(
           useDefaultStyles={false}
         />
         <Button
+          title="скрыть/раскрыть"
           type="button"
           className={`shadow-none absolute top-0 p-3 mt-1 right-1 rounded-full eye-btn border
           outline-inherit border-transparent`}

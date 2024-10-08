@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { CardData } from "../../../UIKit/Card";
 import { Wrapper } from "../../../UIKit/Wrapper";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Chat from "./Components/Chat/Chat";
 import Sidebar from "./Components/Sidebar/Sidebar";
 import TaskList from "./Components/Tasks/TaskList";
@@ -12,15 +12,19 @@ import {
   getProjectData,
   getUserList,
 } from "../../../Lib/Slices/projectSlice/projectApi";
+import { isAvailableProject } from "../../../Api/projectApi";
+import { ErrorMadal } from "./Components/ErrorMadal/ErrorMadal";
 
 const Project = () => {
   const location = useLocation();
-  const state = location.state as CardData; // Allow null type for state
+  const state = location.state as CardData;
   const { userList, project } = useSelector(
     (state: RootState) => state.project
   );
+
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const [open, setIsOpen] = useState(false);
 
   useEffect(() => {
     if (!state?.id) {
@@ -30,6 +34,11 @@ const Project = () => {
 
     (async () => {
       const abortController = new AbortController();
+      const isAvailable = await isAvailableProject(state.id, abortController);
+      if (!isAvailable) {
+        setIsOpen(true);
+      }
+
       await dispatch(
         getUserList({
           project_id: state.id,
@@ -39,6 +48,11 @@ const Project = () => {
       await dispatch(getProjectData({ project_id: state.id, abortController }));
     })();
   }, [state, navigate, dispatch]);
+
+  const closeModal = () => {
+    setIsOpen(!open);
+    navigate("/");
+  };
 
   return (
     <ProjectContextWrapper>
@@ -64,6 +78,7 @@ const Project = () => {
         {/* <ChatIcon /> */}
         {state && <Chat title={project?.title} project_id={state.id} />}
       </div>
+      <ErrorMadal open={open} closeModal={closeModal} />
     </ProjectContextWrapper>
   );
 };

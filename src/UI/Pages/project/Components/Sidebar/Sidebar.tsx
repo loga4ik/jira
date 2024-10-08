@@ -24,6 +24,7 @@ const Sidebar: React.FC<Props> = ({ project_id }) => {
   return (
     <Wrapper className="py-8 flex flex-col flex-none w-20 rounded-full z-10">
       <Button
+        title="добавление пользователя"
         type="button"
         changableIconClass="user_add"
         defaultMP={false}
@@ -32,6 +33,7 @@ const Sidebar: React.FC<Props> = ({ project_id }) => {
         onClick={() => buttonClickHandler("add_user")}
       />
       <Button
+        title="удаление"
         type="button"
         changableIconClass="bin"
         defaultMP={false}
@@ -40,6 +42,7 @@ const Sidebar: React.FC<Props> = ({ project_id }) => {
         onClick={() => buttonClickHandler("delete")}
       />
       <Button
+        title="редактироване"
         type="button"
         changableIconClass="edit"
         defaultMP={false}

@@ -35,6 +35,7 @@ export const CreateSubtaskForm: React.FC<Props> = ({ control, task_id }) => {
             )}
           />
           <Button
+              title="удалить"
             className="h-8 w-8 rounded-full"
             defaultMP={false}
             defaultBorder={false}
@@ -46,6 +47,7 @@ export const CreateSubtaskForm: React.FC<Props> = ({ control, task_id }) => {
         </div>
       ))}
       <Button
+              title="добавить"
         className="h-8 w-8 rounded-full mt-2 ml-0.5"
         defaultMP={false}
         defaultBorder={false}

@@ -38,6 +38,7 @@ export const Layout = () => {
         <ThemeSwitcher />
         {currentUser?.login && (
           <Button
+            title="выход"
             type="button"
             className={"form_btn-navigate px-3"}
             defaultMP={false}
@@ -49,6 +50,7 @@ export const Layout = () => {
         )}
         {location.pathname === "/register" && !currentUser?.login && (
           <Button
+              title="регистрация"
             type="button"
             className={"form_btn-navigate"}
             defaultMP={false}
@@ -66,6 +68,7 @@ export const Layout = () => {
         )}
         {location.pathname === "/login" && !currentUser?.login && (
           <Button
+              title="вход"
             type="button"
             className={"form_btn-navigate"}
             defaultMP={false}

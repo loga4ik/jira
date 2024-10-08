@@ -201,6 +201,7 @@ const Register = () => {
               )}
             </div>
             <Button
+              title="отправить"
               className={
                 "border border-gray-400 rounded-full justify-self-center col-start-2"
               }

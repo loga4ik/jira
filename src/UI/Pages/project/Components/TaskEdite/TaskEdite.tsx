@@ -109,6 +109,7 @@ export const TaskEdite: React.FC<Props> = ({ task_id }) => {
               />
               <div className="w-full flex flex-row-reverse">
                 <Button
+                  title="удалить"
                   className="form_btn m-3 mt-0 px-2 py-1"
                   type="button"
                   defaultMP={false}
@@ -124,6 +125,7 @@ export const TaskEdite: React.FC<Props> = ({ task_id }) => {
         </div>
         <div className="flex justify-between">
           <Button
+            title="добавить"
             className="form_btn"
             type="button"
             bg_color={false}
@@ -139,6 +141,7 @@ export const TaskEdite: React.FC<Props> = ({ task_id }) => {
           </Button>
 
           <Button
+            title="отправить"
             className="form_btn"
             bg_color={false}
             lightShadow={true}

@@ -21,7 +21,9 @@ const Subtask: React.FC<Props> = ({ data }) => {
         <p>{data.title}</p>
         {data.user_id && (
           <p className="ml-2 border-2 rounded-md mr-2 py-1 px-3 bg-gray-400 border-gray-400 text-gray-800">
-            {activeUsers.find((user) => user.id === data.user_id)?.login}
+            {`исполнитель: ${
+              activeUsers.find((user) => user.id === data.user_id)?.login
+            }`}
           </p>
         )}
       </div>
@@ -33,6 +35,7 @@ const Subtask: React.FC<Props> = ({ data }) => {
             </p>
           )}
           <Button
+            title="добавить пользователя"
             type="button"
             className="my-2 h-8 w-8"
             changableIconClass="user_add"
