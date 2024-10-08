@@ -6,7 +6,7 @@ export interface Message {
 
 type OnMessageReceived = (message: Message) => void;
 
-const WEB_SOCKET_URL = "ws://localhost:4000/ws"; // URL вашего WebSocket сервера
+const WEB_SOCKET_URL = "ws://45.67.56.125:4000/ws"; // URL вашего WebSocket сервера
 
 let ws: WebSocket | null = null;
 

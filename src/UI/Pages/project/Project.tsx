@@ -17,7 +17,7 @@ import { ErrorMadal } from "./Components/ErrorMadal/ErrorMadal";
 
 const Project = () => {
   const location = useLocation();
-  const state = location.state as CardData;
+  const state = location.state as CardData | undefined;
   const { userList, project } = useSelector(
     (state: RootState) => state.project
   );
@@ -25,6 +25,12 @@ const Project = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [open, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (!state?.id) {
+      navigate("/");
+    }
+  }, [navigate, state]);
 
   useEffect(() => {
     if (!state?.id) {
@@ -57,14 +63,13 @@ const Project = () => {
   return (
     <ProjectContextWrapper>
       <div className="flex mx-4 my-8 ">
-        <Sidebar project_id={state.id} />
+        {state && <Sidebar project_id={state.id} />}
         <Wrapper className="flex-1 ml-6 p-3 min-h-96 rounded-lg relative">
           {state && (
             <div className="flex border px-3 py-1 border-transparent border-b-gray-400">
-              <p className="font-semibold text-xl mr-2 h-full">
+              <p className="font-semibold text-xl pr-2 h-full border-r border-gray-400">
                 {project?.title}
               </p>
-              |
               <p className="font-normal text-xl ml-2 ">
                 {project?.description}
               </p>

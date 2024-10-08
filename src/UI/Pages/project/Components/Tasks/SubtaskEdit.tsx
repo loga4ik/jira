@@ -64,7 +64,9 @@ const SubtaskEdit: React.FC<Props> = ({ subtask, closeModal }) => {
       className="flex flex-col place-items-center w-2/3 justify-between m-6 text-white"
       onSubmit={handleSubmit(formOnSubmitHandler)}
     >
-      <h1 className="text-xl m-1">Делегировать задачу</h1>
+      <h1 className="text-xl m-1">{`${
+        userList[0] ? "Делегировать задачу":'добавьте пользователей'
+      }`}</h1>
 
       <TextInput
         className="w-full"

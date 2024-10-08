@@ -1,7 +1,7 @@
 import { Wrapper } from "../../../../../UIKit/Wrapper";
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
 import "./Sidebar.css";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import AddUser from "../AddUser/AddUser";
 import EditProject from "../EditProject/EditProject";
 import { NewModal } from "../../../../../UIKit/Modal/NewModal";

@@ -26,8 +26,13 @@ const ChatMessage: React.FC<Props> = ({ text, sender }) => {
           currentUser?.id === sender ? "bg-blue-200" : "bg-gray-300"
         }`}
       >
-        {<div className="font-thin text-sm">{`${user?.login??'удален'}: ${text}`}</div>}
-        {/* <div></div> */}
+        {
+          <div className="font-thin text-sm">{`${
+            user?.login ||
+            (currentUser?.id === sender && currentUser?.login) ||
+            "удален"
+          }: ${text}`}</div>
+        }
       </div>
     </div>
   );
