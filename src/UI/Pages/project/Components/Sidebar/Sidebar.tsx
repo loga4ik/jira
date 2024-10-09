@@ -9,6 +9,9 @@ import DeleteModal from "../DeleteModal/DeleteModal";
 import { ProjectContext } from "../../../../../Context/ProjectConstext";
 import { TaskEdite } from "../TaskEdite/TaskEdite";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../../../Lib/store";
+import { setDefaultProjects } from "../../../../../Lib/Slices/projectSlice/projectSlice";
 
 type OpenedElement = "edit" | "delete" | "add_user" | false;
 type Props = {
@@ -17,11 +20,17 @@ type Props = {
 const Sidebar: React.FC<Props> = ({ project_id }) => {
   const [openElement, setOpenElement] = useState<OpenedElement>(false);
   const { taskIdToEdite } = useContext(ProjectContext);
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   const buttonClickHandler = (name: OpenedElement) => {
     setOpenElement(name);
   };
+
+  const homeButtonClickHandler = () =>{
+    dispatch(setDefaultProjects())
+    navigate('/')
+  }
 
   return (
     <Wrapper className="py-8 flex flex-col flex-none w-20 rounded-full z-10 justify-between">
@@ -61,7 +70,7 @@ const Sidebar: React.FC<Props> = ({ project_id }) => {
         defaultMP={false}
         bg_color={false}
         className="h-12 w-12 mb-5  place-self-center"
-        onClick={() => navigate('/')}
+        onClick={homeButtonClickHandler}
       />
       <NewModal open={!!openElement} closeModal={() => setOpenElement(false)}>
         {openElement === "add_user" && <AddUser />}
