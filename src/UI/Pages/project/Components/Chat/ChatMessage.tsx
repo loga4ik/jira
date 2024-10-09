@@ -16,7 +16,6 @@ const ChatMessage: React.FC<Props> = ({ text, sender }) => {
   useEffect(() => {
     const userLogin = userList.find((user) => user.id === sender);
     userLogin && setUser(userLogin);
-    // console.log(userLogin);
   }, [userList, sender]);
 
   return (
@@ -28,9 +27,7 @@ const ChatMessage: React.FC<Props> = ({ text, sender }) => {
       >
         {
           <div className="font-thin text-sm">{`${
-            user?.login ||
-            (currentUser?.id === sender && currentUser?.login) ||
-            "удален"
+            user?.login || "удален"
           }: ${text}`}</div>
         }
       </div>

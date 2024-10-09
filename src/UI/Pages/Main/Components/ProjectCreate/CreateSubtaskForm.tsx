@@ -31,15 +31,15 @@ export const CreateSubtaskForm: React.FC<Props> = ({ control, task_id }) => {
             inputType="text"
             placeholder="подзача"
             register={control.register(
-              `tasks.${task_id}.subtasks.${subtask_id}.title`
+              `tasks.${task_id}.subtasks.${subtask_id}.title`, { required: "обязательное поле" }
             )}
           />
           <Button
-              title="удалить"
+            title="удалить"
             className="h-8 w-8 rounded-full"
             defaultMP={false}
             defaultBorder={false}
-            lightShadow={true}
+            shadow={false}
             changableIconClass="cross"
             type="button"
             onClick={() => subtasksRemove(subtask_id)}
@@ -47,11 +47,11 @@ export const CreateSubtaskForm: React.FC<Props> = ({ control, task_id }) => {
         </div>
       ))}
       <Button
-              title="добавить"
+        title="добавить"
         className="h-8 w-8 rounded-full mt-2 ml-0.5"
         defaultMP={false}
         defaultBorder={false}
-        lightShadow={true}
+        shadow={false}
         changableIconClass="add"
         type="button"
         onClick={() => subtasksAppend({ title: "" })}

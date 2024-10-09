@@ -48,11 +48,34 @@ const projectSlice = createSlice({
       state.userList = action.payload.activeUsers;
     });
     element.addCase(editeTask.fulfilled, (state, action) => {
-      console.log(action.payload);
+      state.tasks = state.tasks.map((task) => {
+        if (action.payload.taskData.id === task.id) {
+          return action.payload.taskData;
+        }
+        return task;
+      });
+
+      state.subtasks = [
+        // Добавляем подзадачи, у которых task_id не совпадает с новым task_id
+        ...state.subtasks.filter(
+          (oldSubtask) => oldSubtask.task_id !== action.payload.taskData.id
+        ),
+
+        // Обновляем или добавляем новые подзадачи из нового списка
+        ...action.payload.subtaskList.map((newSubtask) => {
+          // Ищем соответствующую подзадачу в старом списке
+          const existingSubtask = state.subtasks.find(
+            (subtask) => subtask.id === newSubtask.id
+          );
+
+          // Возвращаем новую подзадачу, если она существует, либо добавляем новую
+          return existingSubtask
+            ? { ...existingSubtask, ...newSubtask }
+            : newSubtask;
+        }),
+      ];
     });
     element.addCase(removeUserInProject.fulfilled, (state, action) => {
-      console.log(action.payload);
-
       // Обновляем массив subtasks, заменяя объекты по id
       state.subtasks = state.subtasks.map((item1) => {
         const matchingItem = action.payload.updatedSubtasks.find(
@@ -60,7 +83,6 @@ const projectSlice = createSlice({
         );
         return matchingItem ? matchingItem : item1;
       });
-
       // Обновляем список пользователей
       state.userList = action.payload.activeUsers;
     });
@@ -72,13 +94,11 @@ const projectSlice = createSlice({
       state.project = action.payload.project;
       state.tasks = action.payload.tasks;
       state.subtasks = action.payload.subtasks;
-      console.log(action.payload);
     });
     element.addCase(createNewProject.fulfilled, (state, action) => {
       state.project = action.payload.project;
       state.tasks = action.payload.tasks;
       state.subtasks = action.payload.subtasks;
-      console.log(action.payload);
     });
     element.addCase(updateSubtask.fulfilled, (state, action) => {
       state.subtasks = state.subtasks.map((subtask) =>

@@ -73,9 +73,6 @@ const Project = () => {
               <p className="font-normal text-xl ml-2 ">
                 {project?.description}
               </p>
-              <p className="absolute right-5 font-semibold text-xl">
-                {userList?.length}
-              </p>
             </div>
           )}
           {state && <TaskList project_id={state.id} />}

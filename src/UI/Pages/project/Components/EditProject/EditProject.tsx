@@ -107,6 +107,7 @@ const EditProject: React.FC<Props> = ({ closeModal }) => {
               key={task_id}
               lightShadow={true}
               className="aimForm-task rounded-xl m-3 w-96"
+              shadow={false}
             >
               <Controller
                 name={`tasks.${task_id}.title`}
@@ -132,7 +133,8 @@ const EditProject: React.FC<Props> = ({ closeModal }) => {
           bg_color={false}
           lightShadow={true}
           type="submit"
-        >
+          shadow={false}
+          >
           сохранить
         </Button>
       </form>

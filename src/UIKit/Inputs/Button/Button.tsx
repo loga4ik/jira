@@ -15,6 +15,7 @@ type Props = {
   bg_color?: boolean;
   lightShadow?: boolean;
   title: string;
+  shadow?: boolean;
 };
 
 export const Button: React.FC<Props> = ({
@@ -27,6 +28,7 @@ export const Button: React.FC<Props> = ({
   defaultBorder = true,
   bg_color = true,
   lightShadow = false,
+  shadow = true,
   title,
 }) => {
   const { theme } = useContext(ThemeContext);
@@ -38,7 +40,7 @@ export const Button: React.FC<Props> = ({
         type={type}
         className={`
         ${defaultMP && "mx-2 my-4 px-5 py-1"} 
-        ${defaultBorder && "border-gray-200 outline-inherit rounded-md"} 
+        ${defaultBorder && "border border-gray-200 outline-inherit rounded-md"} 
         ${
           changableIconClass
             ? theme !== "dark"
@@ -47,15 +49,24 @@ export const Button: React.FC<Props> = ({
             : ""
         } 
         ${
-          theme === "dark"
+          theme === "dark" && shadow
             ? `dark_out_small  ${
                 bg_color ? "bg-gray-700 text-gray-300" : " bg-inherit"
               }`
             : `light_out_small  ${
                 bg_color ? "bg-gray-300 text-gray-600" : " bg-inherit"
               }`
-        } 
-        ${lightShadow && "light_out_small"}
+        }
+        ${
+          theme === "dark"
+            ? `${bg_color ? "bg-gray-700 text-gray-300" : " bg-inherit"}`
+            : `${bg_color ? "bg-gray-300 text-gray-600" : " bg-inherit"}`
+        }
+        ${lightShadow && "light_out_small"}        
+        ${
+          !shadow &&
+          "shadow-none border border-gray-200 outline-inherit rounded-md"
+        }
         back-image-center ${className}`}
         onClick={onClick}
       >

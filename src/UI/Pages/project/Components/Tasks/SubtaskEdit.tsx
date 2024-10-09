@@ -65,14 +65,14 @@ const SubtaskEdit: React.FC<Props> = ({ subtask, closeModal }) => {
       onSubmit={handleSubmit(formOnSubmitHandler)}
     >
       <h1 className="text-xl m-1">{`${
-        userList[0] ? "Делегировать задачу":'добавьте пользователей'
+        userList[0] ? "Делегировать задачу" : "добавьте пользователей"
       }`}</h1>
 
       <TextInput
         className="w-full"
         inputType="text"
         placeholder="Название подзадачи"
-        register={register("title")}
+        register={register("title", { required: "обязательное поле" })}
       />
 
       {statusList.length > 0 && (
@@ -97,7 +97,7 @@ const SubtaskEdit: React.FC<Props> = ({ subtask, closeModal }) => {
               key={`user-${user.id}`}
               label={user.login}
               value={user.id}
-              register={register("user_id")}
+              register={register("user_id", { required: "обязательное поле" })}
             />
           ))}
       </div>
@@ -106,7 +106,7 @@ const SubtaskEdit: React.FC<Props> = ({ subtask, closeModal }) => {
         title="отправить"
         type="submit"
         bg_color={false}
-        lightShadow={true}
+        shadow={false}
         className="form_submit_btn"
       >
         Сохранить

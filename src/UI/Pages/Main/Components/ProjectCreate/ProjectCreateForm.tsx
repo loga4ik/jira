@@ -70,33 +70,33 @@ export const ProjectCreateForm = () => {
             inputType="text"
             placeholder="название проекта"
             className="aim_input"
-            register={register("title")}
+            register={register("title", { required: "обязательное поле" })}
           />
           <TextInput
             inputType="text"
             placeholder="описание"
             className="aim_input"
-            register={register("description")}
+            register={register("description", { required: "обязательное поле" })}
           />
         </div>
         <div className="flex flex-wrap">
           {taskFields.map((task, task_id) => (
             <Wrapper
               key={task_id}
-              lightShadow={true}
+              shadow={false}
               className="aimForm-task rounded-xl m-3 w-96"
             >
               <TextInput
                 inputType="text"
                 placeholder="задача"
                 className="task_input"
-                register={register(`tasks.${task_id}.title`)}
+                register={register(`tasks.${task_id}.title`, { required: "обязательное поле" })}
               />
               <TextInput
                 inputType="text"
                 placeholder="описание"
                 className="task_input"
-                register={register(`tasks.${task_id}.description`)}
+                register={register(`tasks.${task_id}.description`, { required: "обязательное поле" })}
               />
               <div className="subTask pl-2">
                 <CreateSubtaskForm control={control} task_id={task_id} />
@@ -104,8 +104,9 @@ export const ProjectCreateForm = () => {
               <div className="w-full flex flex-row-reverse">
                 <Button
                   title="удалить"
-                  className="form_btn m-3 mt-0 px-2 py-1"
-                  lightShadow={true}
+                  className="form_btn m-3 mt-0 px-2 py-1 w-fit text-white"
+                  shadow={false}
+                  bg_color={false}
                   type="button"
                   defaultMP={false}
                   onClick={() => tasksRemove(task_id)}
@@ -119,9 +120,10 @@ export const ProjectCreateForm = () => {
         <div className="flex justify-between">
           <Button
             title="добавить"
-            className="form_btn"
             type="button"
-            lightShadow={true}
+            className="w-fit text-white"
+            shadow={false}
+            bg_color={false}
             onClick={() =>
               tasksAppend({
                 title: "",
@@ -134,9 +136,10 @@ export const ProjectCreateForm = () => {
           </Button>
 
           <Button
-            className="form_btn"
             title="отправить"
-            lightShadow={true}
+            className="w-fit text-white"
+            shadow={false}
+            bg_color={false}
             type="submit"
           >
             сохранить

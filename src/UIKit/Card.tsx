@@ -7,14 +7,22 @@ export type CardData = {
   description: string;
   img: string;
   id: number;
+  owner_id: number;
 };
 
-const Card: React.FC<CardData> = ({ title, description, img, id }) => {
+const Card: React.FC<CardData> = ({
+  title,
+  description,
+  img,
+  id,
+  owner_id,
+}) => {
   const data = {
-    title: title,
-    description: description,
-    img: img,
-    id: id,
+    title,
+    description,
+    img,
+    id,
+    owner_id,
   };
 
   const navigate = useNavigate();

@@ -34,3 +34,11 @@
   background-image: url(/public/img/chat_dark.svg);
   background-size: 60%;
 }
+.home_light {
+  background-image: url(/public/img/home.svg);
+  background-size: 70%;
+}
+.home_dark {
+  background-image: url(/public/img/home_dark.svg);
+  background-size: 60%;
+}

@@ -186,6 +186,7 @@ export const getProjectData = createAsyncThunk<
     }
   }
 );
+
 type updateAllType = {
   project: Project;
   tasks: TaskType[];
@@ -256,9 +257,13 @@ export const createNewProject = createAsyncThunk<
     }
   }
 );
-
+type updateTask = {
+  project: Project;
+  taskData: TaskType;
+  subtaskList: SubtaskType[];
+};
 export const editeTask = createAsyncThunk<
-  updateAllType, // Ожидаемый тип успешного ответа
+  updateTask, // Ожидаемый тип успешного ответа
   EditeTaskType, // Тип аргументов
   { rejectValue: string } // Тип для ошибки
 >(
@@ -278,7 +283,7 @@ export const editeTask = createAsyncThunk<
         // signal: abortController.signal,
       });
       const res = await response.json();
-      return res as updateAllType; // Возвращаем успешный результат
+      return res as updateTask; // Возвращаем успешный результат
     } catch (error) {
       return thunkAPI.rejectWithValue(`${error}`);
     }

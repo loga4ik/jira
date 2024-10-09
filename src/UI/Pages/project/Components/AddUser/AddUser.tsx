@@ -60,39 +60,42 @@ const AddUser = () => {
       <div className="p-4">
         <p>Уже на проекте:</p>
         {activeUsers.length > 0 &&
-          activeUsers.map((user) => (
-            <div className="flex" key={user.id}>
-              <p>
-                Name: {user.name} Login: {user.login}{" "}
-                <Button
-                  title="удалить"
-                  type="button"
-                  className="h-8"
-                  changableIconClass="bin"
-                  lightShadow={true}
-                  onClick={() => removeClickHandler(user.id)}
-                />
-              </p>
-            </div>
-          ))}
+          activeUsers.map(
+            (user) =>
+              user.id !== state.owner_id && (
+                <div className="flex items-center" key={user.id}>
+                  <p>
+                    Name: {user.name} Login: {user.login}
+                  </p>
+                  <Button
+                    title="удалить"
+                    type="button"
+                    className="h-10 border-transparent"
+                    changableIconClass="bin"
+                    shadow={false}
+                    onClick={() => removeClickHandler(user.id)}
+                  />
+                </div>
+              )
+          )}
       </div>
       <hr />
       <div className="p-4">
         <p>Добавить:</p>
         {freeUsers.length > 0 &&
           freeUsers.map((user) => (
-            <div className="flex" key={user.id}>
+            <div className="flex items-center" key={user.id}>
               <p>
-                Name: {user.name} Login: {user.login}{" "}
-                <Button
-                  title="добавить"
-                  type="button"
-                  className="h-8"
-                  changableIconClass="add"
-                  lightShadow={true}
-                  onClick={() => addClickHandler(user.id)}
-                />
+                Name: {user.name} Login: {user.login}
               </p>
+              <Button
+                title="добавить"
+                type="button"
+                className="h-10 border-transparent"
+                changableIconClass="add"
+                shadow={false}
+                onClick={() => addClickHandler(user.id)}
+              />
             </div>
           ))}
       </div>

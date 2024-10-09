@@ -43,10 +43,6 @@ const Register = () => {
       query.meta.requestStatus === "fulfilled" && navigate("/");
     })();
   };
-  // useEffect(() => {
-  //   console.log(errors);
-  // }, [errors.login, errors.password, errors.phone]);
-
   return (
     <>
       <div className="flex justify-center">

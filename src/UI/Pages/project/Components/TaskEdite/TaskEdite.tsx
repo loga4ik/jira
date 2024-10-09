@@ -16,10 +16,11 @@ export type EditeTaskType = {
 };
 
 type Props = {
+  closeModal: () => void;
   task_id: number;
 };
 
-export const TaskEdite: React.FC<Props> = ({ task_id }) => {
+export const TaskEdite: React.FC<Props> = ({ closeModal, task_id }) => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -68,8 +69,8 @@ export const TaskEdite: React.FC<Props> = ({ task_id }) => {
 
   const formHandleSubmit = (data: EditeTaskType) => {
     (async () => {
-      console.log(data);
       dispatch(editeTask(data));
+      closeModal();
       // Логика сохранения
     })();
   };
@@ -85,13 +86,13 @@ export const TaskEdite: React.FC<Props> = ({ task_id }) => {
             inputType="text"
             placeholder="название проекта"
             className="aim_input"
-            register={register("title")}
+            register={register("title", { required: "обязательное поле" })}
           />
           <TextInput
             inputType="textarea"
             placeholder="описание"
             className="aim_input"
-            register={register("description")}
+            register={register("description", { required: "обязательное поле" })}
           />
         </div>
         <div className="flex flex-wrap">
@@ -100,12 +101,13 @@ export const TaskEdite: React.FC<Props> = ({ task_id }) => {
               key={subtask_id}
               lightShadow={true}
               className="aimForm-task rounded-xl m-3 w-96"
+              shadow={false}
             >
               <TextInput
                 inputType="text"
                 placeholder="задача"
                 className="task_input"
-                register={register(`subtasks.${subtask_id}.title`)}
+                register={register(`subtasks.${subtask_id}.title`, { required: "обязательное поле" })}
               />
               <div className="w-full flex flex-row-reverse">
                 <Button
@@ -115,6 +117,7 @@ export const TaskEdite: React.FC<Props> = ({ task_id }) => {
                   defaultMP={false}
                   bg_color={false}
                   lightShadow={true}
+                  shadow={false}
                   onClick={() => subtasksRemove(subtask_id)}
                 >
                   удалить
@@ -130,6 +133,7 @@ export const TaskEdite: React.FC<Props> = ({ task_id }) => {
             type="button"
             bg_color={false}
             lightShadow={true}
+            shadow={false}
             onClick={() =>
               subtasksAppend({
                 id: undefined,
@@ -145,6 +149,7 @@ export const TaskEdite: React.FC<Props> = ({ task_id }) => {
             className="form_btn"
             bg_color={false}
             lightShadow={true}
+            shadow={false}
             type="submit"
           >
             сохранить

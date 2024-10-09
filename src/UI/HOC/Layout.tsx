@@ -7,6 +7,7 @@ import { ThemeContext } from "../../Context/ThemeContext";
 import { ThemeSwitcher } from "../../UIKit/themeSwicher/ThemeSwitcher";
 import { Button } from "../../UIKit/Inputs/Button/Button";
 import { getCookie, logOut } from "../../Lib/Slices/userSlice/userApi";
+import UserList from "../Pages/project/Components/UserList/UserList";
 
 export const Layout = () => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
@@ -36,6 +37,7 @@ export const Layout = () => {
     >
       <header className="header">
         <ThemeSwitcher />
+        {location.pathname === "/project" && <UserList />}
         {currentUser?.login && (
           <Button
             title="выход"
@@ -50,7 +52,7 @@ export const Layout = () => {
         )}
         {location.pathname === "/register" && !currentUser?.login && (
           <Button
-              title="регистрация"
+            title="регистрация"
             type="button"
             className={"form_btn-navigate"}
             defaultMP={false}
@@ -68,7 +70,7 @@ export const Layout = () => {
         )}
         {location.pathname === "/login" && !currentUser?.login && (
           <Button
-              title="вход"
+            title="вход"
             type="button"
             className={"form_btn-navigate"}
             defaultMP={false}

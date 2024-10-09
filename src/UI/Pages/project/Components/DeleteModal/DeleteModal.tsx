@@ -23,11 +23,12 @@ const DeleteModal: React.FC<Props> = ({ project_id }) => {
         вы действительно хотите удалить данный проект?
       </p>
       <Button
-              title="удалить"
+        title="удалить"
         type="button"
         className="w-fit text-white"
         bg_color={false}
         lightShadow={true}
+        shadow={false}
         onClick={deleteClickHandler}
       >
         удалить
