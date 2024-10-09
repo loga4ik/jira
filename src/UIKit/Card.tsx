@@ -23,23 +23,23 @@ const Card: React.FC<CardData> = ({ title, description, img, id }) => {
   };
   return (
     <Wrapper
-      className="flex rounded-lg max-w-xl
-    w-full mb-5 min-w-60 items-center cursor-pointer"
+      className="grid grid-cols-6 rounded-lg max-w-xl
+    w-full mb-5 cursor-pointer"
       onClick={redirectClickHandler}
     >
       <img
         className="w-20 h-full rounded-l-lg p-3 ml-3"
         src={"../public/img/noIco.svg"}
-        alt=""
+        alt="иконка проекта"
       />
-      <div className="p-4">
+      <div className="p-4 col-start-2 col-end-8">
         <h5
           className="mb-2 text-2xl font-bold tracking-tight
         text-gray-600"
         >
           {title}
         </h5>
-        <p className="mb-3 font-normal text-gray-400">{description}</p>
+        <p className="mb-3 font-normal text-gray-400 max-w-96">{description}</p>
       </div>
     </Wrapper>
   );
