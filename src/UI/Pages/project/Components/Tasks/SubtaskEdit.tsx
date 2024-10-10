@@ -69,7 +69,7 @@ const SubtaskEdit: React.FC<Props> = ({ subtask, closeModal }) => {
       }`}</h1>
 
       <TextInput
-        className="w-full"
+        className="w-full ml-0"
         inputType="text"
         placeholder="Название подзадачи"
         register={register("title", { required: "обязательное поле" })}
