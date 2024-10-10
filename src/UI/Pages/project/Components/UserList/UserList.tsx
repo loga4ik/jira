@@ -3,7 +3,6 @@ import { RootState } from "../../../../../Lib/store";
 
 const UserList = () => {
   const userList = useSelector((state: RootState) => state.project.userList);
-  console.log(userList);
 
   return (
     <div className="flex items-center">
@@ -11,7 +10,7 @@ const UserList = () => {
       <div className="flex">
         {userList.map((user) => (
           <p
-            key={user.id}
+            key={`${user.id}_user-item`}
             className="border-2 rounded-lg mr-2 py px-3 border-gray-400 h-fit"
           >
             {user.login}

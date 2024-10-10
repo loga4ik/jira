@@ -42,7 +42,13 @@ const projectSlice = createSlice({
       action.payload.subtasks && (state.subtasks = action.payload.subtasks);
     });
     element.addCase(getUserList.fulfilled, (state, action) => {
-      state.userList = action.payload;
+      const uniqueArray = [
+        ...new Set(action.payload.map((item) => item.id)),
+      ]
+        .map((id) => action.payload.find((item) => item.id === id))
+        .filter((item): item is UserType => item !== undefined); // Filter out undefined
+    
+      state.userList = uniqueArray;
     });
     element.addCase(addUserInProject.fulfilled, (state, action) => {
       state.userList = action.payload.activeUsers;
