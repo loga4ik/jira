@@ -65,7 +65,7 @@ const AddUser = () => {
               user.id !== state.owner_id && (
                 <div className="flex items-center" key={user.id}>
                   <p>
-                    Name: {user.name} Login: {user.login}
+                    имя: {user.name} логин: {user.login}
                   </p>
                   <Button
                     title="удалить"
@@ -86,7 +86,7 @@ const AddUser = () => {
           freeUsers.map((user) => (
             <div className="flex items-center" key={user.id}>
               <p>
-                Name: {user.name} Login: {user.login}
+              имя: {user.name} логин: {user.login}
               </p>
               <Button
                 title="добавить"
