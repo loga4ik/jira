@@ -20,6 +20,7 @@ type Props = {
   useDefaultStyles?: boolean;
   style?: CSSProperties;
   autocomplite?: string;
+  isRequired?: boolean;
 };
 
 const TextInput = forwardRef<HTMLInputElement, Props>(
@@ -34,6 +35,7 @@ const TextInput = forwardRef<HTMLInputElement, Props>(
       useDefaultStyles = true,
       style,
       autocomplite,
+      isRequired = false,
     },
     ref
   ) => {
@@ -43,14 +45,29 @@ const TextInput = forwardRef<HTMLInputElement, Props>(
 
     if (inputType === "masked") {
       return (
-        <InputMask
-          mask="+7(___)-___-__-__"
-          replacement={{ _: /\d/ }}
-          placeholder={placeholder}
-          className={`${className} ${defaultClassNames}`}
-          autoComplete={autocomplite}
-          {...register}
-        />
+        <div>
+          <InputMask
+            mask="+7(___)-___-__-__"
+            replacement={{ _: /\d/ }}
+            placeholder={placeholder}
+            className={`${className} ${defaultClassNames}`}
+            autoComplete={autocomplite}
+            {...register}
+          />
+          {isRequired && (
+            <span
+              style={{
+                position: "absolute",
+                // top: "-10px",
+                right: "12px",
+                color: "red",
+                fontWeight: "bold",
+              }}
+            >
+              *
+            </span>
+          )}
+        </div>
       );
     } else if (inputType === "textarea") {
       return (
@@ -66,27 +83,32 @@ const TextInput = forwardRef<HTMLInputElement, Props>(
       );
     }
     return (
-      <input
-        ref={ref}
-        className={`${useDefaultStyles && defaultClassNames} ${className}`}
-        type={inputType}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        style={style}
-        autoComplete={autocomplite}
-        {...register}
-      />
-      // <div className="w-full max-w-md px-4">
-      //   <Field>
-      //     <Input
-      //      className={clsx(
-      //       'mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white',
-      //       'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25'
-      //     )}
-      //     />
-      //   </Field>
-      // </div>
+      <div>
+        <input
+          ref={ref}
+          className={`${useDefaultStyles && defaultClassNames} ${className}`}
+          type={inputType}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          style={style}
+          autoComplete={autocomplite}
+          {...register}
+        />
+        {isRequired && (
+          <span
+            style={{
+              position: "absolute",
+              // top: "-10px",
+              right: "12px",
+              color: "red",
+              fontWeight: "bold",
+            }}
+          >
+            *
+          </span>
+        )}
+      </div>
     );
   }
 );

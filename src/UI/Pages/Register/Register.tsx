@@ -60,10 +60,11 @@ const Register = () => {
                 inputType="text"
                 placeholder="имя"
                 autocomplite="name"
+                isRequired={true}
                 register={register("name", { required: "обязательное поле" })}
               />
               {errors.name && (
-                <p className="absolute bottom-0 text-sm">
+                <p className="absolute bottom-0 text-sm ml-2 text-red-400 text-red-400">
                   {errors.name.message}
                 </p>
               )}
@@ -76,12 +77,13 @@ const Register = () => {
                 inputType="text"
                 placeholder="фамилия"
                 autocomplite="surname"
+                isRequired={true}
                 register={register("surname", {
                   required: "обязательное поле",
                 })}
               />
               {errors.surname && (
-                <p className="absolute bottom-0 text-sm">
+                <p className="absolute bottom-0 text-sm ml-2 text-red-400">
                   {errors.surname.message}
                 </p>
               )}
@@ -96,12 +98,10 @@ const Register = () => {
                 inputType="text"
                 placeholder="отчество"
                 autocomplite="patronymic"
-                register={register("patronymic", {
-                  required: "обязательное поле",
-                })}
+                register={register("patronymic")}
               />
               {errors.patronymic && (
-                <p className="absolute bottom-0 text-sm">
+                <p className="absolute bottom-0 text-sm ml-2 text-red-400">
                   {errors.patronymic.message}
                 </p>
               )}
@@ -114,10 +114,11 @@ const Register = () => {
                 inputType="masked"
                 placeholder="телефон"
                 autocomplite="phone"
+                isRequired={true}
                 register={register("phone", { required: "обязательное поле" })}
               />
               {errors.phone && (
-                <p className="absolute bottom-0 text-sm">
+                <p className="absolute bottom-0 text-sm ml-2 text-red-400">
                   {errors.phone.message}
                 </p>
               )}
@@ -130,10 +131,10 @@ const Register = () => {
                 inputType="text"
                 placeholder="email"
                 autocomplite="email"
-                register={register("email", { required: "обязательное поле" })}
+                register={register("email")}
               />
               {errors.email && (
-                <p className="absolute bottom-0 text-sm ">
+                <p className="absolute bottom-0 text-sm ml-2 text-red-400">
                   {errors.email.message}
                 </p>
               )}
@@ -146,10 +147,11 @@ const Register = () => {
                 inputType="text"
                 placeholder="логин"
                 autocomplite="login"
+                isRequired={true}
                 register={register("login", { required: "обязательное поле" })}
               />
               {errors.login && (
-                <p className="absolute bottom-0 text-sm">
+                <p className="absolute bottom-0 text-sm ml-2 text-red-400">
                   {errors.login.message}
                 </p>
               )}
@@ -165,12 +167,13 @@ const Register = () => {
                 inputType="password"
                 placeholder="пароль"
                 autocomplite="password"
+                isRequired={true}
                 register={register("password", {
                   required: "обязательное поле",
                 })}
               />
               {errors.password && (
-                <p className="absolute bottom-0 text-sm">
+                <p className="absolute bottom-0 text-sm ml-2 text-red-400">
                   {errors.password.message}
                 </p>
               )}
@@ -186,12 +189,13 @@ const Register = () => {
                 inputType="password"
                 placeholder="повтор пароля"
                 autocomplite="password_repeat"
+                isRequired={true}
                 register={register("password_repeat", {
                   required: "обязательное поле",
                 })}
               />
               {errors.password_repeat && (
-                <p className="absolute bottom-0 text-sm">
+                <p className="absolute bottom-0 text-sm ml-2 text-red-400">
                   {errors.password_repeat.message}
                 </p>
               )}

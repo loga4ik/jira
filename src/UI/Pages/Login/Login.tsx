@@ -1,17 +1,20 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { AppDispatch } from "../../../Lib/store";
+import { AppDispatch, RootState } from "../../../Lib/store";
 import { UserLoginData } from "../../../types/UserTypes";
 import { Wrapper } from "../../../UIKit/Wrapper";
 import TextInput from "../../../UIKit/Inputs/TextInput";
 import { Button } from "../../../UIKit/Inputs/Button/Button";
 import HiddenInput from "../../../UIKit/Inputs/HiddenInput/HiddenInput";
 import { loginUser } from "../../../Lib/Slices/userSlice/userApi";
+import { useEffect } from "react";
+import { setDefaultError } from "../../../Lib/Slices/userSlice/userSlice";
 
 const Login = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const error = useSelector((state: RootState) => state.user.error);
 
   const {
     handleSubmit,
@@ -31,6 +34,12 @@ const Login = () => {
     })();
   };
 
+  useEffect(() => {
+    return () => {
+      dispatch(setDefaultError());
+    };
+  }, [dispatch]);
+
   return (
     <>
       <div className="flex justify-center">
@@ -40,6 +49,7 @@ const Login = () => {
             className="flex flex-col items-center"
             onSubmit={handleSubmit(formOnSubmitHandler)}
           >
+            <p className="p-3 text-red-400">{error}</p>
             <div className="relative w-1/2">
               <TextInput
                 className={`focus:outline-none focus:ring mt-0 mb-5

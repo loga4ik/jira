@@ -13,6 +13,7 @@ type Props = {
   register?: UseFormRegisterReturn;
   autocomplite?: string;
   focusClass?: string;
+  isRequired?: boolean;
 };
 
 const HiddenInput = forwardRef<HTMLInputElement, Props>(
@@ -25,6 +26,7 @@ const HiddenInput = forwardRef<HTMLInputElement, Props>(
       onChange,
       autocomplite,
       focusClass,
+      isRequired = false,
     },
     ref
   ) => {
@@ -53,6 +55,19 @@ const HiddenInput = forwardRef<HTMLInputElement, Props>(
           changableIconClass={!isOpen ? "eye-open" : "eye-close"}
           defaultMP={false}
         ></Button>
+        {isRequired && (
+          <span
+            style={{
+              position: "absolute",
+              top: "0px",
+              right: "4px",
+              color: "red",
+              fontWeight: "bold",
+            }}
+          >
+            *
+          </span>
+        )}
       </div>
     );
   }
