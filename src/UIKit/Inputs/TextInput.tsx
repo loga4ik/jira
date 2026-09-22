@@ -4,10 +4,8 @@ import {
   ChangeEventHandler,
   ReactNode,
   forwardRef,
-  useContext,
 } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
-import { ThemeContext } from "../../Context/ThemeContext";
 
 type Props = {
   inputType: "text" | "password" | "masked" | "textarea";
@@ -23,7 +21,7 @@ type Props = {
   isRequired?: boolean;
 };
 
-const TextInput = forwardRef<HTMLInputElement, Props>(
+const  TextInput = forwardRef<HTMLInputElement, Props>(
   (
     {
       inputType,

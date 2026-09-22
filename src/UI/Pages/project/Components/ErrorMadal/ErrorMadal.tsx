@@ -5,7 +5,6 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import React, { ReactNode } from "react";
 
 type Props = {
   open: boolean;

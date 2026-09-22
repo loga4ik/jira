@@ -2,7 +2,7 @@ import { TaskType } from "../../../../../Lib/Slices/projectSlice/types";
 import Subtask from "./Subtask";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../Lib/store";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { ProjectContext } from "../../../../../Context/ProjectConstext";
 
 type Props = {

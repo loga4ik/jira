@@ -16,7 +16,7 @@ export const SubtaskForm: React.FC<Props> = ({ control, task_id }) => {
 
   return (
     <>
-      {subtaskFields.map((subtask, subtask_id) => (
+      {subtaskFields.map((_, subtask_id) => (
         <div key={`subtask${subtask_id}`} className="form_subtask">
           <Controller
             name={`tasks.${task_id}.subtasks.${subtask_id}.title`} // Corrected to "title" as per your subtask structure

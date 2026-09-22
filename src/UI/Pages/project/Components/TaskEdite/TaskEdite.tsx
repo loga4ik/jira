@@ -96,7 +96,7 @@ export const TaskEdite: React.FC<Props> = ({ closeModal, task_id }) => {
           />
         </div>
         <div className="flex flex-wrap">
-          {subtaskFields.map((subtask, subtask_id) => (
+          {subtaskFields.map((_, subtask_id) => (
             <Wrapper
               key={subtask_id}
               lightShadow={true}

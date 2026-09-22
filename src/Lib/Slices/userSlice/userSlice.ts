@@ -62,7 +62,7 @@ const userSlice = createSlice({
     element.addCase(registerUser.rejected, (state, action) => {
       state.error = String(action.payload);
     });
-    element.addCase(logOut.fulfilled, (state, action) => {
+    element.addCase(logOut.fulfilled, (state) => {
       state.currentUser = undefined;
       state.error = undefined;
       state.userList = [];

@@ -80,7 +80,7 @@ export const ProjectCreateForm = () => {
           />
         </div>
         <div className="flex flex-wrap">
-          {taskFields.map((task, task_id) => (
+          {taskFields.map((_, task_id) => (
             <Wrapper
               key={task_id}
               shadow={false}

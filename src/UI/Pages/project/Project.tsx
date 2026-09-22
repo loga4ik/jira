@@ -18,7 +18,7 @@ import { ErrorMadal } from "./Components/ErrorMadal/ErrorMadal";
 const Project = () => {
   const location = useLocation();
   const state = location.state as CardData | undefined;
-  const { userList, project } = useSelector(
+  const { project } = useSelector(
     (state: RootState) => state.project
   );
 

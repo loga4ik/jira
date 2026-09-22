@@ -1,5 +1,4 @@
-import React, { useContext } from "react";
-import { Control, Controller, useFieldArray } from "react-hook-form";
+import { Control, useFieldArray } from "react-hook-form";
 import { CreateProjectType } from "./ProjectCreateForm";
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
 import TextInput from "../../../../../UIKit/Inputs/TextInput";
@@ -21,7 +20,7 @@ export const CreateSubtaskForm: React.FC<Props> = ({ control, task_id }) => {
 
   return (
     <>
-      {subtakFields.map((subtask, subtask_id) => (
+      {subtakFields.map((_, subtask_id) => (
         <div
           key={`subtask${subtask_id}`}
           className="form_subtask flex items-center"

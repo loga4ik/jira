@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../../Lib/store";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
@@ -102,7 +102,7 @@ const EditProject: React.FC<Props> = ({ closeModal }) => {
           />
         </div>
         <div className="flex flex-wrap">
-          {taskFields.map((task, task_id) => (
+          {taskFields.map((_, task_id) => (
             <Wrapper
               key={task_id}
               lightShadow={true}
