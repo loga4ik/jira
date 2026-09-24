@@ -1,3 +1,4 @@
+import { apiFetch } from "../Lib/api/apiFetch";
 import React, { useState, createContext, ReactNode, useEffect } from "react";
 
 type StatusType = {
@@ -46,7 +47,7 @@ export const ProjectContextWrapper: React.FC<ProviderProps> = ({
     const abortController = new AbortController();
     (async () => {
       try {
-        const response = await fetch("/api/status/", {
+        const response = await apiFetch("/api/status/", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

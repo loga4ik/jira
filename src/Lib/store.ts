@@ -1,14 +1,20 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { setupListeners } from "@reduxjs/toolkit/query";
 import { useDispatch } from "react-redux";
-import userSlice from "./Slices/userSlice/userSlice";
 import projectSlice from "./Slices/projectSlice/projectSlice";
+import { userApi } from "./api/userApi";
 
 const store = configureStore({
   reducer: {
-    user: userSlice,
     project: projectSlice,
+    [userApi.reducerPath]: userApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(userApi.middleware),
 });
+
+// перезапрос данных при возвращении фокуса на вкладку и восстановлении сети
+setupListeners(store.dispatch);
 
 export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch: () => AppDispatch = useDispatch;

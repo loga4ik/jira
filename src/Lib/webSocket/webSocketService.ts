@@ -1,3 +1,5 @@
+import { getAccessToken, refreshAccessToken } from "../api/authToken";
+
 export interface Message {
   projectId: number;
   user_id: number;
@@ -6,55 +8,76 @@ export interface Message {
 
 type OnMessageReceived = (message: Message) => void;
 
-const WEB_SOCKET_URL = "ws://45.67.56.125:4000/ws"; // URL вашего WebSocket сервера
+/**
+ * Чат ходит на тот же origin, что и страница (в разработке — через vite-прокси),
+ * а не на захардкоженный адрес. Токен — query-параметром: браузерный WebSocket
+ * не умеет передавать заголовки.
+ */
+const buildUrl = (token: string) => {
+  const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+  return `${protocol}//${window.location.host}/ws?token=${encodeURIComponent(token)}`;
+};
 
 let ws: WebSocket | null = null;
 
-export const connectWebSocket = (
+// Номер текущего подключения. Если компонент размонтировали, пока мы ждали
+// токен, результат устаревшего подключения просто выбрасываем.
+let generation = 0;
+
+export const connectWebSocket = async (
   onMessageReceived: OnMessageReceived,
   projectId: number
-): void => {
-  if (ws) {
-    console.warn("WebSocket connection already established");
+): Promise<void> => {
+  const current = ++generation;
+
+  // После перезагрузки страницы токена в памяти ещё нет — поднимаем его по
+  // refresh-куке. Если обновление уже идёт, refreshAccessToken вернёт тот же промис.
+  if (!getAccessToken()) await refreshAccessToken();
+  const token = getAccessToken();
+
+  if (current !== generation) return;
+  if (!token) {
+    console.error("Нет токена для подключения к чату");
     return;
   }
 
-  ws = new WebSocket(WEB_SOCKET_URL);
+  ws?.close();
+  const socket = new WebSocket(buildUrl(token));
+  ws = socket;
 
-  ws.onopen = () => {
-    console.log("WebSocket connection opened");
-    ws && ws.send(JSON.stringify({ type: "join_room", projectId }));
+  socket.onopen = () => {
+    socket.send(JSON.stringify({ type: "join_room", projectId }));
   };
 
-  ws.onmessage = (event: MessageEvent) => {
+  socket.onmessage = (event: MessageEvent) => {
     try {
-      const parsedMessage: Message = JSON.parse(event.data);
-      onMessageReceived(parsedMessage);
+      const parsed = JSON.parse(event.data);
+      if (parsed.type === "error") {
+        console.error("Чат:", parsed.message);
+        return;
+      }
+      onMessageReceived(parsed as Message);
     } catch (error) {
       console.error("Error parsing WebSocket message:", error);
     }
   };
 
-  ws.onclose = () => {
-    console.log("WebSocket connection closed");
-  };
-
-  ws.onerror = (error: Event) => {
+  socket.onerror = (error: Event) => {
     console.error("WebSocket error:", error);
   };
 };
 
-export const sendMessage = (message: Message): void => {
+/** Автора сервер берёт из токена соединения, поэтому отправляем только текст. */
+export const sendMessage = ({ text }: { text: string }): void => {
   if (ws && ws.readyState === WebSocket.OPEN) {
-    ws.send(JSON.stringify(message));
+    ws.send(JSON.stringify({ text }));
   } else {
     console.error("WebSocket is not open");
   }
 };
 
 export const closeWebSocket = (): void => {
-  if (ws) {
-    ws.close();
-    ws = null; // Clear the WebSocket connection
-  }
+  generation++;
+  ws?.close();
+  ws = null;
 };

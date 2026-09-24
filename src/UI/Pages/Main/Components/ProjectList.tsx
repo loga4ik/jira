@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Card from "../../../../UIKit/Card";
-import { RootState } from "../../../../Lib/store";
-import { useSelector } from "react-redux";
 import { userProjects } from "../../../../Api/projectApi";
 import { UserProjectsType } from "../../../../Lib/Slices/projectSlice/types";
+import { useCurrentUser } from "../../../../Hooks/useCurrentUser";
 export const ProjectList: React.FC = () => {
-  const currentUser = useSelector((state: RootState) => state.user.currentUser);
+  const { currentUser } = useCurrentUser();
   const [projectList, setProjectList] = useState<UserProjectsType | null>(null);
   const abortController = new AbortController();
 

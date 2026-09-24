@@ -1,3 +1,4 @@
+import { apiFetch } from "../../api/apiFetch";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   ManageUserInProjectReqType,
@@ -31,7 +32,7 @@ export const getTasksAndSubtasks = createAsyncThunk<
   async ({ project_id, abortController }: ReqProject_idType, thunkAPI) => {
     try {
       // Передаем сигнал для отмены запроса
-      const response = await fetch(
+      const response = await apiFetch(
         `/api/task/getTasksAndSubtasks/${project_id}`,
         {
           method: "GET",
@@ -57,7 +58,7 @@ export const getUserList = createAsyncThunk<
   async ({ project_id, abortController }: ReqProject_idType, thunkAPI) => {
     try {
       // Передаем сигнал для отмены запроса
-      const response = await fetch(`/api/team/${project_id}`, {
+      const response = await apiFetch(`/api/team/${project_id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -83,7 +84,7 @@ export const addUserInProject = createAsyncThunk<
   ) => {
     try {
       // Передаем сигнал для отмены запроса
-      const response = await fetch(`/api/team/create`, {
+      const response = await apiFetch(`/api/team/create`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -113,7 +114,7 @@ export const removeUserInProject = createAsyncThunk<
   ) => {
     try {
       // Передаем сигнал для отмены запроса
-      const response = await fetch(`/api/team/deleteUser/${user_id}`, {
+      const response = await apiFetch(`/api/team/deleteUser/${user_id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json", // Указываем тип содержимого
@@ -148,7 +149,7 @@ export const updateSubtask = createAsyncThunk<
   ) => {
     try {
       // Передаем сигнал для отмены запроса
-      const response = await fetch(`/api/subtask/addUserInSubtaskRename`, {
+      const response = await apiFetch(`/api/subtask/addUserInSubtaskRename`, {
         method: "put",
         headers: {
           "Content-Type": "application/json", // Указываем тип содержимого
@@ -171,7 +172,7 @@ export const getProjectData = createAsyncThunk<
   "getProjectData",
   async ({ project_id, abortController }: ReqProject_idType, thunkAPI) => {
     try {
-      const response = await fetch(`/api/project/${project_id}`, {
+      const response = await apiFetch(`/api/project/${project_id}`, {
         method: "get",
         headers: {
           "Content-Type": "application/json",
@@ -204,7 +205,7 @@ export const updateAllProject = createAsyncThunk<
     thunkAPI
   ) => {
     try {
-      const response = await fetch(`/api/project/updateAll`, {
+      const response = await apiFetch(`/api/project/updateAll`, {
         method: "put",
         headers: {
           "Content-Type": "application/json",
@@ -237,7 +238,7 @@ export const createNewProject = createAsyncThunk<
     thunkAPI
   ) => {
     try {
-      const response = await fetch(`/api/project/create`, {
+      const response = await apiFetch(`/api/project/create`, {
         method: "post",
         headers: {
           "Content-Type": "application/json",
@@ -270,7 +271,7 @@ export const editeTask = createAsyncThunk<
   "editeTask",
   async ({ id, title, description, subtasks }: EditeTaskType, thunkAPI) => {
     try {
-      const response = await fetch(`/api/task/edite/${id}`, {
+      const response = await apiFetch(`/api/task/edite/${id}`, {
         method: "post",
         headers: {
           "Content-Type": "application/json",

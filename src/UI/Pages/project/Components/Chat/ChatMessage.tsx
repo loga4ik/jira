@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../Lib/store";
 import { UserType } from "../../../../../Lib/Slices/projectSlice/types";
+import { useCurrentUser } from "../../../../../Hooks/useCurrentUser";
 
 type Props = {
   text: string;
@@ -9,13 +10,13 @@ type Props = {
 };
 
 const ChatMessage: React.FC<Props> = ({ text, sender }) => {
-  const currentUser = useSelector((state: RootState) => state.user.currentUser);
+  const { currentUser } = useCurrentUser();
   const userList = useSelector((state: RootState) => state.project.userList);
   const [user, setUser] = useState<UserType>();
 
   useEffect(() => {
-    const userLogin = userList.find((user) => user.id === sender);
-    userLogin && setUser(userLogin);
+    const userLogin = userList.find((user) => user.id === sender)
+    userLogin && setUser(userLogin)
   }, [userList, sender]);
 
   return (

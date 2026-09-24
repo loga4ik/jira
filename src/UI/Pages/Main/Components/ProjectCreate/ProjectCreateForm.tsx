@@ -1,9 +1,10 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import "./EditProject.css";
 import { useNavigate } from "react-router-dom";
 import { useFieldArray, useForm } from "react-hook-form";
-import { AppDispatch, RootState } from "../../../../../Lib/store";
+import { AppDispatch } from "../../../../../Lib/store";
+import { useCurrentUser } from "../../../../../Hooks/useCurrentUser";
 import { CreateSubtaskForm } from "./CreateSubtaskForm";
 import { EditProjectType } from "../../../project/Components/EditProject/EditProject";
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
@@ -16,7 +17,7 @@ export type CreateProjectType = Omit<EditProjectType, "project_id"> & {
 };
 
 export const ProjectCreateForm = () => {
-  const currentUser = useSelector((state: RootState) => state.user.currentUser);
+  const { currentUser } = useCurrentUser();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 

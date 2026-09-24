@@ -1,3 +1,4 @@
+import { apiFetch } from "../Lib/api/apiFetch";
 import { UserType } from "../Lib/Slices/projectSlice/types";
 export type GetFreeUsers = {
   freeUsers: UserType[];
@@ -9,7 +10,7 @@ export const userProjects = async (
   abortController: AbortController
 ) => {
   try {
-    const response = await fetch(`/api/project/getUserProjects/${id}`, {
+    const response = await apiFetch(`/api/project/getUserProjects/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -30,7 +31,7 @@ export const userProjects = async (
 
 export const getStatusList = async (abortController: AbortController) => {
   try {
-    const response = await fetch(`/api/status`, {
+    const response = await apiFetch(`/api/status`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -54,7 +55,7 @@ export const deleteProject = async (
   abortController: AbortController
 ) => {
   try {
-    const response = await fetch(`/api/project/deleteProject/${project_id}`, {
+    const response = await apiFetch(`/api/project/deleteProject/${project_id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -78,7 +79,7 @@ export const isAvailableProject = async (
   abortController: AbortController
 ) => {
   try {
-    const response = await fetch(`/api/team/isAvailable/${project_id}`, {
+    const response = await apiFetch(`/api/team/isAvailable/${project_id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

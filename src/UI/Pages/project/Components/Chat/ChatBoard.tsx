@@ -1,3 +1,4 @@
+import { apiFetch } from "../../../../../Lib/api/apiFetch";
 import React, { useEffect, useState, useRef, FormEvent } from "react";
 import {
   closeWebSocket,
@@ -5,8 +6,6 @@ import {
   Message,
   sendMessage,
 } from "../../../../../Lib/webSocket/webSocketService";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../../Lib/store";
 import ChatMessage from "./ChatMessage";
 
 type Props = {
@@ -18,7 +17,6 @@ const ChatBoard: React.FC<Props> = ({ title, project_id }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [messageText, setMessageText] = useState("");
   const projectId = project_id;
-  const currentUser = useSelector((state: RootState) => state.user.currentUser);
   const messagesEndRef = useRef<HTMLDivElement>(null); // Ref для автоскролла
 
   // Функция для прокрутки чата вниз
@@ -29,7 +27,7 @@ const ChatBoard: React.FC<Props> = ({ title, project_id }) => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await fetch(`/api/message/${projectId}`);
+        const response = await apiFetch(`/api/message/${projectId}`);
         const data = await response.json();
         setMessages(data);
         scrollToBottom(); // Прокрутка чата после загрузки сообщений
@@ -44,7 +42,7 @@ const ChatBoard: React.FC<Props> = ({ title, project_id }) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     };
 
-    connectWebSocket(onMessageReceived, projectId);
+    void connectWebSocket(onMessageReceived, projectId);
 
     return () => {
       closeWebSocket(); // Закрытие WebSocket соединения при размонтировании
@@ -57,13 +55,9 @@ const ChatBoard: React.FC<Props> = ({ title, project_id }) => {
 
   const handleSendMessage = (e: FormEvent) => {
     e.preventDefault();
-    if (currentUser?.id && messageText.trim()) {
-      const message: Message = {
-        projectId,
-        user_id: currentUser.id,
-        text: messageText.trim(),
-      };
-      sendMessage(message);
+    if (messageText.trim()) {
+      // автора сервер берёт из токена соединения, поэтому шлём только текст
+      sendMessage({ text: messageText.trim() });
       setMessageText("");
     }
   };

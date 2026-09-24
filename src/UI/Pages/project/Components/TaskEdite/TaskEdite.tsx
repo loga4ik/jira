@@ -7,6 +7,7 @@ import { Button } from "../../../../../UIKit/Inputs/Button/Button";
 import { Wrapper } from "../../../../../UIKit/Wrapper";
 import TextInput from "../../../../../UIKit/Inputs/TextInput";
 import { editeTask } from "../../../../../Lib/Slices/projectSlice/projectApi";
+import { useCurrentUser } from "../../../../../Hooks/useCurrentUser";
 
 export type EditeTaskType = {
   id: number;
@@ -21,7 +22,7 @@ type Props = {
 };
 
 export const TaskEdite: React.FC<Props> = ({ closeModal, task_id }) => {
-  const currentUser = useSelector((state: RootState) => state.user.currentUser);
+  const { currentUser } = useCurrentUser();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 

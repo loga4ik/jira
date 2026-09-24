@@ -1,8 +1,16 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import type { UserLoginData, UserReg, UserType } from "../../types/UserTypes";
+import { baseQueryWithReauth } from "./baseQuery";
+import { setAccessToken } from "./authToken";
 
 /** То, что реально нужно интерфейсу: всё, кроме пароля. */
 export type AuthUser = Omit<UserType, "password">;
+
+/** Ответ входа, регистрации и обновления: access-токен в теле, refresh — в httpOnly-куке. */
+export type AuthResponse = {
+  accessToken: string;
+  user: AuthUser;
+};
 
 /**
  * Весь user API описан здесь декларативно.
@@ -11,46 +19,48 @@ export type AuthUser = Omit<UserType, "password">;
  */
 export const userApi = createApi({
   reducerPath: "userApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "/api/user",
-    credentials: "include",
-  }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ["CurrentUser", "Users"],
   endpoints: (builder) => ({
-    /** Кто сейчас залогинен. Сервер отдаёт null, если сессии нет. */
-    getCurrentUser: builder.query<AuthUser | null, void>({
-      query: () => "/",
+    /**
+     * Кто сейчас залогинен. Без сессии сервер отвечает 401 —
+     * тогда baseQueryWithReauth пробует refresh-куку и повторяет запрос.
+     */
+    getCurrentUser: builder.query<AuthUser, void>({
+      query: () => "/user",
       // upsertQueryData ниже кладёт данные в кэш сам, но тег оставляем:
-      // он позволяет протухнуть этому кэшу извне (правка профиля, refresh токена).
+      // он позволяет протухнуть этому кэшу извне (например, после правки профиля).
       providesTags: ["CurrentUser"],
     }),
 
     getUsers: builder.query<AuthUser[], void>({
-      query: () => "/getAllUsers",
+      query: () => "/user/getAllUsers",
       providesTags: ["Users"],
     }),
 
-    login: builder.mutation<AuthUser, UserLoginData>({
-      query: (body) => ({ url: "/login", method: "POST", body }),
-      // Ответ login — тот же AuthUser, что вернул бы getCurrentUser.
-      // Кладём его в кэш сами, вместо лишнего запроса по invalidatesTags.
+    login: builder.mutation<AuthResponse, UserLoginData>({
+      query: (body) => ({ url: "/user/login", method: "POST", body }),
+      // Ответ login уже содержит пользователя — кладём его в кэш getCurrentUser
+      // сами, вместо лишнего запроса по invalidatesTags.
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(cacheCurrentUser(data));
+          setAccessToken(data.accessToken);
+          dispatch(cacheCurrentUser(data.user));
         } catch {
           // неверный логин или пароль — ошибку покажет форма
         }
       },
     }),
 
-    register: builder.mutation<AuthUser, UserReg>({
-      query: (body) => ({ url: "/create", method: "POST", body }),
+    register: builder.mutation<AuthResponse, UserReg>({
+      query: (body) => ({ url: "/user/create", method: "POST", body }),
       // Та же причина, что и в login — не тратим лишний запрос на getCurrentUser.
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(cacheCurrentUser(data));
+          setAccessToken(data.accessToken);
+          dispatch(cacheCurrentUser(data.user));
         } catch {
           // занятый логин или ошибка сервера — ошибку покажет форма
         }
@@ -58,23 +68,25 @@ export const userApi = createApi({
     }),
 
     logout: builder.mutation<unknown, void>({
-      query: () => ({ url: "/logOut", method: "DELETE" }),
-      // Чистим весь кэш целиком, а не только текущего пользователя:
-      // после выхода в памяти не должно остаться ничьих данных.
+      query: () => ({ url: "/user/logOut", method: "DELETE" }),
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
-          dispatch(userApi.util.resetApiState());
         } catch {
-          // сессия всё равно протухнет на сервере
+          // даже если сервер недоступен, локально из сессии выходим
+        } finally {
+          // Чистим токен и весь кэш целиком, а не только текущего пользователя:
+          // после выхода в памяти не должно остаться ничьих данных.
+          setAccessToken(null);
+          dispatch(userApi.util.resetApiState());
         }
       },
     }),
   }),
 });
 
-/** Положить пользователя (или его отсутствие) в кэш getCurrentUser без запроса. */
-const cacheCurrentUser = (user: AuthUser | null) =>
+/** Положить пользователя в кэш getCurrentUser без запроса. */
+const cacheCurrentUser = (user: AuthUser) =>
   userApi.util.upsertQueryData("getCurrentUser", undefined, user);
 
 export const {

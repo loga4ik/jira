@@ -16,6 +16,7 @@ type Props = {
   lightShadow?: boolean;
   title: string;
   shadow?: boolean;
+  disabled?: boolean;
 };
 
 export const Button: React.FC<Props> = ({
@@ -30,6 +31,7 @@ export const Button: React.FC<Props> = ({
   lightShadow = false,
   shadow = true,
   title,
+  disabled = false,
 }) => {
   const { theme } = useContext(ThemeContext);
 
@@ -38,6 +40,7 @@ export const Button: React.FC<Props> = ({
       <button
         title={title}
         type={type}
+        disabled={disabled}
         className={`
         ${defaultMP && "mx-2 my-4 px-5 py-1"} 
         ${defaultBorder && "border border-gray-200 outline-inherit rounded-md"} 
@@ -67,6 +70,7 @@ export const Button: React.FC<Props> = ({
           !shadow &&
           "shadow-none border border-gray-200 outline-inherit rounded-md"
         }
+        disabled:opacity-60 disabled:cursor-not-allowed
         back-image-center ${className}`}
         onClick={onClick}
       >

@@ -1,10 +1,11 @@
+import { apiFetch } from "../Lib/api/apiFetch";
 import { UserType } from "../Lib/Slices/projectSlice/types";
 
 export const getUserList = async (
   project_id: number
 ): Promise<Error | UserType[]> => {
   try {
-    const response = await fetch(`/api/project/getFreeUsers`, {
+    const response = await apiFetch(`/api/project/getFreeUsers`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

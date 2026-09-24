@@ -1,32 +1,37 @@
 import { useContext, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import "./Layout.css";
-import { AppDispatch, RootState } from "../../Lib/store";
 import { ThemeContext } from "../../Context/ThemeContext";
 import { ThemeSwitcher } from "../../UIKit/themeSwicher/ThemeSwitcher";
 import { Button } from "../../UIKit/Inputs/Button/Button";
-import { getCookie, logOut } from "../../Lib/Slices/userSlice/userApi";
+import {
+  useGetCurrentUserQuery,
+  useLogoutMutation,
+} from "../../Lib/api/userApi";
 import UserList from "../Pages/project/Components/UserList/UserList";
 
+const AUTH_ROUTES = ["/login", "/register"];
+
 export const Layout = () => {
-  const currentUser = useSelector((state: RootState) => state.user.currentUser);
-  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const location = useLocation();
-
   const { theme } = useContext(ThemeContext);
 
-  useEffect(() => {
-    (async () => {
-      const query = await dispatch(getCookie());
-      !query.payload && navigate("/login");
-    })();
-  }, [dispatch]);
+  // запрос уходит один раз и кэшируется — useEffect с dispatch(getCookie()) не нужен
+  const { data: currentUser, isLoading } = useGetCurrentUserQuery();
+  const [logout] = useLogoutMutation();
 
-  const LogOut = () => {
-    dispatch(logOut());
-    navigate("/login");
+  const isAuthRoute = AUTH_ROUTES.includes(location.pathname);
+
+  useEffect(() => {
+    // не редиректим, пока статус неизвестен, и не гоняем /login на самого себя
+    if (isLoading || currentUser || isAuthRoute) return;
+    navigate("/login", { replace: true });
+  }, [currentUser, isLoading, isAuthRoute, navigate]);
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login", { replace: true });
   };
 
   return (
@@ -42,9 +47,9 @@ export const Layout = () => {
           <Button
             title="выход"
             type="button"
-            className={"form_btn-navigate px-3"}
+            className="form_btn-navigate px-3"
             defaultMP={false}
-            onClick={LogOut}
+            onClick={handleLogout}
             bg_color={false}
           >
             {`выйти: ${currentUser.login}`}
@@ -52,9 +57,9 @@ export const Layout = () => {
         )}
         {location.pathname === "/register" && !currentUser?.login && (
           <Button
-            title="регистрация"
+            title="вход"
             type="button"
-            className={"form_btn-navigate"}
+            className="form_btn-navigate"
             defaultMP={false}
             bg_color={false}
           >
@@ -70,9 +75,9 @@ export const Layout = () => {
         )}
         {location.pathname === "/login" && !currentUser?.login && (
           <Button
-            title="вход"
+            title="регистрация"
             type="button"
-            className={"form_btn-navigate"}
+            className="form_btn-navigate"
             defaultMP={false}
             bg_color={false}
           >
@@ -87,9 +92,7 @@ export const Layout = () => {
           </Button>
         )}
       </header>
-      {/* <div className="flex justify-center"> */}
       <Outlet />
-      {/* </div> */}
     </div>
   );
 };
