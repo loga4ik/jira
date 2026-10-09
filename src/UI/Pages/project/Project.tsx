@@ -10,7 +10,7 @@ import { AppDispatch, RootState } from "../../../Lib/store";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getProjectData,
-  getUserList,
+  getTeamUsers,
 } from "../../../Lib/Slices/projectSlice/projectApi";
 import { isAvailableProject } from "../../../Api/projectApi";
 import { ErrorMadal } from "./Components/ErrorMadal/ErrorMadal";
@@ -46,7 +46,7 @@ const Project = () => {
       }
 
       await dispatch(
-        getUserList({
+        getTeamUsers({
           project_id: state.id,
           abortController,
         })

@@ -49,12 +49,12 @@ export const getTasksAndSubtasks = createAsyncThunk<
   }
 );
 
-export const getUserList = createAsyncThunk<
+export const getTeamUsers = createAsyncThunk<
   UserType[], // Ожидаемый тип успешного ответа
   ReqProject_idType, // Тип аргументов
   { rejectValue: string } // Тип для ошибки
 >(
-  "getUserList",
+  "getTeamUsers",
   async ({ project_id, abortController }: ReqProject_idType, thunkAPI) => {
     try {
       // Передаем сигнал для отмены запроса

@@ -1,8 +1,28 @@
 import { apiFetch } from "../Lib/api/apiFetch";
 import { UserType } from "../Lib/Slices/projectSlice/types";
-export type GetFreeUsers = {
-  freeUsers: UserType[];
-  activeUsers: UserType[];
+
+export const getFreeUsers = async (
+  project_id: number
+): Promise<Error | UserType[]> => {
+  try {
+    const response = await apiFetch(`/api/project/getFreeUsers`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        project_id,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error(`${response.status}`);
+    }
+    return response.json();
+  } catch (error) {
+    throw new Error(`${error}`);
+  } finally {
+    // abortController.abort();
+  }
 };
 
 export const userProjects = async (

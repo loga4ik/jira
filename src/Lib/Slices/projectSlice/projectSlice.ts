@@ -6,7 +6,7 @@ import {
   editeTask,
   getProjectData,
   getTasksAndSubtasks,
-  getUserList,
+  getTeamUsers,
   removeUserInProject,
   updateAllProject,
   updateSubtask,
@@ -41,7 +41,7 @@ const projectSlice = createSlice({
       action.payload.tasks && (state.tasks = action.payload.tasks);
       action.payload.subtasks && (state.subtasks = action.payload.subtasks);
     });
-    element.addCase(getUserList.fulfilled, (state, action) => {
+    element.addCase(getTeamUsers.fulfilled, (state, action) => {
       const uniqueArray = [
         ...new Set(action.payload.map((item) => item.id)),
       ]

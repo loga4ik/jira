@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
@@ -29,4 +30,12 @@ export default defineConfig({
     },
   },
   plugins: [react()],
+  test: {
+    // имитация браузера: без неё компонентам негде отрисоваться
+    environment: "./src/test/jsdom-env.ts",
+    // выполняется перед каждым тестовым файлом
+    setupFiles: "./src/test/setup.ts",
+    // стили для тестов не нужны — так быстрее
+    css: false,
+  },
 });

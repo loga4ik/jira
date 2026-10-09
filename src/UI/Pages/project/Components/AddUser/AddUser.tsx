@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { CardData } from "../../../../../UIKit/Card";
-import { getUserList } from "../../../../../Api/userApi";
+import { getFreeUsers } from "../../../../../Api/projectApi";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../../Lib/store";
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
@@ -22,7 +22,7 @@ const AddUser = () => {
   useEffect(() => {
     (async () => {
       try {
-        const teamData = await getUserList(state.id);
+        const teamData = await getFreeUsers(state.id);
 
         if (!(teamData instanceof Error)) {
           setFreeUsers(teamData);
