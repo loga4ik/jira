@@ -26,20 +26,36 @@ const AUTH_ENDPOINTS = ["/user/login", "/user/create", "/user/refresh"];
 const urlOf = (args: string | FetchArgs) =>
   typeof args === "string" ? args : args.url;
 
+/** Ответ «не авторизован» без похода на сервер. */
+const UNAUTHORIZED: { error: FetchBaseQueryError } = {
+  error: { status: 401, data: { message: "Требуется вход" } },
+};
+
 /**
- * Базовый запрос с автоматическим обновлением токена: получили 401 —
- * обновляем access по refresh-куке и повторяем исходный запрос один раз.
- * Он же поднимает сессию после перезагрузки страницы: первый запрос
- * уходит без токена, получает 401, и токен восстанавливается здесь.
+ * Базовый запрос с автоматическим обновлением токена.
+ *
+ * Токена нет (открыли страницу или нажали F5) — сначала пробуем
+ * восстановить его по refresh-куке. Не вышло — пользователь гость,
+ * и сам запрос не отправляем: он гарантированно получил бы 401.
+ * Так у гостя уходит один запрос (/refresh) вместо двух.
+ *
+ * Токен есть, но сервер ответил 401 (access протух) — обновляем
+ * и повторяем исходный запрос один раз.
  */
 export const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
+  const isAuthEndpoint = AUTH_ENDPOINTS.includes(urlOf(args));
+
+  if (!getAccessToken() && !isAuthEndpoint) {
+    if (!(await refreshAccessToken())) return UNAUTHORIZED;
+  }
+
   let result = await rawBaseQuery(args, api, extraOptions);
 
-  if (result.error?.status === 401 && !AUTH_ENDPOINTS.includes(urlOf(args))) {
+  if (result.error?.status === 401 && !isAuthEndpoint) {
     if (await refreshAccessToken()) {
       result = await rawBaseQuery(args, api, extraOptions);
     }

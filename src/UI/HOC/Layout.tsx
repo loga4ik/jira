@@ -29,6 +29,11 @@ export const Layout = () => {
     navigate("/login", { replace: true });
   }, [currentUser, isLoading, isAuthRoute, navigate]);
 
+  // Внешний вид прежней кнопки-обёртки, перенесённый на саму ссылку.
+  const authLinkClass = `form_btn-navigate block px-3 py-1 rounded-md border border-gray-200 ${
+    theme === "dark" ? "dark_out_small text_dark" : "light_out_small"
+  }`;
+
   const handleLogout = async () => {
     await logout();
     navigate("/login", { replace: true });
@@ -55,41 +60,18 @@ export const Layout = () => {
             {`выйти: ${currentUser.login}`}
           </Button>
         )}
+        {/* Ссылка, а не кнопка со ссылкой внутри: вложенные интерактивные
+            элементы недопустимы — скринридер и Tab видели бы два элемента
+            вместо одного, и непонятно, какой из них срабатывает. */}
         {location.pathname === "/register" && !currentUser?.login && (
-          <Button
-            title="вход"
-            type="button"
-            className="form_btn-navigate"
-            defaultMP={false}
-            bg_color={false}
-          >
-            <NavLink
-              className={`form_btn-navigate ${
-                theme === "dark" && "dark_out_small  text_dark"
-              } p-3`}
-              to={"login"}
-            >
-              уже есть аккаунт
-            </NavLink>
-          </Button>
+          <NavLink className={authLinkClass} to="/login">
+            уже есть аккаунт
+          </NavLink>
         )}
         {location.pathname === "/login" && !currentUser?.login && (
-          <Button
-            title="регистрация"
-            type="button"
-            className="form_btn-navigate"
-            defaultMP={false}
-            bg_color={false}
-          >
-            <NavLink
-              className={`form_btn-navigate ${
-                theme === "dark" && "dark_out_small text_dark"
-              } p-3`}
-              to={"register"}
-            >
-              зарегистрироваться
-            </NavLink>
-          </Button>
+          <NavLink className={authLinkClass} to="/register">
+            зарегистрироваться
+          </NavLink>
         )}
       </header>
       <Outlet />

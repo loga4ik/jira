@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +11,47 @@ import { getErrorMessage } from "../../../Lib/api/getErrorMessage";
 import {
   registerSchema,
   type RegisterForm,
+  type RegisterFormInput,
 } from "../../../features/auth/schemas";
+
+type FieldProps = {
+  id: string;
+  label: string;
+  error?: string;
+  children: ReactNode;
+};
+
+/**
+ * Обёртка поля: подпись, само поле и ошибка под ним.
+ *
+ * Подпись видна только скринридеру (sr-only) — на экране роль подписи
+ * играет плейсхолдер. Без <label> у поля нет доступного имени,
+ * и скринридер прочитал бы просто «поле ввода».
+ *
+ * Ошибка стоит в потоке, а не absolute: длинный текст переносится
+ * на вторую строку и сдвигает поля ниже, а не налезает на них.
+ */
+const Field = ({ id, label, error, children }: FieldProps) => (
+  <div className="w-full max-w-xs flex flex-col mb-4">
+    <label htmlFor={id} className="sr-only">
+      {label}
+    </label>
+    {children}
+    {error && (
+      <p id={`${id}-error`} className="text-sm ml-2 mt-1 text-red-400">
+        {error}
+      </p>
+    )}
+  </div>
+);
+
+/** Классы текстового поля: одинаковые размеры у всех, красная рамка при ошибке. */
+const inputClass = (invalid: boolean) =>
+  `w-full m-0 h-8 px-3 py-1 rounded-md border bg-transparent focus:outline-none focus:ring ${
+    invalid
+      ? "border-red-400 focus:ring-red-300"
+      : "border-gray-200 focus:ring-green-300"
+  }`;
 
 const Register = () => {
   const navigate = useNavigate();
@@ -19,8 +60,12 @@ const Register = () => {
   const {
     handleSubmit,
     register,
+    getValues,
+    trigger,
     formState: { errors },
-  } = useForm<RegisterForm>({
+    // Три параметра: что в форме, контекст и что после разбора схемы.
+    // Ввод и результат различаются: после .trim() строки уже обрезаны.
+  } = useForm<RegisterFormInput, unknown, RegisterForm>({
     resolver: zodResolver(registerSchema),
     mode: "onBlur",
     defaultValues: {
@@ -58,138 +103,156 @@ const Register = () => {
     409: "Этот логин уже занят",
   });
 
-  const fieldClass = (hasError: boolean) =>
-    `focus:outline-none focus:ring mt-0 mb-5 ${
-      hasError ? "focus:ring-red-300" : "focus:ring-green-300"
-    }`;
+  /** Атрибуты доступности поля: связь с ошибкой и признак ошибки. */
+  const fieldA11y = (name: keyof RegisterFormInput) => ({
+    id: `register-${name}`,
+    invalid: Boolean(errors[name]),
+    describedBy: errors[name] ? `register-${name}-error` : undefined,
+  });
 
   return (
     <div className="flex justify-center">
-      <Wrapper className="border-2 border-transparent rounded-xl m-3 p-3 w-3/5">
-        <p className="form-title">регистрация</p>
+      <Wrapper className="border-2 border-transparent rounded-xl m-3 p-3 w-full sm:w-3/5">
+        <h1 className="form-title">регистрация</h1>
         <form
           className="flex flex-col items-center"
           onSubmit={handleSubmit(onSubmit)}
         >
-          {serverError && <p className="p-3 text-red-400">{serverError}</p>}
+          {serverError && (
+            // role="alert" — скринридер прочитает ошибку сервера сразу,
+            // как только она появится, без перехода фокуса.
+            <p role="alert" className="p-3 text-red-400">
+              {serverError}
+            </p>
+          )}
 
-          <div className="relative">
+          <Field id="register-name" label="Имя" error={errors.name?.message}>
             <TextInput
-              className={fieldClass(Boolean(errors.name))}
+              {...fieldA11y("name")}
+              required
+              className={inputClass(Boolean(errors.name))}
+              useDefaultStyles={false}
               inputType="text"
               placeholder="имя"
               autocomplite="given-name"
-              isRequired
               register={register("name")}
             />
-            {errors.name && (
-              <p className="absolute bottom-0 text-sm ml-2 text-red-400">
-                {errors.name.message}
-              </p>
-            )}
-          </div>
+          </Field>
 
-          <div className="relative">
+          <Field
+            id="register-surname"
+            label="Фамилия"
+            error={errors.surname?.message}
+          >
             <TextInput
-              className={fieldClass(Boolean(errors.surname))}
+              {...fieldA11y("surname")}
+              required
+              className={inputClass(Boolean(errors.surname))}
+              useDefaultStyles={false}
               inputType="text"
               placeholder="фамилия"
               autocomplite="family-name"
-              isRequired
               register={register("surname")}
             />
-            {errors.surname && (
-              <p className="absolute bottom-0 text-sm ml-2 text-red-400">
-                {errors.surname.message}
-              </p>
-            )}
-          </div>
+          </Field>
 
-          <div className="relative">
+          <Field
+            id="register-patronymic"
+            label="Отчество, необязательно"
+            error={errors.patronymic?.message}
+          >
             <TextInput
-              className={fieldClass(Boolean(errors.patronymic))}
+              {...fieldA11y("patronymic")}
+              className={inputClass(Boolean(errors.patronymic))}
+              useDefaultStyles={false}
               inputType="text"
-              placeholder="отчество"
+              placeholder="отчество (необязательно)"
               autocomplite="additional-name"
               register={register("patronymic")}
             />
-            {errors.patronymic && (
-              <p className="absolute bottom-0 text-sm ml-2 text-red-400">
-                {errors.patronymic.message}
-              </p>
-            )}
-          </div>
+          </Field>
 
-          <div className="relative">
+          <Field
+            id="register-phone"
+            label="Телефон"
+            error={errors.phone?.message}
+          >
             <TextInput
-              className={fieldClass(Boolean(errors.phone))}
+              {...fieldA11y("phone")}
+              required
+              className={inputClass(Boolean(errors.phone))}
+              useDefaultStyles={false}
               inputType="masked"
               placeholder="телефон"
               autocomplite="tel"
-              isRequired
               register={register("phone")}
             />
-            {errors.phone && (
-              <p className="absolute bottom-0 text-sm ml-2 text-red-400">
-                {errors.phone.message}
-              </p>
-            )}
-          </div>
+          </Field>
 
-          <div className="relative">
+          <Field id="register-email" label="Email" error={errors.email?.message}>
             <TextInput
-              className={fieldClass(Boolean(errors.email))}
+              {...fieldA11y("email")}
+              required
+              className={inputClass(Boolean(errors.email))}
+              useDefaultStyles={false}
               inputType="text"
               placeholder="email"
               autocomplite="email"
-              isRequired
               register={register("email")}
             />
-            {errors.email && (
-              <p className="absolute bottom-0 text-sm ml-2 text-red-400">
-                {errors.email.message}
-              </p>
-            )}
-          </div>
+          </Field>
 
-          <div className="relative">
+          <Field id="register-login" label="Логин" error={errors.login?.message}>
             <TextInput
-              className={fieldClass(Boolean(errors.login))}
+              {...fieldA11y("login")}
+              required
+              className={inputClass(Boolean(errors.login))}
+              useDefaultStyles={false}
               inputType="text"
               placeholder="логин"
               autocomplite="username"
-              isRequired
               register={register("login")}
             />
-            {errors.login && (
-              <p className="absolute bottom-0 text-sm ml-2 text-red-400">
-                {errors.login.message}
-              </p>
-            )}
-          </div>
+          </Field>
 
-          <div className="relative">
+          <Field
+            id="register-password"
+            label="Пароль"
+            error={errors.password?.message}
+          >
             <HiddenInput
-              className="focus:outline-none focus:ring mt-0 mb-5"
+              {...fieldA11y("password")}
+              required
+              className="w-full"
               focusClass={
                 errors.password ? "focus:ring-red-300" : "focus:ring-green-300"
               }
               inputType="password"
               placeholder="пароль"
               autocomplite="new-password"
-              isRequired
-              register={register("password")}
+              register={register("password", {
+                // Схема сравнивает пароли в refine, но react-hook-form
+                // перепроверяет только то поле, которое изменилось.
+                // Без этого после смены пароля старое «совпадают»
+                // оставалось бы до отправки формы. Повтор проверяем,
+                // только если его уже ввели, — иначе под пустым полем
+                // раньше времени появилось бы «Обязательное поле».
+                onBlur: () => {
+                  if (getValues("passwordRepeat")) void trigger("passwordRepeat");
+                },
+              })}
             />
-            {errors.password && (
-              <p className="absolute bottom-0 text-sm ml-2 text-red-400">
-                {errors.password.message}
-              </p>
-            )}
-          </div>
+          </Field>
 
-          <div className="relative">
+          <Field
+            id="register-passwordRepeat"
+            label="Повтор пароля"
+            error={errors.passwordRepeat?.message}
+          >
             <HiddenInput
-              className="focus:outline-none focus:ring mt-0 mb-5"
+              {...fieldA11y("passwordRepeat")}
+              required
+              className="w-full"
               focusClass={
                 errors.passwordRepeat
                   ? "focus:ring-red-300"
@@ -198,15 +261,9 @@ const Register = () => {
               inputType="password"
               placeholder="повтор пароля"
               autocomplite="new-password"
-              isRequired
               register={register("passwordRepeat")}
             />
-            {errors.passwordRepeat && (
-              <p className="absolute bottom-0 text-sm ml-2 text-red-400">
-                {errors.passwordRepeat.message}
-              </p>
-            )}
-          </div>
+          </Field>
 
           <Button
             title="зарегистрироваться"

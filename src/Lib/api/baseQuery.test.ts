@@ -108,4 +108,34 @@ describe("baseQueryWithReauth", () => {
     });
     expect(refreshCalls).toBe(0);
   });
+
+  it("гость без токена: один запрос /refresh, сам запрос не уходит", async () => {
+    // Подготовка: токена нет, refresh-куки тоже (сервер отвечает 401).
+    // /api/user считает обращения — их быть не должно: без токена
+    // он гарантированно ответил бы 401, лишний запрос ни к чему.
+    let currentUserCalls = 0;
+    let refreshCalls = 0;
+
+    server.use(
+      http.get("/api/user", () => {
+        currentUserCalls++;
+        return new HttpResponse(null, { status: 401 });
+      }),
+      http.post("/api/user/refresh", () => {
+        refreshCalls++;
+        return new HttpResponse(null, { status: 401 });
+      }),
+    );
+
+    const store = createTestStore();
+
+    const result = await store.dispatch(
+      userApi.endpoints.getCurrentUser.initiate(),
+    );
+
+    // Компонент получает обычную 401 — для него ничего не изменилось.
+    expect(result.error).toMatchObject({ status: 401 });
+    expect(refreshCalls).toBe(1);
+    expect(currentUserCalls).toBe(0);
+  });
 });

@@ -13,7 +13,10 @@ type Props = {
   register?: UseFormRegisterReturn;
   autocomplite?: string;
   focusClass?: string;
-  isRequired?: boolean;
+  id?: string;
+  invalid?: boolean;
+  describedBy?: string;
+  required?: boolean;
 };
 
 const HiddenInput = forwardRef<HTMLInputElement, Props>(
@@ -26,16 +29,25 @@ const HiddenInput = forwardRef<HTMLInputElement, Props>(
       onChange,
       autocomplite,
       focusClass,
-      isRequired = false,
+      id,
+      invalid = false,
+      describedBy,
+      required,
     },
-    ref
+    ref,
   ) => {
     const [isOpen, setIsOpen] = useState(false);
     return (
-      <div className={`relative border rounded outline-inherit ${className}`}>
+      // Рамка у обёртки, а не у поля: внутри ещё кнопка-«глазик».
+      // Цвет рамки задан явно, чтобы неверное поле было видно и без фокуса.
+      <div
+        className={`relative border rounded outline-inherit ${
+          invalid ? "border-red-400" : "border-gray-200"
+        } ${className}`}
+      >
         <TextInput
           ref={ref}
-          className={`m-0 w-full px-3 py-1 h-8 focus:outline-none focus:ring bg-transparent
+          className={`m-0 w-full px-3 py-1 pr-10 h-8 focus:outline-none focus:ring bg-transparent
           rounded-md ${focusClass}`}
           inputType={isOpen ? "text" : "password"}
           placeholder={placeholder}
@@ -44,9 +56,15 @@ const HiddenInput = forwardRef<HTMLInputElement, Props>(
           onChange={onChange}
           autocomplite={autocomplite}
           useDefaultStyles={false}
+          id={id}
+          invalid={invalid}
+          describedBy={describedBy}
+          required={required}
         />
         <Button
-          title="скрыть/раскрыть"
+          // Имя кнопки говорит, что произойдёт по нажатию, —
+          // «скрыть/раскрыть» не давало понять, какое сейчас состояние.
+          title={isOpen ? "Скрыть пароль" : "Показать пароль"}
           type="button"
           className={`shadow-none absolute top-0 p-3 mt-1 right-1 rounded-full eye-btn border
           outline-inherit border-transparent`}
@@ -55,22 +73,9 @@ const HiddenInput = forwardRef<HTMLInputElement, Props>(
           changableIconClass={!isOpen ? "eye-open" : "eye-close"}
           defaultMP={false}
         ></Button>
-        {isRequired && (
-          <span
-            style={{
-              position: "absolute",
-              top: "0px",
-              right: "4px",
-              color: "red",
-              fontWeight: "bold",
-            }}
-          >
-            *
-          </span>
-        )}
       </div>
     );
-  }
+  },
 );
 
 export default HiddenInput;

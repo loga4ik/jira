@@ -18,6 +18,12 @@ export const ThemeSwitcher = () => {
 
   return (
     <button
+      type="button"
+      // Видимый текст «Light»/«Dark» говорит, какая тема сейчас,
+      // а не что сделает кнопка. aria-label называет действие.
+      aria-label={
+        theme === "dark" ? "Включить светлую тему" : "Включить тёмную тему"
+      }
       className={`switch_btn ${
         theme === "dark" && "dark_out_small flex_reverse"
       }`}
