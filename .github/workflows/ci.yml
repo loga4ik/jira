@@ -1,0 +1,47 @@
+# Проверки на каждый push и pull request в main:
+# линт, типы, тесты и сборка. Красный крестик у коммита на GitHub
+# значит, что одна из них не прошла, — подробности во вкладке Actions.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Новый push в ту же ветку отменяет ещё идущую проверку предыдущего:
+# результат старого коммита уже никому не нужен.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Версия Node берётся из .nvmrc — та же, что локально.
+      # cache: npm кэширует скачанные пакеты между запусками.
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      # npm ci ставит ровно то, что в package-lock.json,
+      # и падает, если lock-файл расходится с package.json.
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint -- --max-warnings=0
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npx vite build

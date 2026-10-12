@@ -14,7 +14,7 @@ export const ThemeSwitcher = () => {
     if (localStorageValue === "light" || localStorageValue === "dark") {
       setTheme(localStorageValue);
     }
-  }, [localStorageValue]);
+  }, [localStorageValue, setTheme]);
 
   return (
     <button

@@ -6,19 +6,25 @@ import { useCurrentUser } from "../../../../Hooks/useCurrentUser";
 export const ProjectList: React.FC = () => {
   const { currentUser } = useCurrentUser();
   const [projectList, setProjectList] = useState<UserProjectsType | null>(null);
-  const abortController = new AbortController();
+  const userId = currentUser?.id;
 
   useEffect(() => {
-    currentUser &&
-      currentUser.id &&
-      (async () => {
-        try {
-          const res = await userProjects(currentUser?.id, abortController);
-          setProjectList(res);
-        } catch (error) {}
-      })();
+    if (!userId) return;
+    // Контроллер создаётся внутри эффекта: раньше он пересоздавался
+    // на каждый рендер, и очистка отменяла не тот запрос.
+    const abortController = new AbortController();
+
+    (async () => {
+      try {
+        const res = await userProjects(userId, abortController);
+        setProjectList(res);
+      } catch {
+        // запрос отменён при уходе со страницы — список просто не обновится
+      }
+    })();
+
     return () => abortController.abort();
-  }, [currentUser]);
+  }, [userId]);
 
   return (
     <>

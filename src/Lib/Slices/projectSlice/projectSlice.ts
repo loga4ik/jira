@@ -38,8 +38,8 @@ const projectSlice = createSlice({
   },
   extraReducers: (element) => {
     element.addCase(getTasksAndSubtasks.fulfilled, (state, action) => {
-      action.payload.tasks && (state.tasks = action.payload.tasks);
-      action.payload.subtasks && (state.subtasks = action.payload.subtasks);
+      if (action.payload.tasks) state.tasks = action.payload.tasks;
+      if (action.payload.subtasks) state.subtasks = action.payload.subtasks;
     });
     element.addCase(getTeamUsers.fulfilled, (state, action) => {
       const uniqueArray = [

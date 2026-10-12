@@ -1,28 +1,32 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
+/**
+ * Показывает что-то после задержки наведения (300 мс).
+ *
+ * Таймер хранится в useRef: обычная переменная пересоздавалась
+ * на каждом рендере, и endHover не мог отменить таймер,
+ * запущенный до перерисовки.
+ */
 function useShowTime(callback: () => void) {
   const [isHovered, setIsHovered] = useState(false);
-
-  let timeout: ReturnType<typeof setTimeout>;
+  const timeout = useRef<ReturnType<typeof setTimeout>>();
 
   const startHover = () => {
-    timeout = setTimeout(() => {
+    timeout.current = setTimeout(() => {
       setIsHovered(true);
       callback();
     }, 300);
   };
 
   const endHover = () => {
-    clearTimeout(timeout);
+    clearTimeout(timeout.current);
     setIsHovered(false);
   };
 
-  // мы используем кастомный хук, для clearTimeout(timeout)
-  // при переходе на другую страничку
-
-  useEffect(() => {
-    return clearTimeout(timeout);
-  }, []);
+  // Отменяем таймер при размонтировании (уход на другую страницу).
+  // Раньше здесь было return clearTimeout(timeout) — таймер чистился
+  // один раз при монтировании, а функции очистки не было вовсе.
+  useEffect(() => () => clearTimeout(timeout.current), []);
 
   return {
     startHover,

@@ -30,8 +30,8 @@ const AddUser = () => {
       } catch (error) {
         console.error("Error fetching team:", error);
       }
-    })(); // Загрузка данных при монтировании компонента
-  }, []);
+    })(); // Загрузка при открытии и при смене проекта
+  }, [state.id]);
 
   const addClickHandler = async (user_id: number) => {
     const abortController = new AbortController();

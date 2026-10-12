@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../Lib/store";
-import { UserType } from "../../../../../Lib/Slices/projectSlice/types";
 import { useCurrentUser } from "../../../../../Hooks/useCurrentUser";
 
 type Props = {
@@ -12,12 +11,9 @@ type Props = {
 const ChatMessage: React.FC<Props> = ({ text, sender }) => {
   const { currentUser } = useCurrentUser();
   const userList = useSelector((state: RootState) => state.project.userList);
-  const [user, setUser] = useState<UserType>();
-
-  useEffect(() => {
-    const userLogin = userList.find((user) => user.id === sender)
-    userLogin && setUser(userLogin)
-  }, [userList, sender]);
+  // Автор вычисляется из списка при рендере — отдельное состояние
+  // и эффект для этого не нужны: они лишь давали лишний рендер.
+  const user = userList.find((item) => item.id === sender);
 
   return (
     <div className={`flex ${currentUser?.id === sender && "justify-end"}`}>

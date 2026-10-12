@@ -20,7 +20,7 @@ const TaskList: React.FC<Props> = ({ project_id }) => {
         })
       );
     })();
-  }, [project_id]);
+  }, [dispatch, project_id]);
 
   return (
     <div>
