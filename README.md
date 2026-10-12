@@ -1,50 +1,138 @@
-# React + TypeScript + Vite
+# Jira-клон — трекер задач для команд
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![CI](https://github.com/loga4ik/jira/actions/workflows/ci.yml/badge.svg)](https://github.com/loga4ik/jira/actions/workflows/ci.yml)
 
-Currently, two official plugins are available:
+Веб-приложение для ведения проектов: задачи и подзадачи со статусами, команда проекта и чат в реальном времени. Фронтенд — этот репозиторий, бэкенд — [loga4ik/jira_back](https://github.com/loga4ik/jira_back).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Возможности
 
-## Expanding the ESLint configuration
+- **Регистрация и вход** — JWT с ротацией refresh-токенов, сессия переживает перезагрузку страницы.
+- **Проекты** — создание, редактирование, удаление; у проекта есть владелец и участники.
+- **Задачи и подзадачи** — статусы «новый», «в работе», «завершён».
+- **Команда** — добавление и удаление участников проекта.
+- **Чат проекта** — WebSocket, сообщения видят только участники.
+- **Светлая и тёмная тема.**
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Стек
 
-- Configure the top-level `parserOptions` property like this:
+| Область | Технологии | Зачем |
+|---|---|---|
+| Основа | React 18, TypeScript (strict), Vite 5 | быстрый dev-сервер, строгая типизация |
+| Состояние и данные | Redux Toolkit, RTK Query | кэш запросов, состояния загрузки и инвалидация без ручных thunk'ов |
+| Формы | react-hook-form + zod | одна схема даёт и правила валидации, и TypeScript-типы формы |
+| Роутинг | React Router 6 | ленивая загрузка страниц, гостевые маршруты |
+| Стили | Tailwind CSS 3 | |
+| Тесты | Vitest, React Testing Library, MSW | тесты поведения, сеть подменяется на уровне fetch |
+| Бэкенд | Express, Sequelize, PostgreSQL, ws | |
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Авторизация
+
+```
+Вход ──► access-токен (JWT, 15 мин) в теле ответа ──► хранится в памяти вкладки
+     └─► refresh-токен (7 дней) в httpOnly-куке   ──► JS к нему доступа не имеет
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- **Access-токен хранится только в памяти** — не в `localStorage`, где его прочитал бы любой скрипт при XSS. После перезагрузки страницы он восстанавливается по refresh-куке.
+- **Access — stateless, refresh — stateful.** Access проверяется по подписи без похода в базу, поэтому он короткий. Refresh хранится в базе в виде SHA-256-хеша, поэтому его можно отозвать.
+- **Ротация с обнаружением кражи.** Каждый refresh одноразовый: при обмене выдаётся новый. Повторное предъявление уже использованного токена означает, что он утёк, и гасится вся цепочка сессии. Короткое окно (10 с) прощает одновременное обновление из двух вкладок.
+- **Автоматическое обновление на клиенте** (`src/Lib/api/baseQuery.ts`): запрос получил 401 → токен обновляется → запрос повторяется. Если 401 пришли сразу на несколько запросов, обновление всё равно одно — все ждут общий промис (`src/Lib/api/authToken.ts`).
+- **WebSocket**: токен проверяется при рукопожатии, войти в комнату чата может только участник проекта, автор сообщения берётся из токена, а не от клиента.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## Тестирование
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+31 тест на ключевую логику — авторизацию и формы.
+
+- **Сетевой слой**: обновление токена по 401, один `/refresh` на несколько одновременных запросов, поведение при истёкшей сессии.
+- **RTK Query**: пользователь попадает в кэш после входа без лишнего запроса; выход очищает токен и кэш даже при ошибке сервера.
+- **Формы** (React Testing Library): ошибки валидации, ответы сервера (401, 409), блокировка кнопки во время запроса, нормализация телефона. Поля ищутся по подписи (`getByLabelText`), поэтому тесты заодно проверяют доступность.
+- **MSW** вместо моков `fetch`: тест описывает правила поддельного сервера («пускаю только с новым токеном»), а не порядок ответов.
+
+```bash
+npm test            # один прогон
+npm run test:watch  # перезапуск при изменениях
+npm run coverage    # покрытие, HTML-отчёт в coverage/
 ```
+
+## CI
+
+GitHub Actions на каждый push и pull request в `main`: `npm ci` → ESLint (без предупреждений) → проверка типов → тесты → сборка. Версия Node зафиксирована в `.nvmrc`, одна и та же локально и в CI.
+
+## Производительность
+
+Страницы загружаются лениво через `React.lazy` + `Suspense`: каждая страница — отдельный файл, который скачивается при первом переходе на неё. Пока он загружается, шапка остаётся на экране.
+
+| | Начальный JS | gzip |
+|---|---|---|
+| Все страницы в одном бандле | 470 КБ | 151 КБ |
+| С ленивой загрузкой страниц | **245 КБ** | **81 КБ** |
+
+Валидация форм (zod, react-hook-form) теперь скачивается только на страницах входа и регистрации — вошедший пользователь её не загружает.
+
+## Доступность
+
+- В форме регистрации у полей есть подписи, связанные с инпутами; ошибка привязана к полю через `aria-describedby`, неверное поле помечено `aria-invalid`.
+- Ошибка сервера объявляется скринридером сразу (`role="alert"`).
+- У иконочных кнопок есть понятные названия («Показать пароль», «Включить тёмную тему»).
+
+## Запуск локально
+
+Нужны Node 24 (`nvm use` возьмёт версию из `.nvmrc`) и PostgreSQL.
+
+**Бэкенд** ([jira_back](https://github.com/loga4ik/jira_back)):
+
+```bash
+git clone https://github.com/loga4ik/jira_back.git
+cd jira_back
+npm install
+cp .env.example .env          # заполнить JWT_ACCESS_SECRET
+# подключение к базе — db/config/database.json
+npm run db-create
+npm run db-migrate
+npx sequelize db:seed:all     # статусы задач
+npm run dev                   # http://localhost:4000
+```
+
+**Фронтенд:**
+
+```bash
+git clone https://github.com/loga4ik/jira.git
+cd jira
+npm install
+npm run dev                   # http://localhost:5173
+```
+
+Dev-сервер Vite проксирует `/api` и `/ws` на бэкенд, поэтому CORS в разработке не нужен.
+
+## Скрипты
+
+| Команда | Что делает |
+|---|---|
+| `npm run dev` | dev-сервер |
+| `npm run build` | проверка типов и production-сборка в `dist/` |
+| `npm run preview` | локальный просмотр собранной версии |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | проверка типов |
+| `npm test` | тесты |
+
+## Структура
+
+```
+src/
+  features/auth/   схемы zod для форм входа и регистрации
+  Lib/api/         RTK Query, baseQuery с обновлением токена, работа с токеном
+  Lib/Slices/      состояние проекта (Redux)
+  Lib/webSocket/   клиент чата
+  UI/App/          роутинг
+  UI/HOC/          Layout, GuestRoute
+  UI/Pages/        страницы: вход, регистрация, главная, проект
+  UIKit/           общие компоненты: поля, кнопки, модалки
+  test/            окружение тестов, MSW-сервер, хелперы рендера
+```
+
+## Планы
+
+- Перевести API проектов и задач на RTK Query.
+- Права доступа: действия с проектом — только для владельца и участников.
+- Защищённые маршруты на клиенте.
+- UI-кит с доступными полями для всех форм.
+- Деплой с демо-аккаунтом.
