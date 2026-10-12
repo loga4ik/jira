@@ -1,11 +1,23 @@
+import { lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Layout } from "../HOC/Layout";
 import { GuestRoute } from "../HOC/GuestRoute";
-import Login from "../Pages/Login/Login";
-import Register from "../Pages/Register/Register";
-import Main from "../Pages/Main/Main";
-import Project from "../Pages/project/Project";
-import NotFound from "../Pages/404/NotFound";
+
+/*
+ * Страницы грузятся лениво: import() с круглыми скобками — сигнал сборщику
+ * вынести страницу в отдельный файл, а lazy скачивает его при первом показе.
+ * Так форма входа не тянет за собой код проектов, задач и чата.
+ *
+ * Пока файл страницы качается, показывается fallback из <Suspense>
+ * в Layout — шапка при этом остаётся на месте.
+ *
+ * lazy работает только с export default — у всех страниц он есть.
+ */
+const Main = lazy(() => import("../Pages/Main/Main"));
+const Login = lazy(() => import("../Pages/Login/Login"));
+const Register = lazy(() => import("../Pages/Register/Register"));
+const Project = lazy(() => import("../Pages/project/Project"));
+const NotFound = lazy(() => import("../Pages/404/NotFound"));
 
 function App() {
   return (
@@ -30,7 +42,7 @@ function App() {
             }
           />
           <Route path="/project" element={<Project />} />
-          <Route path='*' element={<NotFound />}/>
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>

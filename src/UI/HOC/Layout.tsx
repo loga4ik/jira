@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { Suspense, useContext, useEffect } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import "./Layout.css";
 import { ThemeContext } from "../../Context/ThemeContext";
@@ -11,6 +11,13 @@ import {
 import UserList from "../Pages/project/Components/UserList/UserList";
 
 const AUTH_ROUTES = ["/login", "/register"];
+
+/** Заглушка на время загрузки страницы. role="status" — скринридер её озвучит. */
+const PageLoader = () => (
+  <p role="status" className="p-3 text-center opacity-60">
+    загрузка…
+  </p>
+);
 
 export const Layout = () => {
   const navigate = useNavigate();
@@ -74,7 +81,12 @@ export const Layout = () => {
           </NavLink>
         )}
       </header>
-      <Outlet />
+      {/* Suspense внутри Layout, а не вокруг всего приложения: пока
+          качается файл страницы, шапка и тема остаются на экране,
+          а заглушка появляется только на месте контента. */}
+      <Suspense fallback={<PageLoader />}>
+        <Outlet />
+      </Suspense>
     </div>
   );
 };
