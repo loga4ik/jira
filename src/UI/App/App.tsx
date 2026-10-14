@@ -41,7 +41,7 @@ function App() {
               </GuestRoute>
             }
           />
-          <Route path="/project" element={<Project />} />
+          <Route path="/project/:id" element={<Project />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

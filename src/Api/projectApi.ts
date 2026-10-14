@@ -1,4 +1,4 @@
-import { apiFetch } from "../Lib/api/apiFetch";
+import { apiFetch, readApiError } from "../Lib/api/apiFetch";
 import { UserType } from "../Lib/Slices/projectSlice/types";
 
 export const getFreeUsers = async (
@@ -84,11 +84,12 @@ export const deleteProject = async (
     });
 
     if (!response.ok) {
-      throw new Error(`${response.status}`);
+      throw new Error(await readApiError(response));
     }
     return response.json();
   } catch (error) {
-    throw new Error(`${error}`);
+    // текст ошибки отдаём как есть, без обёртки «Error: Error: 403»
+    throw error instanceof Error ? error : new Error(`${error}`);
   } finally {
     // abortController.abort();
   }

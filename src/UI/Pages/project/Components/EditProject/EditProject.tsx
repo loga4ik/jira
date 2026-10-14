@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../../Lib/store";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
@@ -64,9 +64,17 @@ const EditProject: React.FC<Props> = ({ closeModal }) => {
     }
   }, [project, reduxTasks, reduxSubtasks, reset]);
 
-  const formHandleSubmit = (data: EditProjectType) => {
-    dispatch(updateAllProject(data));
-    closeModal();
+  const [error, setError] = useState<string>();
+
+  // Окно закрываем только после успешного сохранения — иначе показываем ошибку
+  // (например, 403, если пользователь не владелец проекта).
+  const formHandleSubmit = async (data: EditProjectType) => {
+    const res = await dispatch(updateAllProject(data));
+    if (updateAllProject.fulfilled.match(res)) {
+      closeModal();
+    } else {
+      setError(res.payload ?? "Не удалось сохранить изменения");
+    }
   };
 
   return (
@@ -75,6 +83,11 @@ const EditProject: React.FC<Props> = ({ closeModal }) => {
         onSubmit={handleSubmit(formHandleSubmit)}
         className="create_aim_page m-3 max-w-7xl max-h-3xl text-gray-300"
       >
+        {error && (
+          <p role="alert" className="p-3 text-red-400">
+            {error}
+          </p>
+        )}
         <div className="flex flex-col">
           <Controller
             name="title"

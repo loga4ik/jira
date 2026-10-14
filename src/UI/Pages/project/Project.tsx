@@ -1,5 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import { CardData } from "../../../UIKit/Card";
+import { useNavigate, useParams } from "react-router-dom";
 import { Wrapper } from "../../../UIKit/Wrapper";
 import { useEffect, useState } from "react";
 import Chat from "./Components/Chat/Chat";
@@ -12,73 +11,72 @@ import {
   getProjectData,
   getTeamUsers,
 } from "../../../Lib/Slices/projectSlice/projectApi";
+import { setDefaultProjects } from "../../../Lib/Slices/projectSlice/projectSlice";
 import { isAvailableProject } from "../../../Api/projectApi";
 import { ErrorMadal } from "./Components/ErrorMadal/ErrorMadal";
 
 const Project = () => {
-  const location = useLocation();
-  const state = location.state as CardData | undefined;
-  const { project } = useSelector(
-    (state: RootState) => state.project
-  );
+  // id проекта берётся из адреса /project/:id, а не из location.state:
+  // так страница работает по прямой ссылке, в новой вкладке и из закладок.
+  const { id } = useParams();
+  const projectId = Number(id);
+  const isValidId = Number.isInteger(projectId) && projectId > 0;
+
+  const { project } = useSelector((state: RootState) => state.project);
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [open, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (!state?.id) {
-      navigate("/");
-    }
-  }, [navigate, state]);
-
-  useEffect(() => {
-    if (!state?.id) {
-      navigate("/login");
+    if (!isValidId) {
+      navigate("/", { replace: true });
       return;
     }
 
-    (async () => {
-      const abortController = new AbortController();
-      const isAvailable = await isAvailableProject(state.id, abortController);
-      if (!isAvailable) {
-        setIsOpen(true);
-      }
+    const abortController = new AbortController();
+    // при переходе из одного проекта в другой не показываем данные прошлого
+    dispatch(setDefaultProjects());
 
-      await dispatch(
-        getTeamUsers({
-          project_id: state.id,
-          abortController,
-        })
-      );
-      await dispatch(getProjectData({ project_id: state.id, abortController }));
+    (async () => {
+      try {
+        const isAvailable = await isAvailableProject(projectId, abortController);
+        if (!isAvailable) {
+          // не участник: данные проекта не грузим, бэк всё равно ответит 403
+          setIsOpen(true);
+          return;
+        }
+        await dispatch(getTeamUsers({ project_id: projectId, abortController }));
+        await dispatch(getProjectData({ project_id: projectId, abortController }));
+      } catch {
+        // запрос отменён при уходе со страницы
+      }
     })();
-  }, [state, navigate, dispatch]);
+
+    return () => abortController.abort();
+  }, [isValidId, projectId, navigate, dispatch]);
 
   const closeModal = () => {
-    setIsOpen(!open);
+    setIsOpen(false);
     navigate("/");
   };
+
+  if (!isValidId) return null;
 
   return (
     <ProjectContextWrapper>
       <div className="flex mx-4 my-8 ">
-        {state && <Sidebar project_id={state.id} />}
+        <Sidebar project_id={projectId} />
         <Wrapper className="flex-1 ml-6 p-3 min-h-96 rounded-lg relative">
-          {state && (
-            <div className="flex border px-3 py-1 border-transparent border-b-gray-400">
-              <p className="font-semibold text-xl pr-2 h-full border-r border-gray-400">
-                {project?.title}
-              </p>
-              <p className="font-normal text-xl ml-2 ">
-                {project?.description}
-              </p>
-            </div>
-          )}
-          {state && <TaskList project_id={state.id} />}
+          <div className="flex border px-3 py-1 border-transparent border-b-gray-400">
+            <p className="font-semibold text-xl pr-2 h-full border-r border-gray-400">
+              {project?.title}
+            </p>
+            <p className="font-normal text-xl ml-2 ">{project?.description}</p>
+          </div>
+          <TaskList project_id={projectId} />
         </Wrapper>
-        {/* <ChatIcon /> */}
-        {state && <Chat title={project?.title} project_id={state.id} />}
+        <Chat title={project?.title} project_id={projectId} />
       </div>
       <ErrorMadal open={open} closeModal={closeModal} />
     </ProjectContextWrapper>

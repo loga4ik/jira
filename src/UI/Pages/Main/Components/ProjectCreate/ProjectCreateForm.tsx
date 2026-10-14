@@ -55,7 +55,7 @@ export const ProjectCreateForm = () => {
     (async () => {
       const res = await dispatch(createNewProject(data)); // Вы можете раскомментировать, чтобы добавить логику сохранения
       if (typeof res.payload !== "string" && res.payload?.project) {
-        navigate("/project", { state: res.payload.project });
+        navigate(`/project/${res.payload.project.id}`);
       }
     })();
   };

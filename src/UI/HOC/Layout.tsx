@@ -9,6 +9,7 @@ import {
   useLogoutMutation,
 } from "../../Lib/api/userApi";
 import UserList from "../Pages/project/Components/UserList/UserList";
+import { loginPathWithReturn } from "../../features/auth/returnPath";
 
 const AUTH_ROUTES = ["/login", "/register"];
 
@@ -33,8 +34,9 @@ export const Layout = () => {
   useEffect(() => {
     // не редиректим, пока статус неизвестен, и не гоняем /login на самого себя
     if (isLoading || currentUser || isAuthRoute) return;
-    navigate("/login", { replace: true });
-  }, [currentUser, isLoading, isAuthRoute, navigate]);
+    // запоминаем, куда шёл гость, — после входа вернём его туда
+    navigate(loginPathWithReturn(location), { replace: true });
+  }, [currentUser, isLoading, isAuthRoute, navigate, location]);
 
   // Внешний вид прежней кнопки-обёртки, перенесённый на саму ссылку.
   const authLinkClass = `form_btn-navigate block px-3 py-1 rounded-md border border-gray-200 ${
@@ -54,7 +56,7 @@ export const Layout = () => {
     >
       <header className="header">
         <ThemeSwitcher />
-        {location.pathname === "/project" && <UserList />}
+        {location.pathname.startsWith("/project/") && <UserList />}
         {currentUser?.login && (
           <Button
             title="выход"

@@ -22,3 +22,19 @@ export const apiFetch = async (
   }
   return fetch(input, withAuth());
 };
+
+/**
+ * Понятный текст ошибки из ответа сервера: сообщение бэка ({ message }),
+ * а если его нет — по коду. Для 403 бэк отвечает «Нет доступа к проекту».
+ */
+export const readApiError = async (response: Response): Promise<string> => {
+  try {
+    const body = await response.clone().json();
+    if (body && typeof body.message === "string") return body.message;
+  } catch {
+    // тело не JSON — ниже ответ по коду
+  }
+  if (response.status === 403) return "Нет доступа к проекту";
+  if (response.status === 404) return "Не найдено";
+  return "Ошибка сервера. Попробуйте позже";
+};

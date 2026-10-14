@@ -1,4 +1,4 @@
-import { apiFetch } from "../../api/apiFetch";
+import { apiFetch, readApiError } from "../../api/apiFetch";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   ManageUserInProjectReqType,
@@ -42,6 +42,11 @@ export const getTasksAndSubtasks = createAsyncThunk<
           signal: abortController.signal,
         }
       );
+      // 403/404/500 — не данные: без этой проверки тело ошибки
+      // попадало в стор как успешный ответ
+      if (!response.ok) {
+        return thunkAPI.rejectWithValue(await readApiError(response));
+      }
       return (await response.json()) as TaskAndSubtasks; // Возвращаем успешный результат
     } catch (error) {
       return thunkAPI.rejectWithValue(`${error}`);
@@ -65,6 +70,9 @@ export const getTeamUsers = createAsyncThunk<
         },
         signal: abortController.signal,
       });
+      if (!response.ok) {
+        return thunkAPI.rejectWithValue(await readApiError(response));
+      }
       return (await response.json()) as UserType[]; // Возвращаем успешный результат
     } catch (error) {
       return thunkAPI.rejectWithValue(`${error}`);
@@ -95,6 +103,9 @@ export const addUserInProject = createAsyncThunk<
           project_id,
         }),
       });
+      if (!response.ok) {
+        return thunkAPI.rejectWithValue(await readApiError(response));
+      }
       return (await response.json()) as ResActiveAndFreeUsers; // Возвращаем успешный результат
     } catch (error) {
       return thunkAPI.rejectWithValue(`${error}`);
@@ -122,6 +133,9 @@ export const removeUserInProject = createAsyncThunk<
         signal: abortController.signal,
         body: JSON.stringify({ project_id }),
       });
+      if (!response.ok) {
+        return thunkAPI.rejectWithValue(await readApiError(response));
+      }
       return (await response.json()) as ResActiveAndFreeUsers; // Возвращаем успешный результат
     } catch (error) {
       return thunkAPI.rejectWithValue(`${error}`);
@@ -157,6 +171,9 @@ export const updateSubtask = createAsyncThunk<
         body: JSON.stringify({ id, user_id, status_id, title }),
         signal: abortController.signal,
       });
+      if (!response.ok) {
+        return thunkAPI.rejectWithValue(await readApiError(response));
+      }
       return (await response.json()) as SubtaskType; // Возвращаем успешный результат
     } catch (error) {
       return thunkAPI.rejectWithValue(`${error}`);
@@ -179,6 +196,9 @@ export const getProjectData = createAsyncThunk<
         },
         signal: abortController.signal,
       });
+      if (!response.ok) {
+        return thunkAPI.rejectWithValue(await readApiError(response));
+      }
       const res = await response.json();
 
       return res[0] as Project; // Возвращаем успешный результат
@@ -218,6 +238,9 @@ export const updateAllProject = createAsyncThunk<
         }),
         // signal: abortController.signal,
       });
+      if (!response.ok) {
+        return thunkAPI.rejectWithValue(await readApiError(response));
+      }
       const res = await response.json();
 
       return res as updateAllType; // Возвращаем успешный результат
@@ -251,6 +274,9 @@ export const createNewProject = createAsyncThunk<
         }),
         // signal: abortController.signal,
       });
+      if (!response.ok) {
+        return thunkAPI.rejectWithValue(await readApiError(response));
+      }
       const res = await response.json();
       return res as updateAllType; // Возвращаем успешный результат
     } catch (error) {
@@ -283,6 +309,9 @@ export const editeTask = createAsyncThunk<
         }),
         // signal: abortController.signal,
       });
+      if (!response.ok) {
+        return thunkAPI.rejectWithValue(await readApiError(response));
+      }
       const res = await response.json();
       return res as updateTask; // Возвращаем успешный результат
     } catch (error) {

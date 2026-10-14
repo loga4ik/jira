@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Wrapper } from "../../../UIKit/Wrapper";
 import TextInput from "../../../UIKit/Inputs/TextInput";
 import { Button } from "../../../UIKit/Inputs/Button/Button";
@@ -8,9 +8,12 @@ import HiddenInput from "../../../UIKit/Inputs/HiddenInput/HiddenInput";
 import { useLoginMutation } from "../../../Lib/api/userApi";
 import { getErrorMessage } from "../../../Lib/api/getErrorMessage";
 import { loginSchema, type LoginForm } from "../../../features/auth/schemas";
+import { getSafeReturnPath } from "../../../features/auth/returnPath";
+import { homePathFor } from "../../../features/mainProject/mainProject";
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [login, { isLoading, error }] = useLoginMutation();
 
   const {
@@ -28,9 +31,13 @@ const Login = () => {
 
   const onSubmit = async (data: LoginForm) => {
     try {
-      await login(data).unwrap();
+      const { user } = await login(data).unwrap();
+      // туда, куда шёл до входа (?from=…), иначе в главный проект,
+      // а если его нет — на список проектов;
       // replace, чтобы кнопка «назад» не возвращала на форму входа
-      navigate("/", { replace: true });
+      navigate(getSafeReturnPath(location.search) ?? homePathFor(user.id), {
+        replace: true,
+      });
     } catch {
       // текст ошибки берём из error мутации ниже
     }
@@ -94,6 +101,7 @@ const Login = () => {
             {isLoading ? "входим…" : "войти"}
           </Button>
         </form>
+        <p>тестовый пользователь: qwe/qwe</p>
       </Wrapper>
     </div>
   );

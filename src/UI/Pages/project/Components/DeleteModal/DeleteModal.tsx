@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { deleteProject } from "../../../../../Api/projectApi";
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
@@ -8,13 +9,20 @@ type Props = {
   project_id: number;
 };
 const DeleteModal: React.FC<Props> = ({ project_id }) => {
-  const abortController = new AbortController();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const deleteClickHandler = () => {
-    deleteProject(project_id, abortController);
-    navigate("/");
-    dispatch(setDefaultProjects());
+  const [error, setError] = useState<string>();
+
+  // Раньше уходили на главную, не дождавшись ответа: если удаление
+  // не прошло (например, 403 у не-владельца), пользователь об этом не узнавал.
+  const deleteClickHandler = async () => {
+    try {
+      await deleteProject(project_id, new AbortController());
+      dispatch(setDefaultProjects());
+      navigate("/");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Не удалось удалить проект");
+    }
   };
 
   return (
@@ -22,6 +30,11 @@ const DeleteModal: React.FC<Props> = ({ project_id }) => {
       <p className="p-3 text-white">
         вы действительно хотите удалить данный проект?
       </p>
+      {error && (
+        <p role="alert" className="p-3 text-red-400">
+          {error}
+        </p>
+      )}
       <Button
         title="удалить"
         type="button"

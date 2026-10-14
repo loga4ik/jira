@@ -6,6 +6,7 @@ import { renderWithProviders } from "../../../test/renderWithProviders";
 import { ivan } from "../../../test/fixtures";
 import { getAccessToken, setAccessToken } from "../../../Lib/api/authToken";
 import Login from "./Login";
+import { setMainProject } from "../../../features/mainProject/mainProject";
 
 /*
  * Здесь тестируем форму глазами пользователя: он не знает про
@@ -31,6 +32,7 @@ const submitButton = () => screen.getByRole("button", { name: "войти" });
 
 beforeEach(() => {
   setAccessToken(null);
+  localStorage.clear();
 });
 
 describe("Login", () => {
@@ -102,6 +104,78 @@ describe("Login", () => {
     expect(await screen.findByText("Главная страница")).toBeInTheDocument();
     expect(sentBody).toEqual({ login: "ivan", password: "secret1" });
     expect(getAccessToken()).toBe("access-1");
+  });
+
+  it("после входа возвращает туда, куда пользователь шёл (?from=)", async () => {
+    server.use(
+      http.post("/api/user/login", () =>
+        HttpResponse.json({ accessToken: "access-1", user: ivan }),
+      ),
+    );
+
+    const { user } = renderWithProviders(<Login />, {
+      route: "/login?from=%2Fproject%2F5",
+    });
+
+    await user.type(loginInput(), "ivan");
+    await user.type(passwordInput(), "secret1");
+    await user.click(submitButton());
+
+    expect(await screen.findByText("Проект 5")).toBeInTheDocument();
+  });
+
+  it("чужой адрес в ?from= игнорирует и ведёт на главную", async () => {
+    server.use(
+      http.post("/api/user/login", () =>
+        HttpResponse.json({ accessToken: "access-1", user: ivan }),
+      ),
+    );
+
+    const { user } = renderWithProviders(<Login />, {
+      route: "/login?from=%2F%2Fevil.com",
+    });
+
+    await user.type(loginInput(), "ivan");
+    await user.type(passwordInput(), "secret1");
+    await user.click(submitButton());
+
+    expect(await screen.findByText("Главная страница")).toBeInTheDocument();
+  });
+
+  it("после входа открывает главный проект, если он выбран", async () => {
+    setMainProject(ivan.id, 7);
+    server.use(
+      http.post("/api/user/login", () =>
+        HttpResponse.json({ accessToken: "access-1", user: ivan }),
+      ),
+    );
+
+    const { user } = renderWithProviders(<Login />);
+
+    await user.type(loginInput(), "ivan");
+    await user.type(passwordInput(), "secret1");
+    await user.click(submitButton());
+
+    expect(await screen.findByText("Проект 7")).toBeInTheDocument();
+  });
+
+  it("?from= важнее главного проекта", async () => {
+    setMainProject(ivan.id, 7);
+    server.use(
+      http.post("/api/user/login", () =>
+        HttpResponse.json({ accessToken: "access-1", user: ivan }),
+      ),
+    );
+
+    const { user } = renderWithProviders(<Login />, {
+      route: "/login?from=%2Fproject%2F5",
+    });
+
+    await user.type(loginInput(), "ivan");
+    await user.type(passwordInput(), "secret1");
+    await user.click(submitButton());
+
+    expect(await screen.findByText("Проект 5")).toBeInTheDocument();
   });
 
   it("пока идёт запрос, кнопка заблокирована и показывает «входим…»", async () => {

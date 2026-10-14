@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { ThemeContextWrapper } from "../Context/ThemeContext";
 import { createTestStore, type TestStore } from "./createTestStore";
+import { ProjectProbe } from "./ProjectProbe";
 
 type Options = {
   /** С какого адреса «открыта» страница. */
@@ -43,6 +44,7 @@ export const renderWithProviders = (
           <Routes>
             <Route path={path} element={ui} />
             <Route path="/" element={<p>Главная страница</p>} />
+            <Route path="/project/:id" element={<ProjectProbe />} />
           </Routes>
         </MemoryRouter>
       </ThemeContextWrapper>

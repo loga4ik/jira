@@ -48,4 +48,22 @@ describe("GuestRoute", () => {
     await new Promise((resolve) => setTimeout(resolve, 50));
     expect(screen.getByText("Страница для гостей")).toBeInTheDocument();
   });
+
+  it("вошедшего пользователя возвращает по адресу из ?from=", async () => {
+    server.use(
+      http.post("/api/user/refresh", () =>
+        HttpResponse.json({ accessToken: "access-1" }),
+      ),
+      http.get("/api/user", () => HttpResponse.json(ivan)),
+    );
+
+    renderWithProviders(
+      <GuestRoute>
+        <p>Страница для гостей</p>
+      </GuestRoute>,
+      { route: "/login?from=%2Fproject%2F5" },
+    );
+
+    expect(await screen.findByText("Проект 5")).toBeInTheDocument();
+  });
 });
