@@ -1,4 +1,4 @@
-import { getAccessToken, refreshAccessToken } from "../api/authToken";
+import { getAccessToken, refreshAccessToken } from "../api/userApi/authToken";
 
 export interface Message {
   projectId: number;

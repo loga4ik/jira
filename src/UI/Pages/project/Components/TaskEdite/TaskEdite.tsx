@@ -1,20 +1,18 @@
-import { useEffect, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { AppDispatch, RootState } from "../../../../../Lib/store";
+import { skipToken } from "@reduxjs/toolkit/query/react";
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
 import { Wrapper } from "../../../../../UIKit/Wrapper";
 import TextInput from "../../../../../UIKit/Inputs/TextInput";
-import { editeTask } from "../../../../../Lib/Slices/projectSlice/projectApi";
-import { useCurrentUser } from "../../../../../Hooks/useCurrentUser";
+import {
+  useEditTaskMutation,
+  useGetTasksQuery,
+  type EditTaskBody,
+} from "../../../../../Lib/api/projectApi";
+import { getErrorMessage } from "../../../../../Lib/api/getErrorMessage";
+import { useProjectId } from "../../../../../Hooks/useProjectId";
 
-export type EditeTaskType = {
-  id: number;
-  title: string;
-  description: string;
-  subtasks: { id: number | undefined; title: string }[];
-};
+export type EditeTaskType = EditTaskBody;
 
 type Props = {
   closeModal: () => void;
@@ -22,19 +20,15 @@ type Props = {
 };
 
 export const TaskEdite: React.FC<Props> = ({ closeModal, task_id }) => {
-  const { currentUser } = useCurrentUser();
-  const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
-
-  const { tasks: reduxTasks, subtasks: reduxSubtasks } = useSelector(
-    (state: RootState) => state.project
-  );
+  const projectId = useProjectId();
+  const { data: tasksData } = useGetTasksQuery(projectId ?? skipToken);
+  const [editTask, { isLoading, error }] = useEditTaskMutation();
 
   // Мемоизируем значения для использования в defaultValues
   const defaultValues = useMemo(() => {
-    const currentTask = reduxTasks.find((task) => task.id === task_id);
+    const currentTask = tasksData?.tasks.find((task) => task.id === task_id);
 
-    const subtaskArr = reduxSubtasks
+    const subtaskArr = (tasksData?.subtasks ?? [])
       .filter((subtask) => subtask.task_id === task_id)
       .map((subtask) => ({
         id: subtask.id,
@@ -47,7 +41,7 @@ export const TaskEdite: React.FC<Props> = ({ closeModal, task_id }) => {
       description: currentTask?.description || "",
       subtasks: subtaskArr.length ? subtaskArr : [{ title: "" }],
     };
-  }, [reduxTasks, reduxSubtasks, task_id]);
+  }, [tasksData, task_id]);
 
   const { register, handleSubmit, control } = useForm<EditeTaskType>({
     defaultValues, // Используем мемоизированные значения
@@ -62,19 +56,19 @@ export const TaskEdite: React.FC<Props> = ({ closeModal, task_id }) => {
     name: "subtasks",
   });
 
-  useEffect(() => {
-    if (!currentUser) {
-      navigate("/");
-    }
-  }, [currentUser, navigate]);
-
-  const formHandleSubmit = (data: EditeTaskType) => {
-    (async () => {
-      dispatch(editeTask(data));
+  // Раньше окно закрывалось сразу, не дожидаясь ответа: ошибка сохранения
+  // терялась. Теперь закрываем только после успеха.
+  const formHandleSubmit = async (data: EditeTaskType) => {
+    if (!projectId) return;
+    try {
+      await editTask({ ...data, projectId }).unwrap();
       closeModal();
-      // Логика сохранения
-    })();
+    } catch {
+      // текст ошибки — из error мутации ниже
+    }
   };
+
+  const serverError = getErrorMessage(error, {}, "Не удалось сохранить задачу");
 
   return (
     <>
@@ -82,6 +76,11 @@ export const TaskEdite: React.FC<Props> = ({ closeModal, task_id }) => {
         onSubmit={handleSubmit(formHandleSubmit)}
         className="create_aim_page p-3 max-w-7xl max-h-3xl text-gray-300"
       >
+        {serverError && (
+          <p role="alert" className="p-3 text-red-400">
+            {serverError}
+          </p>
+        )}
         <div className="flex flex-col">
           <TextInput
             inputType="text"
@@ -152,8 +151,9 @@ export const TaskEdite: React.FC<Props> = ({ closeModal, task_id }) => {
             lightShadow={true}
             shadow={false}
             type="submit"
+            disabled={isLoading}
           >
-            сохранить
+            {isLoading ? "сохраняем…" : "сохранить"}
           </Button>
         </div>
       </form>

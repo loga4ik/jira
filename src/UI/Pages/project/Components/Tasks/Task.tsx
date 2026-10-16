@@ -1,17 +1,16 @@
-import { TaskType } from "../../../../../Lib/Slices/projectSlice/types";
+import type { SubtaskType, TaskType } from "../../../../../types/ProjectTypes";
 import Subtask from "./Subtask";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../../Lib/store";
 import { useContext } from "react";
 import { ProjectContext } from "../../../../../Context/ProjectConstext";
 
 type Props = {
   data: TaskType;
+  /** Подзадачи этой задачи — TaskList уже отфильтровал их. */
+  subtasks: SubtaskType[];
 };
 
-export const Task: React.FC<Props> = ({ data }) => {
+export const Task: React.FC<Props> = ({ data, subtasks }) => {
   const { taskIdToEdite, changeTaskId } = useContext(ProjectContext);
-  const subtasks = useSelector((state: RootState) => state.project.subtasks);
 
   const taskClickHandler = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -34,12 +33,9 @@ export const Task: React.FC<Props> = ({ data }) => {
         <p className="mx-1">{data.description}</p>
       </div>
       <div className="flex-1 p-2">
-        {subtasks?.map(
-          (subtask) =>
-            subtask.task_id === data.id && (
-              <Subtask key={subtask.id} data={subtask} />
-            )
-        )}
+        {subtasks.map((subtask) => (
+          <Subtask key={subtask.id} data={subtask} />
+        ))}
       </div>
     </div>
   );

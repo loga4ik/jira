@@ -1,6 +1,5 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import type { UserLoginData, UserReg, UserType } from "../../types/UserTypes";
-import { baseQueryWithReauth } from "./baseQuery";
+import type { UserLoginData, UserReg, UserType } from "../../../types/UserTypes";
+import { api } from "../api";
 import { setAccessToken } from "./authToken";
 
 /** То, что реально нужно интерфейсу: всё, кроме пароля. */
@@ -17,10 +16,7 @@ export type AuthResponse = {
  * Хуки (useLoginMutation и т.д.) генерируются автоматически,
  * состояния загрузки, кэш и инвалидация — тоже.
  */
-export const userApi = createApi({
-  reducerPath: "userApi",
-  baseQuery: baseQueryWithReauth,
-  tagTypes: ["CurrentUser", "Users"],
+export const userApi = api.injectEndpoints({
   endpoints: (builder) => ({
     /**
      * Кто сейчас залогинен. Без сессии сервер отвечает 401 —
@@ -75,10 +71,11 @@ export const userApi = createApi({
         } catch {
           // даже если сервер недоступен, локально из сессии выходим
         } finally {
-          // Чистим токен и весь кэш целиком, а не только текущего пользователя:
-          // после выхода в памяти не должно остаться ничьих данных.
+          // Чистим токен и весь кэш целиком — пользователя, его проекты,
+          // задачи: после выхода в памяти не должно остаться ничьих данных,
+          // иначе следующий вошедший на этом компьютере их увидит.
           setAccessToken(null);
-          dispatch(userApi.util.resetApiState());
+          dispatch(api.util.resetApiState());
         }
       },
     }),

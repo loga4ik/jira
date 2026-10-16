@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { http, HttpResponse } from "msw";
-import { server } from "../../test/server";
-import { createTestStore, type TestStore } from "../../test/createTestStore";
-import { ivan } from "../../test/fixtures";
+import { server } from "../../../test/server";
+import { createTestStore, type TestStore } from "../../../test/createTestStore";
+import { ivan } from "../../../test/fixtures";
 import { userApi } from "./userApi";
 import { getAccessToken, setAccessToken } from "./authToken";
 
@@ -139,7 +139,7 @@ describe("logout", () => {
       // не остаётся ни токена, ни чьих-либо данных.
       expect(getAccessToken()).toBeNull();
       expect(cachedCurrentUser(store)).toBeUndefined();
-      expect(store.getState().userApi.queries).toEqual({});
+      expect(store.getState().api.queries).toEqual({});
     },
   );
 });

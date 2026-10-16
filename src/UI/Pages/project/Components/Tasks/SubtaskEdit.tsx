@@ -1,13 +1,16 @@
-import { SubtaskType } from "../../../../../Lib/Slices/projectSlice/types";
+import type { SubtaskType } from "../../../../../types/ProjectTypes";
 import { useForm, Controller } from "react-hook-form";
 import TextInput from "../../../../../UIKit/Inputs/TextInput";
 import { Radio } from "../../../../../UIKit/Inputs/Radio";
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../../../Lib/store";
-import { updateSubtask } from "../../../../../Lib/Slices/projectSlice/projectApi";
-import { useEffect, useState } from "react";
-import { getStatusList } from "../../../../../Api/projectApi";
+import { skipToken } from "@reduxjs/toolkit/query/react";
+import {
+  useGetStatusesQuery,
+  useGetTeamQuery,
+  useUpdateSubtaskMutation,
+} from "../../../../../Lib/api/projectApi";
+import { getErrorMessage } from "../../../../../Lib/api/getErrorMessage";
+import { useProjectId } from "../../../../../Hooks/useProjectId";
 import DropDown from "../../../../../UIKit/Inputs/DropDown";
 
 type ChangeSubtask = {
@@ -22,20 +25,12 @@ type Props = {
 };
 
 const SubtaskEdit: React.FC<Props> = ({ subtask, closeModal }) => {
-  const userList = useSelector((state: RootState) => state.project.userList);
-  const dispatch = useDispatch<AppDispatch>();
-  const [statusList, setStatusList] = useState<{ id: number; title: string }[]>(
-    []
-  );
-
-  useEffect(() => {
-    const abortController = new AbortController();
-    (async () => {
-      const res = await getStatusList(abortController);
-      setStatusList(res);
-    })();
-    return () => abortController.abort(); // Clean up the request on unmount
-  }, []);
+  const projectId = useProjectId();
+  const { data: userList = [] } = useGetTeamQuery(projectId ?? skipToken);
+  // Раньше статусы запрашивались при каждом открытии окна —
+  // теперь берутся из кэша, запрос был один раз за сессию.
+  const { data: statusList = [] } = useGetStatusesQuery();
+  const [updateSubtask, { isLoading, error }] = useUpdateSubtaskMutation();
 
   const { handleSubmit, register, control } = useForm<ChangeSubtask>({
     defaultValues: {
@@ -45,19 +40,25 @@ const SubtaskEdit: React.FC<Props> = ({ subtask, closeModal }) => {
     },
   });
 
+  // Окно закрываем только после успеха — иначе показываем ошибку
+  // (например, 400, если исполнитель уже не в команде).
   const formOnSubmitHandler = async (data: ChangeSubtask) => {
-    const abortController = new AbortController();
-    await dispatch(
-      updateSubtask({
+    if (!projectId) return;
+    try {
+      await updateSubtask({
+        projectId,
         id: subtask.id,
-        user_id: data.user_id,
+        user_id: Number(data.user_id),
         title: data.title,
         status_id: data.status_id,
-        abortController,
-      })
-    );
-    closeModal();
+      }).unwrap();
+      closeModal();
+    } catch {
+      // текст ошибки — из error мутации ниже
+    }
   };
+
+  const serverError = getErrorMessage(error);
 
   return (
     <form
@@ -67,6 +68,12 @@ const SubtaskEdit: React.FC<Props> = ({ subtask, closeModal }) => {
       <h1 className="text-xl m-1">{`${
         userList[0] ? "Делегировать задачу" : "добавьте пользователей"
       }`}</h1>
+
+      {serverError && (
+        <p role="alert" className="p-3 text-red-400">
+          {serverError}
+        </p>
+      )}
 
       <TextInput
         className="w-full ml-0"
@@ -108,8 +115,9 @@ const SubtaskEdit: React.FC<Props> = ({ subtask, closeModal }) => {
         bg_color={false}
         shadow={false}
         className="form_submit_btn"
+        disabled={isLoading}
       >
-        Сохранить
+        {isLoading ? "Сохраняем…" : "Сохранить"}
       </Button>
     </form>
   );

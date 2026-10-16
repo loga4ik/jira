@@ -1,31 +1,29 @@
 import { Task } from "./Task";
-import { AppDispatch, RootState } from "../../../../../Lib/store";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { getTasksAndSubtasks } from "../../../../../Lib/Slices/projectSlice/projectApi";
+import { useGetTasksQuery } from "../../../../../Lib/api/projectApi";
+
 type Props = {
   project_id: number;
 };
+
 const TaskList: React.FC<Props> = ({ project_id }) => {
-  const tasks = useSelector((state: RootState) => state.project.tasks);
-  const dispatch = useDispatch<AppDispatch>();
-  
-  useEffect(() => {
-    (async () => {
-      const abortController = new AbortController();
-      await dispatch(
-        getTasksAndSubtasks({
-          project_id: project_id,
-          abortController,
-        })
-      );
-    })();
-  }, [dispatch, project_id]);
+  const { data, isLoading, isError } = useGetTasksQuery(project_id);
+
+  if (isLoading) return <p role="status">загрузка задач…</p>;
+  if (isError)
+    return (
+      <p role="alert" className="text-red-400">
+        Не удалось загрузить задачи
+      </p>
+    );
 
   return (
     <div>
-      {tasks?.map((task) => (
-        <Task data={task} key={task.id} />
+      {data?.tasks.map((task) => (
+        <Task
+          key={task.id}
+          data={task}
+          subtasks={data.subtasks.filter(({ task_id }) => task_id === task.id)}
+        />
       ))}
     </div>
   );

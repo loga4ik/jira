@@ -1,9 +1,9 @@
-import { getAccessToken, refreshAccessToken } from "./authToken";
+import { getAccessToken, refreshAccessToken } from "./userApi/authToken";
 
 /**
  * fetch с access-токеном и одной повторной попыткой после обновления токена.
- * Временная обёртка для старого project API на ручных fetch —
- * уйдёт вместе с его переводом на RTK Query.
+ * Остался только у истории чата (ChatBoard) — уйдёт, когда чат
+ * переедет на RTK Query (getMessages с WebSocket в onCacheEntryAdded).
  */
 export const apiFetch = async (
   input: RequestInfo | URL,
@@ -21,20 +21,4 @@ export const apiFetch = async (
     return response;
   }
   return fetch(input, withAuth());
-};
-
-/**
- * Понятный текст ошибки из ответа сервера: сообщение бэка ({ message }),
- * а если его нет — по коду. Для 403 бэк отвечает «Нет доступа к проекту».
- */
-export const readApiError = async (response: Response): Promise<string> => {
-  try {
-    const body = await response.clone().json();
-    if (body && typeof body.message === "string") return body.message;
-  } catch {
-    // тело не JSON — ниже ответ по коду
-  }
-  if (response.status === 403) return "Нет доступа к проекту";
-  if (response.status === 404) return "Не найдено";
-  return "Ошибка сервера. Попробуйте позже";
 };

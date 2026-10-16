@@ -1,10 +1,13 @@
-import React, { useContext, useState } from "react";
-import { SubtaskType } from "../../../../../Lib/Slices/projectSlice/types";
+import React, { useState } from "react";
+import type { SubtaskType } from "../../../../../types/ProjectTypes";
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
-import { ProjectContext } from "../../../../../Context/ProjectConstext";
 import SubtaskEdit from "./SubtaskEdit";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../../Lib/store";
+import { skipToken } from "@reduxjs/toolkit/query/react";
+import {
+  useGetStatusesQuery,
+  useGetTeamQuery,
+} from "../../../../../Lib/api/projectApi";
+import { useProjectId } from "../../../../../Hooks/useProjectId";
 import { NewModal } from "../../../../../UIKit/Modal/NewModal";
 type Props = {
   data: SubtaskType;
@@ -12,8 +15,13 @@ type Props = {
 
 const Subtask: React.FC<Props> = ({ data }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { statuses } = useContext(ProjectContext);
-  const activeUsers = useSelector((state: RootState) => state.project.userList);
+  const projectId = useProjectId();
+  // Те же хуки зовут и другие компоненты — запрос всё равно один на всех,
+  // данные берутся из общего кэша.
+  const { data: team = [] } = useGetTeamQuery(projectId ?? skipToken);
+  const { data: statuses = [] } = useGetStatusesQuery();
+  const assignee = team.find((user) => user.id === data.user_id);
+  const status = statuses.find((item) => item.id === data.status_id);
 
   return (
     <div className="flex justify-between items-center">
@@ -21,17 +29,15 @@ const Subtask: React.FC<Props> = ({ data }) => {
         <p>{data.title}</p>
         {data.user_id && (
           <p className="ml-2 border-2 rounded-md mr-2 py-1 px-3 bg-gray-400 border-gray-400 text-gray-800">
-            {`исполнитель: ${
-              activeUsers.find((user) => user.id === data.user_id)?.login
-            }`}
+            {`исполнитель: ${assignee?.login ?? "не в команде"}`}
           </p>
         )}
       </div>
       <div>
         <div className="flex flex-row justify-between items-center">
-          {data.status_id && (
+          {status && (
             <p className="border-2 rounded-md mr-2 py-1 px-2 border-gray-400">
-              {statuses[data.status_id]}
+              {status.title}
             </p>
           )}
           <Button

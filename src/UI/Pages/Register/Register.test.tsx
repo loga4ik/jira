@@ -4,7 +4,7 @@ import { delay, http, HttpResponse } from "msw";
 import { server } from "../../../test/server";
 import { renderWithProviders } from "../../../test/renderWithProviders";
 import { ivan } from "../../../test/fixtures";
-import { setAccessToken } from "../../../Lib/api/authToken";
+import { setAccessToken } from "../../../Lib/api/userApi/authToken";
 import Register from "./Register";
 
 /*

@@ -4,7 +4,7 @@ import {
   type FetchArgs,
   type FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
-import { getAccessToken, refreshAccessToken } from "./authToken";
+import { getAccessToken, refreshAccessToken } from "./userApi/authToken";
 
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: "/api",

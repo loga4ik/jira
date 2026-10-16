@@ -9,10 +9,8 @@ import DeleteModal from "../DeleteModal/DeleteModal";
 import { ProjectContext } from "../../../../../Context/ProjectConstext";
 import { TaskEdite } from "../TaskEdite/TaskEdite";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../../../Lib/store";
 import { useCurrentUser } from "../../../../../Hooks/useCurrentUser";
-import { setDefaultProjects } from "../../../../../Lib/Slices/projectSlice/projectSlice";
+import { useGetProjectQuery } from "../../../../../Lib/api/projectApi";
 
 type OpenedElement = "edit" | "delete" | "add_user" | false;
 type Props = {
@@ -21,10 +19,10 @@ type Props = {
 const Sidebar: React.FC<Props> = ({ project_id }) => {
   const [openElement, setOpenElement] = useState<OpenedElement>(false);
   const { taskIdToEdite } = useContext(ProjectContext);
-  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { currentUser } = useCurrentUser();
-  const project = useSelector((state: RootState) => state.project.project);
+  // проект уже в кэше — его загрузила страница
+  const { data: project } = useGetProjectQuery(project_id);
 
   // Управлять проектом может только владелец — бэк всё равно ответит 403,
   // поэтому участнику эти кнопки не показываем. Редактировать задачу
@@ -38,10 +36,10 @@ const Sidebar: React.FC<Props> = ({ project_id }) => {
     setOpenElement(name);
   };
 
-  const homeButtonClickHandler = () =>{
-    dispatch(setDefaultProjects())
-    navigate('/')
-  }
+  // Раньше перед уходом стор чистили руками (setDefaultProjects), чтобы
+  // в следующем проекте не мелькнули данные этого. Кэш RTK Query
+  // хранит каждый проект отдельно — чистить нечего.
+  const homeButtonClickHandler = () => navigate("/");
 
   return (
     <Wrapper className="py-8 flex flex-col flex-none w-20 rounded-full z-10 justify-between">

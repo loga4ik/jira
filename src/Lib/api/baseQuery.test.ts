@@ -4,7 +4,7 @@ import { server } from "../../test/server";
 import { createTestStore } from "../../test/createTestStore";
 import { ivan } from "../../test/fixtures";
 import { userApi } from "./userApi";
-import { getAccessToken, setAccessToken } from "./authToken";
+import { getAccessToken, setAccessToken } from "./userApi/authToken";
 
 // Токен лежит в переменной модуля authToken и переживает тест.
 // Обнуляем его, чтобы каждый тест начинался «без входа».

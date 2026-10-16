@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { delay, http, HttpResponse } from "msw";
-import { server } from "../../test/server";
+import { server } from "../../../test/server";
 import {
   getAccessToken,
   refreshAccessToken,

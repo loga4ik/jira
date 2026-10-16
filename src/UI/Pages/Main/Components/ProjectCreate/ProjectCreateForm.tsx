@@ -1,15 +1,14 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import "./EditProject.css";
 import { useNavigate } from "react-router-dom";
 import { useFieldArray, useForm } from "react-hook-form";
-import { AppDispatch } from "../../../../../Lib/store";
 import { useCurrentUser } from "../../../../../Hooks/useCurrentUser";
 import { CreateSubtaskForm } from "./CreateSubtaskForm";
 import { EditProjectType } from "../../../project/Components/EditProject/EditProject";
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
 import { Wrapper } from "../../../../../UIKit/Wrapper";
-import { createNewProject } from "../../../../../Lib/Slices/projectSlice/projectApi";
+import { useCreateProjectMutation } from "../../../../../Lib/api/projectApi";
+import { getErrorMessage } from "../../../../../Lib/api/getErrorMessage";
 import TextInput from "../../../../../UIKit/Inputs/TextInput";
 
 export type CreateProjectType = Omit<EditProjectType, "project_id"> & {
@@ -17,8 +16,8 @@ export type CreateProjectType = Omit<EditProjectType, "project_id"> & {
 };
 
 export const ProjectCreateForm = () => {
-  const { currentUser } = useCurrentUser();
-  const dispatch = useDispatch<AppDispatch>();
+  const { currentUser, isLoading: isUserLoading } = useCurrentUser();
+  const [createProject, { isLoading, error }] = useCreateProjectMutation();
   const navigate = useNavigate();
 
   const { register, handleSubmit, control } = useForm<CreateProjectType>({
@@ -45,20 +44,25 @@ export const ProjectCreateForm = () => {
     name: "tasks",
   });
 
+  // уводим, только когда точно известно, что пользователя нет:
+  // пока он загружается, currentUser тоже undefined
   useEffect(() => {
-    if (!currentUser) {
+    if (!isUserLoading && !currentUser) {
       navigate("/");
     }
-  }, [currentUser, navigate]);
+  }, [isUserLoading, currentUser, navigate]);
 
-  const formHandleSubmit = (data: CreateProjectType) => {
-    (async () => {
-      const res = await dispatch(createNewProject(data)); // Вы можете раскомментировать, чтобы добавить логику сохранения
-      if (typeof res.payload !== "string" && res.payload?.project) {
-        navigate(`/project/${res.payload.project.id}`);
-      }
-    })();
+  const formHandleSubmit = async ({ title, description, tasks }: CreateProjectType) => {
+    try {
+      // user_id не отправляем: владельца сервер берёт из токена
+      const { project } = await createProject({ title, description, tasks }).unwrap();
+      navigate(`/project/${project.id}`);
+    } catch {
+      // текст ошибки — из error мутации ниже
+    }
   };
+
+  const serverError = getErrorMessage(error);
 
   return (
     <>
@@ -66,6 +70,11 @@ export const ProjectCreateForm = () => {
         onSubmit={handleSubmit(formHandleSubmit)}
         className="create_aim_page p-3 max-w-7xl max-h-3xl "
       >
+        {serverError && (
+          <p role="alert" className="p-3 text-red-400">
+            {serverError}
+          </p>
+        )}
         <div className="flex flex-col">
           <TextInput
             inputType="text"
@@ -142,8 +151,9 @@ export const ProjectCreateForm = () => {
             shadow={false}
             bg_color={false}
             type="submit"
+            disabled={isLoading}
           >
-            сохранить
+            {isLoading ? "сохраняем…" : "сохранить"}
           </Button>
         </div>
       </form>

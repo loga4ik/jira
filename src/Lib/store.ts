@@ -1,19 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { useDispatch } from "react-redux";
-import projectSlice from "./Slices/projectSlice/projectSlice";
-import { userApi } from "./api/userApi";
+import { api } from "./api/api";
 
 const store = configureStore({
   reducer: {
-    project: projectSlice,
-    [userApi.reducerPath]: userApi.reducer,
+    [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(userApi.middleware),
+    getDefaultMiddleware().concat(api.middleware),
 });
 
-// перезапрос данных при возвращении фокуса на вкладку и восстановлении сети
+// слушает фокус вкладки и сеть; что с ними делать, задано в api.ts
+// (refetchOnFocus, refetchOnReconnect) — без этих флагов сам по себе ничего не перезапрашивает
 setupListeners(store.dispatch);
 
 export type AppDispatch = typeof store.dispatch;

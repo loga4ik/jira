@@ -1,67 +1,35 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { getFreeUsers } from "../../../../../Api/projectApi";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../../../Lib/store";
+import { skipToken } from "@reduxjs/toolkit/query/react";
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
-import { UserType } from "../../../../../Lib/Slices/projectSlice/types";
 import {
-  addUserInProject,
-  removeUserInProject,
-} from "../../../../../Lib/Slices/projectSlice/projectApi";
+  useAddMemberMutation,
+  useGetFreeUsersQuery,
+  useGetProjectQuery,
+  useGetTeamQuery,
+  useRemoveMemberMutation,
+} from "../../../../../Lib/api/projectApi";
+import { getErrorMessage } from "../../../../../Lib/api/getErrorMessage";
+import { useProjectId } from "../../../../../Hooks/useProjectId";
 
 const AddUser = () => {
-  const [freeUsers, setFreeUsers] = useState<UserType[]>([]);
-  const [error, setError] = useState<string>();
-  const activeUsers = useSelector((state: RootState) => state.project.userList);
+  const projectId = useProjectId();
+  const arg = projectId ?? skipToken;
 
-  const dispatch = useDispatch<AppDispatch>();
-  // id проекта — из адреса /project/:id, владелец — из загруженного проекта
-  const projectId = Number(useParams().id);
-  const ownerId = useSelector(
-    (state: RootState) => state.project.project?.owner_id
-  );
+  const { data: project } = useGetProjectQuery(arg);
+  const { data: team = [] } = useGetTeamQuery(arg);
+  const { data: freeUsers = [] } = useGetFreeUsersQuery(arg);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const teamData = await getFreeUsers(projectId);
+  // Списки руками не правим: мутации сбрасывают тег Team/<id>,
+  // и команда со свободными пользователями перезапрашиваются сами.
+  const [addMember, addState] = useAddMemberMutation();
+  const [removeMember, removeState] = useRemoveMemberMutation();
+  const isBusy = addState.isLoading || removeState.isLoading;
+  const error = getErrorMessage(addState.error ?? removeState.error);
 
-        if (!(teamData instanceof Error)) {
-          setFreeUsers(teamData);
-        }
-      } catch (error) {
-        console.error("Error fetching team:", error);
-      }
-    })(); // Загрузка при открытии и при смене проекта
-  }, [projectId]);
-
-  const addClickHandler = async (user_id: number) => {
-    const abortController = new AbortController();
-    const res = await dispatch(
-      addUserInProject({ user_id, project_id: projectId, abortController })
-    );
-    // проверяем именно успех: при ошибке payload — строка с текстом ошибки,
-    // и проверка if (res.payload) пропускала её как удачу
-    if (addUserInProject.fulfilled.match(res)) {
-      setFreeUsers(freeUsers.filter((user) => user.id !== user_id));
-    } else {
-      setError(res.payload ?? "Не удалось добавить пользователя");
-    }
+  const add = (userId: number) => {
+    if (projectId) addMember({ projectId, userId });
   };
-
-  const removeClickHandler = async (user_id: number) => {
-    const abortController = new AbortController();
-    const res = await dispatch(
-      removeUserInProject({ user_id, project_id: projectId, abortController })
-    );
-
-    if (removeUserInProject.fulfilled.match(res)) {
-      const deletedUser = activeUsers.filter((user) => user.id === user_id);
-      setFreeUsers([...freeUsers, deletedUser[0]]);
-    } else {
-      setError(res.payload ?? "Не удалось удалить пользователя");
-    }
+  const remove = (userId: number) => {
+    if (projectId) removeMember({ projectId, userId });
   };
 
   return (
@@ -73,45 +41,44 @@ const AddUser = () => {
       )}
       <div className="p-4">
         <p>Уже на проекте:</p>
-        {activeUsers.length > 0 &&
-          activeUsers.map(
-            (user) =>
-              user.id !== ownerId && (
-                <div className="flex items-center" key={user.id}>
-                  <p>
-                    имя: {user.name} логин: {user.login}
-                  </p>
-                  <Button
-                    title="удалить"
-                    type="button"
-                    className="h-10 border-transparent"
-                    changableIconClass="bin"
-                    shadow={false}
-                    onClick={() => removeClickHandler(user.id)}
-                  />
-                </div>
-              )
-          )}
+        {team
+          .filter((user) => user.id !== project?.owner_id)
+          .map((user) => (
+            <div className="flex items-center" key={user.id}>
+              <p>
+                имя: {user.name} логин: {user.login}
+              </p>
+              <Button
+                title={`удалить ${user.login}`}
+                type="button"
+                className="h-10 border-transparent"
+                changableIconClass="bin"
+                shadow={false}
+                disabled={isBusy}
+                onClick={() => remove(user.id)}
+              />
+            </div>
+          ))}
       </div>
       <hr />
       <div className="p-4">
         <p>Добавить:</p>
-        {freeUsers.length > 0 &&
-          freeUsers.map((user) => (
-            <div className="flex items-center" key={user.id}>
-              <p>
+        {freeUsers.map((user) => (
+          <div className="flex items-center" key={user.id}>
+            <p>
               имя: {user.name} логин: {user.login}
-              </p>
-              <Button
-                title="добавить"
-                type="button"
-                className="h-10 border-transparent"
-                changableIconClass="add"
-                shadow={false}
-                onClick={() => addClickHandler(user.id)}
-              />
-            </div>
-          ))}
+            </p>
+            <Button
+              title={`добавить ${user.login}`}
+              type="button"
+              className="h-10 border-transparent"
+              changableIconClass="add"
+              shadow={false}
+              disabled={isBusy}
+              onClick={() => add(user.id)}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );

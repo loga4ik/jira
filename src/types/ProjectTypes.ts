@@ -37,20 +37,20 @@ type TaskType = {
   updateAt: Date;
 };
 
-interface TaskAndSubtasks {
-  tasks?: TaskType[];
-  subtasks?: SubtaskType[];
-}
+/** Задачи и подзадачи проекта — ответ GET /task/getTasksAndSubtasks/:id. */
+type TaskAndSubtasks = {
+  tasks: TaskType[];
+  subtasks: SubtaskType[];
+};
+
+type StatusType = {
+  id: number;
+  title: string;
+};
 
 type UserProjectsType = {
   owner: Project[];
   working: Project[];
-};
-
-type ManageUserInProjectReqType = {
-  user_id: number;
-  project_id: number;
-  abortController: AbortController;
 };
 
 export type {
@@ -60,5 +60,5 @@ export type {
   SubtaskType,
   Project,
   UserProjectsType,
-  ManageUserInProjectReqType,
+  StatusType,
 };

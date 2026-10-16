@@ -5,12 +5,9 @@ import { server } from "../../../../../test/server";
 import { renderWithProviders } from "../../../../../test/renderWithProviders";
 import { createTestStore } from "../../../../../test/createTestStore";
 import { ivan } from "../../../../../test/fixtures";
-import { setAccessToken } from "../../../../../Lib/api/authToken";
-import {
-  getProjectData,
-  updateAllProject,
-} from "../../../../../Lib/Slices/projectSlice/projectApi";
-import type { Project } from "../../../../../Lib/Slices/projectSlice/types";
+import { setAccessToken } from "../../../../../Lib/api/userApi/authToken";
+import { projectApi } from "../../../../../Lib/api/projectApi";
+import type { Project } from "../../../../../types/ProjectTypes";
 import { ProjectContext } from "../../../../../Context/ProjectConstext";
 import Sidebar from "./Sidebar";
 
@@ -29,23 +26,20 @@ const loginAsIvan = () =>
     http.get("/api/user", () => HttpResponse.json(ivan)),
   );
 
-/** Рисует Sidebar с проектом в сторе и выбранной (или нет) задачей. */
-const renderSidebar = (ownerId: number, taskIdToEdite?: number) => {
-  const store = createTestStore();
-  // кладём проект в стор так же, как это делает успешный getProjectData
-  store.dispatch(
-    getProjectData.fulfilled(makeProject(ownerId), "test", {
-      project_id: 5,
-      abortController: new AbortController(),
-    }),
+/** Сервер отдаёт проект 5 с указанным владельцем (бэк отвечает массивом). */
+const serveProject = (ownerId: number) =>
+  server.use(
+    http.get("/api/project/5", () => HttpResponse.json([makeProject(ownerId)])),
   );
+
+/** Рисует Sidebar проекта 5 с выбранной (или нет) задачей. */
+const renderSidebar = (ownerId: number, taskIdToEdite?: number) => {
+  serveProject(ownerId);
   return renderWithProviders(
-    <ProjectContext.Provider
-      value={{ statuses: {}, taskIdToEdite, changeTaskId: () => {} }}
-    >
+    <ProjectContext.Provider value={{ taskIdToEdite, changeTaskId: () => {} }}>
       <Sidebar project_id={5} />
     </ProjectContext.Provider>,
-    { route: "/project", path: "/project", store },
+    { route: "/project/5/sidebar", path: "/project/:id/sidebar" },
   );
 };
 
@@ -95,29 +89,41 @@ describe("Sidebar", () => {
   });
 });
 
-describe("updateAllProject", () => {
-  it("на 403 отклоняется с текстом сервера и не трогает стор", async () => {
+describe("updateProject", () => {
+  it("на 403 возвращает текст сервера и не трогает кэш проекта", async () => {
+    let projectCalls = 0;
     server.use(
+      http.get("/api/project/5", () => {
+        projectCalls++;
+        return HttpResponse.json([makeProject(OTHER_ID)]);
+      }),
       http.put("/api/project/updateAll", () =>
         HttpResponse.json({ message: "Нет доступа к проекту" }, { status: 403 }),
       ),
     );
     const store = createTestStore();
-    store.dispatch(
-      getProjectData.fulfilled(makeProject(OTHER_ID), "test", {
+    setAccessToken("access-1");
+    // «страница открыта»: проект загружен и на него есть подписчик
+    await store.dispatch(projectApi.endpoints.getProject.initiate(5));
+
+    const res = await store.dispatch(
+      projectApi.endpoints.updateProject.initiate({
         project_id: 5,
-        abortController: new AbortController(),
+        title: "Новое",
+        description: "",
+        tasks: [],
       }),
     );
 
-    const res = await store.dispatch(
-      updateAllProject({ project_id: 5, title: "Новое", description: "", tasks: [] }),
+    expect(res.error).toMatchObject({
+      status: 403,
+      data: { message: "Нет доступа к проекту" },
+    });
+    // не сохранилось — проект в кэше прежний и не перезапрашивался
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(projectApi.endpoints.getProject.select(5)(store.getState()).data?.title).toBe(
+      "Проект",
     );
-
-    expect(updateAllProject.rejected.match(res)).toBe(true);
-    expect(res.payload).toBe("Нет доступа к проекту");
-    // раньше тело ошибки попадало в стор: project становился undefined
-    expect(store.getState().project.project?.title).toBe("Проект");
-    expect(store.getState().project.tasks).toEqual([]);
+    expect(projectCalls).toBe(1);
   });
 });

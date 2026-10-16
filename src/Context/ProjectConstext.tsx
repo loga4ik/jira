@@ -1,24 +1,13 @@
-import { apiFetch } from "../Lib/api/apiFetch";
-import React, { useState, createContext, ReactNode, useEffect } from "react";
+import React, { useState, createContext, ReactNode } from "react";
 
-type StatusType = {
-  id: number;
-  title: string;
-};
-
+/**
+ * Состояние, которое есть только в интерфейсе страницы проекта:
+ * какая задача выбрана для редактирования. Данные с сервера (проект,
+ * задачи, команда, статусы) здесь не храним — они в кэше RTK Query.
+ */
 type ProjectContextType = {
-  statuses: { [key: number]: string }; // Теперь значение — это только title
   taskIdToEdite: number | undefined;
   changeTaskId(taskId: number): void;
-};
-
-const transformToStatusObject = (
-  data: StatusType[]
-): { [key: number]: string } => {
-  return data.reduce((acc, status) => {
-    acc[status.id] = status.title; // Сохраняем только title
-    return acc;
-  }, {} as { [key: number]: string });
 };
 
 export const ProjectContext = createContext<ProjectContextType>(
@@ -32,44 +21,15 @@ type ProviderProps = {
 export const ProjectContextWrapper: React.FC<ProviderProps> = ({
   children,
 }) => {
-  const [statuses, setStatuses] = useState<{ [key: number]: string }>({});
   const [taskIdToEdite, setTaskIdToEdite] = useState<number | undefined>();
 
+  // повторный клик по выбранной задаче снимает выбор
   const changeTaskId = (taskId: number | undefined) => {
-    if (taskId === taskIdToEdite) {
-      setTaskIdToEdite(undefined);
-    } else {
-      setTaskIdToEdite(taskId);
-    }
+    setTaskIdToEdite(taskId === taskIdToEdite ? undefined : taskId);
   };
 
-  useEffect(() => {
-    const abortController = new AbortController();
-    (async () => {
-      try {
-        const response = await apiFetch("/api/status/", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          signal: abortController.signal,
-        });
-
-        if (response.ok) {
-          const data: StatusType[] = await response.json();
-          setStatuses(transformToStatusObject(data)); // Преобразуем данные в объект с ключами - id
-        }
-      } catch (error) {
-        console.error("Error fetching statuses", error);
-      }
-    })();
-    return () => {
-      abortController.abort();
-    };
-  }, []);
-
   return (
-    <ProjectContext.Provider value={{ statuses, taskIdToEdite, changeTaskId }}>
+    <ProjectContext.Provider value={{ taskIdToEdite, changeTaskId }}>
       {children}
     </ProjectContext.Provider>
   );

@@ -1,6 +1,7 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../../Lib/store";
+import { skipToken } from "@reduxjs/toolkit/query/react";
+import { useGetTeamQuery } from "../../../../../Lib/api/projectApi";
+import { useProjectId } from "../../../../../Hooks/useProjectId";
 import { useCurrentUser } from "../../../../../Hooks/useCurrentUser";
 
 type Props = {
@@ -10,7 +11,8 @@ type Props = {
 
 const ChatMessage: React.FC<Props> = ({ text, sender }) => {
   const { currentUser } = useCurrentUser();
-  const userList = useSelector((state: RootState) => state.project.userList);
+  const projectId = useProjectId();
+  const { data: userList = [] } = useGetTeamQuery(projectId ?? skipToken);
   // Автор вычисляется из списка при рендере — отдельное состояние
   // и эффект для этого не нужны: они лишь давали лишний рендер.
   const user = userList.find((item) => item.id === sender);

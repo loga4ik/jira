@@ -4,7 +4,7 @@ import { http, HttpResponse } from "msw";
 import { server } from "../../../../test/server";
 import { renderWithProviders } from "../../../../test/renderWithProviders";
 import { ivan } from "../../../../test/fixtures";
-import { setAccessToken } from "../../../../Lib/api/authToken";
+import { setAccessToken } from "../../../../Lib/api/userApi/authToken";
 import { getMainProject, setMainProject } from "../../../../features/mainProject/mainProject";
 import { ProjectList } from "./ProjectList";
 
@@ -86,5 +86,18 @@ describe("ProjectList: главный проект", () => {
 
     await screen.findByRole("button", { name: "Сделать «Кофейня» главным" });
     expect(getMainProject(ivan.id)).toBeNull();
+  });
+
+  it("если список не загрузился — сообщает об этом", async () => {
+    server.use(
+      http.get("/api/project/getUserProjects/:id", () =>
+        HttpResponse.json({ message: "ошибка" }, { status: 500 }),
+      ),
+    );
+    renderList();
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Не удалось загрузить проекты",
+    );
   });
 });

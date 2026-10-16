@@ -1,38 +1,32 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../../../Lib/store";
+import { useEffect } from "react";
+import { skipToken } from "@reduxjs/toolkit/query/react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { Button } from "../../../../../UIKit/Inputs/Button/Button";
 import { Wrapper } from "../../../../../UIKit/Wrapper";
 import TextInput from "../../../../../UIKit/Inputs/TextInput";
 import { SubtaskForm } from "./SubtaskForm";
 import "./EditProject.css";
-import { updateAllProject } from "../../../../../Lib/Slices/projectSlice/projectApi";
+import {
+  useGetProjectQuery,
+  useGetTasksQuery,
+  useUpdateProjectMutation,
+  type UpdateProjectBody,
+} from "../../../../../Lib/api/projectApi";
+import { getErrorMessage } from "../../../../../Lib/api/getErrorMessage";
+import { useProjectId } from "../../../../../Hooks/useProjectId";
 
-export type EditProjectType = {
-  title: string;
-  description: string;
-  project_id: number;
-  tasks: {
-    title: string;
-    description: string;
-    subtasks: {
-      title: string;
-    }[];
-  }[];
-};
+export type EditProjectType = UpdateProjectBody;
 
 type Props = {
   closeModal: () => void;
 };
 
 const EditProject: React.FC<Props> = ({ closeModal }) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const {
-    project,
-    tasks: reduxTasks,
-    subtasks: reduxSubtasks,
-  } = useSelector((state: RootState) => state.project);
+  const projectId = useProjectId();
+  // проект и задачи уже в кэше — их загрузила страница, запросов не будет
+  const { data: project } = useGetProjectQuery(projectId ?? skipToken);
+  const { data: tasksData } = useGetTasksQuery(projectId ?? skipToken);
+  const [updateProject, { isLoading, error }] = useUpdateProjectMutation();
 
   const { handleSubmit, control, reset } = useForm<EditProjectType>({
     defaultValues: {
@@ -49,33 +43,35 @@ const EditProject: React.FC<Props> = ({ closeModal }) => {
   });
 
   useEffect(() => {
-    if (project && reduxTasks && reduxSubtasks) {
+    if (project && tasksData) {
       reset({
         title: project.title,
         description: project.description,
         project_id: project.id,
-        tasks: reduxTasks.map((task) => ({
+        tasks: tasksData.tasks.map((task) => ({
           ...task,
-          subtasks: reduxSubtasks
-            .filter((reduxSubtasks) => reduxSubtasks.task_id === task.id)
-            .map((reduxSubtasks) => ({ ...reduxSubtasks })),
+          subtasks: tasksData.subtasks
+            .filter((subtask) => subtask.task_id === task.id)
+            .map((subtask) => ({ ...subtask })),
         })),
       });
     }
-  }, [project, reduxTasks, reduxSubtasks, reset]);
-
-  const [error, setError] = useState<string>();
+  }, [project, tasksData, reset]);
 
   // Окно закрываем только после успешного сохранения — иначе показываем ошибку
   // (например, 403, если пользователь не владелец проекта).
+  // Обновлять стор руками не нужно: мутация сбросит теги проекта, задач
+  // и списка на главной, и они перезапросятся сами.
   const formHandleSubmit = async (data: EditProjectType) => {
-    const res = await dispatch(updateAllProject(data));
-    if (updateAllProject.fulfilled.match(res)) {
+    try {
+      await updateProject(data).unwrap();
       closeModal();
-    } else {
-      setError(res.payload ?? "Не удалось сохранить изменения");
+    } catch {
+      // текст ошибки — из error мутации ниже
     }
   };
+
+  const serverError = getErrorMessage(error, {}, "Не удалось сохранить изменения");
 
   return (
     <>
@@ -83,9 +79,9 @@ const EditProject: React.FC<Props> = ({ closeModal }) => {
         onSubmit={handleSubmit(formHandleSubmit)}
         className="create_aim_page m-3 max-w-7xl max-h-3xl text-gray-300"
       >
-        {error && (
+        {serverError && (
           <p role="alert" className="p-3 text-red-400">
-            {error}
+            {serverError}
           </p>
         )}
         <div className="flex flex-col">
@@ -147,8 +143,9 @@ const EditProject: React.FC<Props> = ({ closeModal }) => {
           lightShadow={true}
           type="submit"
           shadow={false}
-          >
-          сохранить
+          disabled={isLoading}
+        >
+          {isLoading ? "сохраняем…" : "сохранить"}
         </Button>
       </form>
     </>

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Card from "../../../../UIKit/Card";
-import { userProjects } from "../../../../Api/projectApi";
-import { UserProjectsType } from "../../../../Lib/Slices/projectSlice/types";
+import { skipToken } from "@reduxjs/toolkit/query/react";
+import { useGetUserProjectsQuery } from "../../../../Lib/api/projectApi";
+import type { UserProjectsType } from "../../../../types/ProjectTypes";
 import { useCurrentUser } from "../../../../Hooks/useCurrentUser";
 import {
   getMainProject,
@@ -45,36 +46,28 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({
 
 export const ProjectList: React.FC = () => {
   const { currentUser } = useCurrentUser();
-  const [projectList, setProjectList] = useState<UserProjectsType | null>(null);
   const userId = currentUser?.id;
+  // skipToken — «пока не спрашивай»: без пользователя запрос не уходит.
+  // Отмену при уходе со страницы, кэш и повтор при возврате на вкладку
+  // RTK Query делает сам — раньше для этого был AbortController и useEffect.
+  const {
+    data: projectList,
+    isLoading,
+    isError,
+  } = useGetUserProjectsQuery(userId ?? skipToken);
   const [mainId, setMainId] = useState<number | null>(null);
 
   useEffect(() => {
-    if (!userId) return;
-    // Контроллер создаётся внутри эффекта: раньше он пересоздавался
-    // на каждый рендер, и очистка отменяла не тот запрос.
-    const abortController = new AbortController();
-
-    (async () => {
-      try {
-        const res = await userProjects(userId, abortController);
-        setProjectList(res);
-
-        // Главный проект удалили или из него исключили — забываем,
-        // иначе после входа вели бы на «нет доступа».
-        const main = getMainProject(userId);
-        const exists = [...res.owner, ...res.working].some(
-          (p) => p.id === main,
-        );
-        if (main && !exists) setMainProject(userId, null);
-        setMainId(exists ? main : null);
-      } catch {
-        // запрос отменён при уходе со страницы — список просто не обновится
-      }
-    })();
-
-    return () => abortController.abort();
-  }, [userId]);
+    if (!userId || !projectList) return;
+    // Главный проект удалили или из него исключили — забываем,
+    // иначе после входа вели бы на «нет доступа».
+    const main = getMainProject(userId);
+    const exists = [...projectList.owner, ...projectList.working].some(
+      (p) => p.id === main,
+    );
+    if (main && !exists) setMainProject(userId, null);
+    setMainId(exists ? main : null);
+  }, [userId, projectList]);
 
   // повторный клик по звезде снимает выбор
   const toggleMain = (projectId: number) => {
@@ -83,6 +76,14 @@ export const ProjectList: React.FC = () => {
     setMainProject(userId, next);
     setMainId(next);
   };
+
+  if (isLoading) return <p role="status">загрузка проектов…</p>;
+  if (isError)
+    return (
+      <p role="alert" className="text-red-400">
+        Не удалось загрузить проекты
+      </p>
+    );
 
   return (
     <>
