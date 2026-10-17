@@ -2,6 +2,7 @@ import { lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Layout } from "../HOC/Layout";
 import { GuestRoute } from "../HOC/GuestRoute";
+import { ProtectedRoute } from "../HOC/ProtectedRoute";
 
 /*
  * Страницы грузятся лениво: import() с круглыми скобками — сигнал сборщику
@@ -24,24 +25,18 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Main />} />
-          <Route
-            path="/login"
-            element={
-              <GuestRoute>
-                <Login />
-              </GuestRoute>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <GuestRoute>
-                <Register />
-              </GuestRoute>
-            }
-          />
-          <Route path="/project/:id" element={<Project />} />
+          {/* только для вошедших: гостя уведёт на /login?from=… */}
+          <Route element={<ProtectedRoute />}>
+            <Route index element={<Main />} />
+            <Route path="/project/:id" element={<Project />} />
+          </Route>
+          {/* только для гостей: вошедшего уведёт туда, куда он шёл */}
+          <Route element={<GuestRoute />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </Route>
+          {/* 404 видна всем — гостю незачем логиниться, чтобы узнать,
+              что страницы нет */}
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

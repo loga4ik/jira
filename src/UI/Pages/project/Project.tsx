@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { skipToken } from "@reduxjs/toolkit/query/react";
 import { Wrapper } from "../../../UIKit/Wrapper";
+import { PageLoader } from "../../../UIKit/PageLoader";
 import Chat from "./Components/Chat/Chat";
 import Sidebar from "./Components/Sidebar/Sidebar";
 import TaskList from "./Components/Tasks/TaskList";
@@ -38,7 +39,7 @@ const Project = () => {
     return <ErrorMadal open closeModal={() => navigate("/")} />;
   }
 
-  if (isLoading) return <p role="status">загрузка проекта…</p>;
+  if (isLoading) return <PageLoader text="загрузка проекта…" />;
 
   if (error || !project) {
     return (

@@ -13,7 +13,7 @@ import { baseQueryWithReauth } from "./baseQuery";
 export const api = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["CurrentUser", "Users", "Project", "Tasks", "Team"],
+  tagTypes: ["CurrentUser", "Project", "Tasks", "Team"],
   // Вернулся на вкладку или появилась сеть — данные, на которые кто-то
   // подписан, перезапрашиваются: задачи могли поменять другие участники.
   // Работает вместе с setupListeners в store.ts.

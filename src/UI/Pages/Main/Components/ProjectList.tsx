@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Card from "../../../../UIKit/Card";
+import { PageLoader } from "../../../../UIKit/PageLoader";
 import { skipToken } from "@reduxjs/toolkit/query/react";
 import { useGetUserProjectsQuery } from "../../../../Lib/api/projectApi";
 import type { UserProjectsType } from "../../../../types/ProjectTypes";
@@ -77,7 +78,7 @@ export const ProjectList: React.FC = () => {
     setMainId(next);
   };
 
-  if (isLoading) return <p role="status">загрузка проектов…</p>;
+  if (isLoading) return <PageLoader text="загрузка проектов…" />;
   if (isError)
     return (
       <p role="alert" className="text-red-400">

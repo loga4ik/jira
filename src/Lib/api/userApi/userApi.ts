@@ -29,11 +29,6 @@ export const userApi = api.injectEndpoints({
       providesTags: ["CurrentUser"],
     }),
 
-    getUsers: builder.query<AuthUser[], void>({
-      query: () => "/user/getAllUsers",
-      providesTags: ["Users"],
-    }),
-
     login: builder.mutation<AuthResponse, UserLoginData>({
       query: (body) => ({ url: "/user/login", method: "POST", body }),
       // Ответ login уже содержит пользователя — кладём его в кэш getCurrentUser
@@ -88,7 +83,6 @@ const cacheCurrentUser = (user: AuthUser) =>
 
 export const {
   useGetCurrentUserQuery,
-  useGetUsersQuery,
   useLoginMutation,
   useRegisterMutation,
   useLogoutMutation,

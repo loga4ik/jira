@@ -1,5 +1,6 @@
 import { Task } from "./Task";
 import { useGetTasksQuery } from "../../../../../Lib/api/projectApi";
+import { PageLoader } from "../../../../../UIKit/PageLoader";
 
 type Props = {
   project_id: number;
@@ -8,7 +9,7 @@ type Props = {
 const TaskList: React.FC<Props> = ({ project_id }) => {
   const { data, isLoading, isError } = useGetTasksQuery(project_id);
 
-  if (isLoading) return <p role="status">загрузка задач…</p>;
+  if (isLoading) return <PageLoader text="загрузка задач…" />;
   if (isError)
     return (
       <p role="alert" className="text-red-400">

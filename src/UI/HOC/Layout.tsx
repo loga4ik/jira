@@ -1,4 +1,4 @@
-import { Suspense, useContext, useEffect } from "react";
+import { Suspense, useContext } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import "./Layout.css";
 import { ThemeContext } from "../../Context/ThemeContext";
@@ -9,16 +9,7 @@ import {
   useLogoutMutation,
 } from "../../Lib/api/userApi";
 import UserList from "../Pages/project/Components/UserList/UserList";
-import { loginPathWithReturn } from "../../features/auth/returnPath";
-
-const AUTH_ROUTES = ["/login", "/register"];
-
-/** Заглушка на время загрузки страницы. role="status" — скринридер её озвучит. */
-const PageLoader = () => (
-  <p role="status" className="p-3 text-center opacity-60">
-    загрузка…
-  </p>
-);
+import { PageLoader } from "../../UIKit/PageLoader";
 
 export const Layout = () => {
   const navigate = useNavigate();
@@ -26,17 +17,11 @@ export const Layout = () => {
   const { theme } = useContext(ThemeContext);
 
   // запрос уходит один раз и кэшируется — useEffect с dispatch(getCookie()) не нужен
-  const { data: currentUser, isLoading } = useGetCurrentUserQuery();
+  const { data: currentUser } = useGetCurrentUserQuery();
   const [logout] = useLogoutMutation();
 
-  const isAuthRoute = AUTH_ROUTES.includes(location.pathname);
-
-  useEffect(() => {
-    // не редиректим, пока статус неизвестен, и не гоняем /login на самого себя
-    if (isLoading || currentUser || isAuthRoute) return;
-    // запоминаем, куда шёл гость, — после входа вернём его туда
-    navigate(loginPathWithReturn(location), { replace: true });
-  }, [currentUser, isLoading, isAuthRoute, navigate, location]);
+  // Кого куда пускать, решают маршруты (ProtectedRoute, GuestRoute),
+  // а Layout только рисует шапку и место под страницу.
 
   // Внешний вид прежней кнопки-обёртки, перенесённый на саму ссылку.
   const authLinkClass = `form_btn-navigate block px-3 py-1 rounded-md border border-gray-200 ${
